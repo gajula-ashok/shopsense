@@ -198,5 +198,5 @@ ShopSense/
 
 ## Author
 
-**Sreya Bondili**  
+**GAJULA ASHOK**  
 
