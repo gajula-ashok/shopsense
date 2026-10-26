@@ -28,7 +28,7 @@ def run_clean_setup():
     db: Session = SessionLocal()
     try:
         print("🌱 Seeding accounts and profile variables...")
-        # 3a. Platform Admin - Sreya Bondili
+        # 3a. Platform Admin - GAJULA ASHOK
         admin_user = User(
             full_name="GAJULA ASHOK (Admin)",
             email="chiruashok12@gmail.com",

@@ -24,51 +24,31 @@ except Exception:
     importlib.reload(_api_module)
     ApiClient = _api_module.ApiClient
 
+try:
+    import dashboard.theme as _theme_module
+    importlib.reload(_theme_module)
+except Exception:
+    import theme as _theme_module
+    importlib.reload(_theme_module)
+
 # Page configuration
 st.set_page_config(
-    page_title="ShopSense – Multi-Vendor Analytics",
+    page_title="ShopSense – Multi-Vendor Analytics & Marketplace",
     page_icon="🛍️",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
+# Initialize Session State Defaults
+if "theme" not in st.session_state:
+    st.session_state["theme"] = "🛍️ ShopSense Hybrid (Flipkart + Amazon + Meesho)"
+
 # Initialize API Client
 BACKEND_URL = os.getenv("API_BASE_URL", "http://127.0.0.1:8000")
 api = ApiClient(base_url=BACKEND_URL)
 
-# Custom Styling
-st.markdown("""
-<style>
-    .metric-card {
-        background-color: #f8f9fa;
-        border-radius: 8px;
-        padding: 16px;
-        border-left: 5px solid #1f77b4;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-    .status-badge-active {
-        background-color: #d4edda;
-        color: #155724;
-        padding: 3px 8px;
-        border-radius: 4px;
-        font-weight: 600;
-    }
-    .status-badge-pending {
-        background-color: #fff3cd;
-        color: #856404;
-        padding: 3px 8px;
-        border-radius: 4px;
-        font-weight: 600;
-    }
-    .status-badge-suspended {
-        background-color: #f8d7da;
-        color: #721c24;
-        padding: 3px 8px;
-        border-radius: 4px;
-        font-weight: 600;
-    }
-</style>
-""", unsafe_allow_html=True)
+# Inject Dynamic E-Commerce Styling (Flipkart + Amazon + Meesho aesthetic)
+st.markdown(_theme_module.generate_ecommerce_css(st.session_state["theme"]), unsafe_allow_html=True)
 
 # Session State Initialization
 if "token" not in st.session_state:
@@ -91,11 +71,52 @@ def logout():
 # 1. AUTHENTICATION (LOGIN / REGISTER)
 # ==========================================
 def render_auth_page():
-    st.title("🛍️ ShopSense – Multi-Vendor Analytics Platform")
+    theme_name = st.session_state.get("theme", "🛍️ ShopSense Hybrid (Flipkart + Amazon + Meesho)")
+    cfg = _theme_module.THEME_CONFIGS.get(theme_name, _theme_module.THEME_CONFIGS["🛍️ ShopSense Hybrid (Flipkart + Amazon + Meesho)"])
+
+    # Top Brand Bar for Auth Page
+    st.markdown(f"""
+    <div class="ss-navbar" style="justify-content: center; text-align: center; padding: 18px 24px;">
+        <div style="text-align: center;">
+            <div class="ss-navbar-logo" style="justify-content: center;">
+                🛍️ ShopSense <span class="ss-navbar-pill" style="font-size:0.75rem; margin-left:8px;">{cfg["brand_badge"]}</span>
+            </div>
+            <div class="ss-navbar-tagline" style="margin-top: 4px;">
+                India's Multi-Vendor Marketplace • Amazon, Flipkart & Meesho Experience
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Theme Switcher on Auth Screen
+    col_t1, col_t2, col_t3 = st.columns([1, 2, 1])
+    with col_t2:
+        col_lbl, col_sel = st.columns([1, 2])
+        with col_lbl:
+            st.markdown("<div style='font-size:0.85rem; font-weight:700; color:#555; padding-top:6px; text-align:right;'>🎨 Select UI Style:</div>", unsafe_allow_html=True)
+        with col_sel:
+            chosen_auth_theme = st.selectbox(
+                "Theme",
+                list(_theme_module.THEME_CONFIGS.keys()),
+                index=list(_theme_module.THEME_CONFIGS.keys()).index(st.session_state["theme"]),
+                key="auth_theme_select",
+                label_visibility="collapsed"
+            )
+            if chosen_auth_theme != st.session_state["theme"]:
+                st.session_state["theme"] = chosen_auth_theme
+                st.rerun()
 
     _, col1, _ = st.columns([1, 2, 1])
 
     with col1:
+        # Quick Demo Credentials Hint
+        with st.expander("🔑 Quick Demo Credentials (Click to preview)", expanded=False):
+            st.markdown("""
+            - 👑 **Admin:** `admin@shopsense.com` | Password: `Admin@123`
+            - 🏪 **Vendor:** `techworld@example.com` | Password: `Vendor@123`
+            - 🛍️ **Customer:** `customer@shopsense.com` | Password: `Customer@123`
+            """)
+
         tab_login, tab_register = st.tabs(["🔐 Sign In", "📝 Create Account"])
 
         with tab_login:
@@ -125,7 +146,6 @@ def render_auth_page():
                             st.rerun()
                     except Exception as e:
                         st.error(f"Login failed: {str(e)}")
-
 
         with tab_register:
             st.subheader("Register New Account")
@@ -180,6 +200,15 @@ def render_auth_page():
                     except Exception as e:
                         st.error(f"Registration error: {str(e)}")
 
+        st.markdown("""
+        <div class="ss-auth-trust-footer">
+            🔒 By continuing, you agree to ShopSense Conditions of Use and Privacy Notice.<br/>
+            100% Secure Checkout • 256-Bit SSL Protection
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown(_theme_module.render_trust_footer(), unsafe_allow_html=True)
+
 
 # ==========================================
 # 2. DASHBOARD VIEW (ADMIN / VENDOR)
@@ -188,9 +217,11 @@ def render_dashboard_page():
     role = st.session_state["role"]
     token = st.session_state["token"]
     user_name = st.session_state.get("user_name", "User")
-    
+    current_theme = st.session_state.get("theme", "🛍️ ShopSense Hybrid (Flipkart + Amazon + Meesho)")
+
+    st.markdown(_theme_module.render_top_navbar(user_name, role, current_theme), unsafe_allow_html=True)
     st.title(f"📊 {'Marketplace Executive Dashboard' if role == 'ADMIN' else 'Vendor Performance Portal'}")
-    st.markdown(f"Logged in as **{user_name}**")
+    st.markdown(f"Logged in as **{user_name}** • Flipkart & Amazon Seller Central View")
 
     # Fetch Summary KPIs
     try:
@@ -324,13 +355,18 @@ def render_dashboard_page():
         else:
             st.info("No sales data available.")
 
+    st.markdown(_theme_module.render_trust_footer(), unsafe_allow_html=True)
+
 # ==========================================
 # 3. VENDOR MANAGEMENT PAGE (ADMIN ONLY)
 # ==========================================
 def render_vendors_page():
     token = st.session_state["token"]
     role = st.session_state["role"]
+    user_name = st.session_state.get("user_name", "User")
+    current_theme = st.session_state.get("theme", "🛍️ ShopSense Hybrid (Flipkart + Amazon + Meesho)")
 
+    st.markdown(_theme_module.render_top_navbar(user_name, role, current_theme), unsafe_allow_html=True)
     st.title("🏢 Vendor Management & Onboarding")
 
     if role != "ADMIN":
@@ -434,13 +470,18 @@ def render_vendors_page():
     except Exception as e:
         st.error(f"Error loading vendors: {e}")
 
+    st.markdown(_theme_module.render_trust_footer(), unsafe_allow_html=True)
+
 # ==========================================
 # 4. PRODUCT CATALOG PAGE
 # ==========================================
 def render_products_page():
     token = st.session_state["token"]
     role = st.session_state["role"]
+    user_name = st.session_state.get("user_name", "User")
+    current_theme = st.session_state.get("theme", "🛍️ ShopSense Hybrid (Flipkart + Amazon + Meesho)")
 
+    st.markdown(_theme_module.render_top_navbar(user_name, role, current_theme), unsafe_allow_html=True)
     st.title("📦 Product Catalog Management")
 
     # Add Product Form
@@ -540,11 +581,18 @@ def render_products_page():
     except Exception as e:
         st.error(f"Error fetching products: {e}")
 
+    st.markdown(_theme_module.render_trust_footer(), unsafe_allow_html=True)
+
 # ==========================================
 # 5. INVENTORY MANAGEMENT PAGE
 # ==========================================
 def render_inventory_page():
     token = st.session_state["token"]
+    role = st.session_state.get("role", "VENDOR")
+    user_name = st.session_state.get("user_name", "User")
+    current_theme = st.session_state.get("theme", "🛍️ ShopSense Hybrid (Flipkart + Amazon + Meesho)")
+
+    st.markdown(_theme_module.render_top_navbar(user_name, role, current_theme), unsafe_allow_html=True)
     st.title("📋 Inventory Management & Warehouse Tracking")
 
     status_filter = st.selectbox("Filter by Stock Status", ["All", "IN STOCK", "LOW STOCK", "OUT OF STOCK"])
@@ -603,12 +651,18 @@ def render_inventory_page():
     except Exception as e:
         st.error(f"Error loading inventory: {e}")
 
+    st.markdown(_theme_module.render_trust_footer(), unsafe_allow_html=True)
+
 # ==========================================
 # 6. TRANSACTIONS PAGE
 # ==========================================
 def render_transactions_page():
     token = st.session_state["token"]
     role = st.session_state["role"]
+    user_name = st.session_state.get("user_name", "User")
+    current_theme = st.session_state.get("theme", "🛍️ ShopSense Hybrid (Flipkart + Amazon + Meesho)")
+
+    st.markdown(_theme_module.render_top_navbar(user_name, role, current_theme), unsafe_allow_html=True)
     st.title("💳 Transaction Management & Sales Ledger")
 
     # Transaction Creation Form
@@ -670,12 +724,18 @@ def render_transactions_page():
     except Exception as e:
         st.error(f"Error fetching transactions: {e}")
 
+    st.markdown(_theme_module.render_trust_footer(), unsafe_allow_html=True)
+
 # ==========================================
 # 7. ANALYTICS & REPORTING PAGE
 # ==========================================
 def render_analytics_page():
     token = st.session_state["token"]
     role = st.session_state["role"]
+    user_name = st.session_state.get("user_name", "User")
+    current_theme = st.session_state.get("theme", "🛍️ ShopSense Hybrid (Flipkart + Amazon + Meesho)")
+
+    st.markdown(_theme_module.render_top_navbar(user_name, role, current_theme), unsafe_allow_html=True)
     st.title("📈 Marketplace Analytics & Performance Reports")
 
     # Overview KPIs
@@ -764,12 +824,19 @@ def render_analytics_page():
                 "text/csv"
             )
 
+    st.markdown(_theme_module.render_trust_footer(), unsafe_allow_html=True)
+
 # ==========================================
 # 8. CUSTOMER VIEWS
 # ==========================================
 def render_customer_catalog():
     token = st.session_state["token"]
-    st.title("Products")
+    user_name = st.session_state.get("user_name", "Customer")
+    role = st.session_state.get("role", "CUSTOMER")
+    current_theme = st.session_state.get("theme", "🛍️ ShopSense Hybrid (Flipkart + Amazon + Meesho)")
+
+    # 1. Top E-Commerce Header Bar
+    st.markdown(_theme_module.render_top_navbar(user_name, role, current_theme), unsafe_allow_html=True)
 
     try:
         products = api.get_products(token)
@@ -778,25 +845,72 @@ def render_customer_catalog():
         return
 
     if not products:
-        st.info("No products available.")
+        st.info("No products currently listed in the marketplace.")
         return
 
-    # Filters
-    col_search, col_cat = st.columns([2, 1])
+    # Extract all categories
+    categories = ["All Categories"] + sorted(list(set(p.get("category", "General") for p in products)))
+
+    # Category Ribbon (Flipkart / Meesho style)
+    cat_selection = st.session_state.get("customer_cat_filter", "All Categories")
+    st.markdown(_theme_module.render_category_ribbon(cat_selection), unsafe_allow_html=True)
+
+    # Search, Category Filter & Sort Options
+    col_search, col_cat, col_sort = st.columns([3, 2, 2])
     with col_search:
-        search_query = st.text_input("Search Products", "").strip().lower()
+        search_query = st.text_input(
+            "Search Products",
+            placeholder="🔍 Search for headphones, fashion, books, home essentials...",
+            label_visibility="collapsed",
+            key="cust_search_input"
+        ).strip().lower()
     with col_cat:
-        categories = ["All Categories"] + sorted(list(set(p.get("category", "General") for p in products)))
-        selected_category = st.selectbox("Category", categories)
+        selected_category = st.selectbox(
+            "Category Filter",
+            categories,
+            index=categories.index(cat_selection) if cat_selection in categories else 0,
+            label_visibility="collapsed",
+            key="cust_cat_select"
+        )
+        st.session_state["customer_cat_filter"] = selected_category
+    with col_sort:
+        sort_by = st.selectbox(
+            "Sort Order",
+            ["Featured Deals", "Price: Low to High", "Price: High to Low", "Product Name: A to Z"],
+            label_visibility="collapsed",
+            key="cust_sort_select"
+        )
 
     # Filtered products
     filtered = products
     if search_query:
-        filtered = [p for p in filtered if search_query in p.get("product_name", "").lower()]
+        filtered = [
+            p for p in filtered 
+            if search_query in p.get("product_name", "").lower() 
+            or search_query in p.get("category", "").lower()
+            or search_query in str(p.get("vendor_name", "")).lower()
+        ]
     if selected_category != "All Categories":
         filtered = [p for p in filtered if p.get("category") == selected_category]
 
-    st.write(f"Showing **{len(filtered)}** products:")
+    # Sorting
+    if sort_by == "Price: Low to High":
+        filtered = sorted(filtered, key=lambda x: float(x.get("price", 0.0)))
+    elif sort_by == "Price: High to Low":
+        filtered = sorted(filtered, key=lambda x: float(x.get("price", 0.0)), reverse=True)
+    elif sort_by == "Product Name: A to Z":
+        filtered = sorted(filtered, key=lambda x: x.get("product_name", "").lower())
+
+    st.markdown(
+        f"<div style='font-size:0.95rem; font-weight:700; color:#555; margin: 6px 0 16px 0;'>"
+        f"Showing <strong style='color:var(--ss-primary);'>{len(filtered)}</strong> products for you"
+        f"</div>",
+        unsafe_allow_html=True
+    )
+
+    if not filtered:
+        st.warning("No products matched your search or category filters. Try resetting filters.")
+        return
 
     cols_per_row = 3
     for i in range(0, len(filtered), cols_per_row):
@@ -805,73 +919,119 @@ def render_customer_catalog():
             if i + j < len(filtered):
                 p = filtered[i + j]
                 with row_cols[j]:
+                    # Render realistic Amazon / Flipkart / Meesho Product Card
+                    st.markdown(_theme_module.render_product_card_html(p, current_theme), unsafe_allow_html=True)
+
                     stock_qty = p.get("stock", 0)
-                    if stock_qty == 0:
-                        stock_badge = "OUT OF STOCK"
-                    elif stock_qty <= 10:
-                        stock_badge = f"LOW STOCK ({stock_qty})"
-                    else:
-                        stock_badge = f"IN STOCK ({stock_qty})"
-
-                    with st.container(border=True):
-                        st.subheader(p.get("product_name", "Product"))
-                        st.write(f"Category: **{p.get('category', 'General')}**")
-                        st.write(f"Price: **${float(p.get('price', 0.0)):,.2f}**")
-                        st.write(f"Status: **{stock_badge}**")
-                        vendor_disp = p.get("vendor_name") or f"Vendor #{p.get('vendor_id', '')}"
-                        st.write(f"Vendor: {vendor_disp}")
-
-                        if stock_qty > 0:
+                    if stock_qty > 0:
+                        c_qty, c_btn = st.columns([1, 2])
+                        with c_qty:
                             qty = st.number_input(
-                                "Quantity",
+                                "Qty",
                                 min_value=1,
                                 max_value=stock_qty,
                                 value=1,
                                 step=1,
-                                key=f"cust_qty_{p['product_id']}"
+                                key=f"cust_qty_{p['product_id']}",
+                                label_visibility="collapsed"
                             )
-                            if st.button("Buy", key=f"cust_buy_{p['product_id']}", type="primary", use_container_width=True):
+                        with c_btn:
+                            if st.button("⚡ Buy Now", key=f"cust_buy_{p['product_id']}", type="primary", use_container_width=True):
                                 try:
                                     res = api.create_transaction(token, {
                                         "product_id": p["product_id"],
                                         "quantity": qty
                                     })
-                                    st.success(f"Order placed successfully! Transaction ID: {res['transaction_id']}")
+                                    st.success(f"🎉 Order placed! Order ID: #{res['transaction_id']}")
                                     st.rerun()
                                 except Exception as err:
                                     st.error(f"Error placing order: {err}")
+                    else:
+                        st.button("❌ Out of Stock", key=f"cust_out_{p['product_id']}", disabled=True, use_container_width=True)
+
+    # Trust Footer
+    st.markdown(_theme_module.render_trust_footer(), unsafe_allow_html=True)
+
 
 def render_customer_orders():
     token = st.session_state["token"]
     user_name = st.session_state.get("user_name", "Customer")
-    st.title("My Orders")
-    st.markdown(f"Order history for **{user_name}**")
+    role = st.session_state.get("role", "CUSTOMER")
+    current_theme = st.session_state.get("theme", "🛍️ ShopSense Hybrid (Flipkart + Amazon + Meesho)")
+
+    st.markdown(_theme_module.render_top_navbar(user_name, role, current_theme), unsafe_allow_html=True)
+    st.title("📦 Your Orders & Purchase History")
 
     try:
         txs = api.get_transactions(token)
         if txs:
-            df = pd.DataFrame(txs)
-            st.dataframe(
-                df[["transaction_id", "product_name", "vendor_name", "quantity", "amount", "transaction_date"]],
-                use_container_width=True,
-                hide_index=True
-            )
+            # Summary Metrics for Orders
+            total_spent = sum(float(tx.get("amount", 0.0)) for tx in txs)
+            total_items = sum(int(tx.get("quantity", 0)) for tx in txs)
+
+            m1, m2, m3 = st.columns(3)
+            with m1:
+                st.metric("Total Orders Placed", len(txs))
+            with m2:
+                st.metric("Total Items Purchased", f"{total_items:,} units")
+            with m3:
+                st.metric("Total Amount Spent", f"${total_spent:,.2f}")
+
+            st.markdown("---")
+
+            # Render individual Amazon / Flipkart style order cards
+            for tx in txs:
+                st.markdown(_theme_module.render_order_card_html(tx, current_theme), unsafe_allow_html=True)
+
+            # Raw Ledger Table in Expander
+            with st.expander("📜 View Raw Transaction Ledger Table", expanded=False):
+                df = pd.DataFrame(txs)
+                st.dataframe(
+                    df[["transaction_id", "product_name", "vendor_name", "quantity", "amount", "transaction_date"]],
+                    use_container_width=True,
+                    hide_index=True
+                )
         else:
-            st.info("You have not placed any orders yet. Head over to the Products catalog to buy items!")
+            st.info("🛒 You have not placed any orders yet. Check out the Products catalog to start shopping!")
     except Exception as e:
         st.error(f"Error fetching orders: {e}")
 
+    st.markdown(_theme_module.render_trust_footer(), unsafe_allow_html=True)
+
+
 def render_customer_profile():
-    st.title("Profile")
     user_name = st.session_state.get("user_name", "Customer")
     user_email = st.session_state.get("user", "")
     role = st.session_state.get("role", "CUSTOMER")
+    current_theme = st.session_state.get("theme", "🛍️ ShopSense Hybrid (Flipkart + Amazon + Meesho)")
 
-    with st.container(border=True):
-        st.subheader(user_name)
-        st.write(f"Email: **{user_email}**")
-        st.write(f"Role: **{role}**")
-        st.write("Status: **ACTIVE**")
+    st.markdown(_theme_module.render_top_navbar(user_name, role, current_theme), unsafe_allow_html=True)
+    st.title("👤 My Account & Membership")
+
+    # Member Profile Card
+    st.markdown(_theme_module.render_customer_profile_card(user_name, user_email, role, current_theme), unsafe_allow_html=True)
+
+    # Address and Preferences Cards
+    col_addr, col_sec = st.columns(2)
+    with col_addr:
+        with st.container(border=True):
+            st.subheader("📍 Default Delivery Address")
+            st.write(f"**{user_name}**")
+            st.write("#42, Tech Boulevard, Koramangala 4th Block")
+            st.write("Bangalore, Karnataka – 560034")
+            st.write("📞 Contact: +91 98765 43210")
+            st.caption("⚡ Verified primary shipping address for 1-day delivery")
+
+    with col_sec:
+        with st.container(border=True):
+            st.subheader("🔒 Account Security & Preferences")
+            st.write(f"Account Email: **{user_email}**")
+            st.write("Two-Factor Authentication: **Enabled (SMS)**")
+            st.write("Currency: **USD ($) / INR (₹)**")
+            st.write("Notification Preferences: **Email & SMS Orders**")
+
+    st.markdown(_theme_module.render_trust_footer(), unsafe_allow_html=True)
+
 
 # ==========================================
 # MAIN APPLICATION ROUTER
@@ -886,19 +1046,49 @@ def main():
 
         # Sidebar Navigation
         with st.sidebar:
-            st.title("🛍️ ShopSense")
-            st.caption(f"Role: **{role}**")
-            st.write(f"👤 {user_name}")
-            st.write(f"📧 {user_email}")
+            st.markdown("""
+            <div class="ss-sidebar-header">
+                <div style="font-size: 1.35rem; font-weight: 800; display:flex; align-items:center; gap:8px;">
+                    🛍️ ShopSense
+                </div>
+                <div style="font-size: 0.75rem; opacity: 0.9; margin-top:2px;">
+                    Multi-Vendor Marketplace & Analytics
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+            # Theme Switcher
+            st.markdown("<div style='font-size:0.8rem; font-weight:700; color:#555; margin-bottom:4px;'>🎨 APP UI THEME</div>", unsafe_allow_html=True)
+            theme_choice = st.selectbox(
+                "UI Theme",
+                list(_theme_module.THEME_CONFIGS.keys()),
+                index=list(_theme_module.THEME_CONFIGS.keys()).index(st.session_state["theme"]),
+                key="sidebar_theme_switcher",
+                label_visibility="collapsed"
+            )
+            if theme_choice != st.session_state["theme"]:
+                st.session_state["theme"] = theme_choice
+                st.rerun()
+
+            st.markdown(f"""
+            <div class="ss-sidebar-user-card">
+                <div style="font-size: 0.88rem; font-weight: 700; color: #212121;">👤 {user_name}</div>
+                <div style="font-size: 0.75rem; color: #666; margin-top: 2px; overflow:hidden; text-overflow:ellipsis;">📧 {user_email}</div>
+                <div style="margin-top: 8px;">
+                    <span class="status-badge-active">{role}</span>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
             st.markdown("---")
 
             # Nav items depend on role
             if role == "CUSTOMER":
-                nav_options = ["Products", "Orders", "Profile"]
+                nav_options = ["🛍️ Products", "📦 Orders", "👤 Profile"]
             elif role == "ADMIN":
-                nav_options = ["Dashboard", "Vendors", "Products", "Inventory", "Transactions", "Analytics"]
+                nav_options = ["📊 Dashboard", "🏢 Vendors", "📦 Products", "📋 Inventory", "💳 Transactions", "📈 Analytics"]
             else:  # VENDOR
-                nav_options = ["Dashboard", "Products", "Inventory", "Transactions", "Analytics"]
+                nav_options = ["📊 Dashboard", "📦 Products", "📋 Inventory", "💳 Transactions", "📈 Analytics"]
 
             chosen_page = st.radio("Navigation", nav_options, index=0)
 
@@ -908,24 +1098,24 @@ def main():
 
         # Render chosen page based on role and selection
         if role == "CUSTOMER":
-            if chosen_page == "Products":
+            if "Products" in chosen_page:
                 render_customer_catalog()
-            elif chosen_page == "Orders":
+            elif "Orders" in chosen_page:
                 render_customer_orders()
-            elif chosen_page == "Profile":
+            elif "Profile" in chosen_page:
                 render_customer_profile()
         else:
-            if chosen_page == "Dashboard":
+            if "Dashboard" in chosen_page:
                 render_dashboard_page()
-            elif chosen_page == "Vendors":
+            elif "Vendors" in chosen_page:
                 render_vendors_page()
-            elif chosen_page == "Products":
+            elif "Products" in chosen_page:
                 render_products_page()
-            elif chosen_page == "Inventory":
+            elif "Inventory" in chosen_page:
                 render_inventory_page()
-            elif chosen_page == "Transactions":
+            elif "Transactions" in chosen_page:
                 render_transactions_page()
-            elif chosen_page == "Analytics":
+            elif "Analytics" in chosen_page:
                 render_analytics_page()
 
 if __name__ == "__main__":
