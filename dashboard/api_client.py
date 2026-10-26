@@ -62,6 +62,12 @@ class ApiClient:
         resp = requests.post(url, json=payload)
         return self._handle_response(resp)
 
+    def reset_password(self, email: str, new_password: str) -> Dict[str, Any]:
+        """Reset a user's password via the /auth/reset-password endpoint."""
+        url = f"{self.base_url}/auth/reset-password"
+        resp = requests.post(url, json={"email": email, "new_password": new_password})
+        return self._handle_response(resp)
+
     def get_me(self, token: str) -> Dict[str, Any]:
         url = f"{self.base_url}/auth/me"
         resp = requests.get(url, headers=self._headers(token))

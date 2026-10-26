@@ -41,13 +41,13 @@ st.set_page_config(
 
 # Initialize Session State Defaults
 if "theme" not in st.session_state:
-    st.session_state["theme"] = "🛍️ ShopSense Hybrid (Flipkart + Amazon + Meesho)"
+    st.session_state["theme"] = _theme_module.DEFAULT_THEME
 
 # Initialize API Client
 BACKEND_URL = os.getenv("API_BASE_URL", "http://127.0.0.1:8000")
 api = ApiClient(base_url=BACKEND_URL)
 
-# Inject Dynamic E-Commerce Styling (Flipkart + Amazon + Meesho aesthetic)
+# Inject Dynamic E-Commerce Styling
 st.markdown(_theme_module.generate_ecommerce_css(st.session_state["theme"]), unsafe_allow_html=True)
 
 # Session State Initialization
@@ -71,8 +71,8 @@ def logout():
 # 1. AUTHENTICATION (LOGIN / REGISTER)
 # ==========================================
 def render_auth_page():
-    theme_name = st.session_state.get("theme", "🛍️ ShopSense Hybrid (Flipkart + Amazon + Meesho)")
-    cfg = _theme_module.THEME_CONFIGS.get(theme_name, _theme_module.THEME_CONFIGS["🛍️ ShopSense Hybrid (Flipkart + Amazon + Meesho)"])
+    theme_name = st.session_state.get("theme", _theme_module.DEFAULT_THEME)
+    cfg = _theme_module.get_theme_config(theme_name)
 
     # Top Brand Bar for Auth Page
     st.markdown(f"""
@@ -82,7 +82,7 @@ def render_auth_page():
                 🛍️ ShopSense <span class="ss-navbar-pill" style="font-size:0.75rem; margin-left:8px;">{cfg["brand_badge"]}</span>
             </div>
             <div class="ss-navbar-tagline" style="margin-top: 4px;">
-                India's Multi-Vendor Marketplace • Amazon, Flipkart & Meesho Experience
+                India's Multi-Vendor Marketplace • Smart Shopping & Instant Delivery
             </div>
         </div>
     </div>
@@ -120,13 +120,26 @@ def render_auth_page():
         tab_login, tab_register = st.tabs(["🔐 Sign In", "📝 Create Account"])
 
         with tab_login:
-            portal_mode = st.radio(
-                "Select Role:",
-                ["Admin", "Vendor", "Customer"],
-                horizontal=True,
-                key="portal_mode"
+            login_role = st.selectbox(
+                "I want to sign in as:",
+                ["ADMIN", "VENDOR", "CUSTOMER"],
+                format_func=lambda r: {
+                "ADMIN": "🛡️ Admin",
+                "VENDOR": "🏪 Vendor",
+                "CUSTOMER": "🛍️ Customer"
+                }[r],
+                key="login_role"
             )
-
+            
+            if login_role == "ADMIN":
+            # Redirect to Admin Dashboard
+                pass
+            elif login_role == "VENDOR":
+            # Redirect to Vendor Dashboard
+                pass
+            elif login_role == "CUSTOMER":
+            # Redirect to Customer Dashboard
+                pass
             login_email = st.text_input("Email Address", key="login_email")
             login_password = st.text_input("Password", type="password", key="login_password")
 
@@ -147,25 +160,51 @@ def render_auth_page():
                     except Exception as e:
                         st.error(f"Login failed: {str(e)}")
 
+            # Forgot Password Section
+            st.markdown("---")
+            with st.expander("🔑 Forgot Password?", expanded=False):
+                st.markdown("<p style='font-size:0.9rem; color:#666;'>Enter your registered email and set a new password.</p>", unsafe_allow_html=True)
+                fp_email = st.text_input("Registered Email", key="fp_email", placeholder="Enter your registered email")
+                fp_new_pw = st.text_input("New Password (min 6 chars)", type="password", key="fp_new_pw")
+                fp_confirm_pw = st.text_input("Confirm New Password", type="password", key="fp_confirm_pw")
+
+                if st.button("Reset Password", type="primary", use_container_width=True, key="fp_submit"):
+                    if not fp_email or not fp_new_pw or not fp_confirm_pw:
+                        st.error("All fields are required.")
+                    elif len(fp_new_pw) < 6:
+                        st.error("Password must be at least 6 characters.")
+                    elif fp_new_pw != fp_confirm_pw:
+                        st.error("Passwords do not match.")
+                    else:
+                        try:
+                            with st.spinner("Resetting password..."):
+                                result = api.reset_password(fp_email.strip(), fp_new_pw)
+                                st.success(result.get("message", "Password reset successfully! You can now sign in with your new password."))
+                        except Exception as e:
+                            st.error(f"Password reset failed: {str(e)}")
+
         with tab_register:
             st.subheader("Register New Account")
+
+            # Role selection comes first
+            reg_role = st.selectbox(
+                "I want to register as:",
+                ["CUSTOMER", "VENDOR"],
+                format_func=lambda r: {"CUSTOMER": "🛍️ Customer", "VENDOR": "🏪 Vendor"}[r],
+                key="reg_role"
+            )
+
             reg_name = st.text_input("Full Name", key="reg_name")
             reg_email = st.text_input("Email", key="reg_email")
             reg_pw = st.text_input("Password (min 6 chars)", type="password", key="reg_pw")
-            reg_role = st.selectbox(
-                "Role:",
-                ["CUSTOMER", "VENDOR", "ADMIN"],
-                format_func=lambda r: {"CUSTOMER": "Customer", "VENDOR": "Vendor", "ADMIN": "Admin"}[r],
-                key="reg_role"
-            )
-            admin_code = None
+            reg_pw_confirm = st.text_input("Confirm Password", type="password", key="reg_pw_confirm")
+
             reg_phone = None
             reg_bname = None
             reg_cat = None
 
-            if reg_role == "ADMIN":
-                admin_code = st.text_input("Admin Passcode", type="password", key="reg_admin_code", help="Admin Security Passcode (Admin@123)")
-            elif reg_role == "VENDOR":
+            if reg_role == "VENDOR":
+                st.markdown("##### 🏪 Vendor Details")
                 reg_bname = st.text_input("Business / Store Name", key="reg_bname", placeholder="e.g. Apex Electronics")
                 reg_phone = st.text_input("Phone Number", key="reg_phone", placeholder="e.g. 9876543210")
                 reg_cat = st.selectbox(
@@ -175,12 +214,12 @@ def render_auth_page():
                 )
 
             if st.button("Create Account", type="primary", use_container_width=True):
-                if not reg_name or not reg_email or not reg_pw:
+                if not reg_name or not reg_email or not reg_pw or not reg_pw_confirm:
                     st.error("All fields are required.")
                 elif len(reg_pw) < 6:
                     st.error("Password must be at least 6 characters.")
-                elif reg_role == "ADMIN" and not admin_code:
-                    st.error("Admin Security Passcode is required to register an Admin account.")
+                elif reg_pw != reg_pw_confirm:
+                    st.error("Passwords do not match.")
                 elif reg_role == "VENDOR" and not reg_phone:
                     st.error("Phone number is required for Vendor onboarding.")
                 else:
@@ -191,7 +230,6 @@ def render_auth_page():
                                 reg_email.strip(),
                                 reg_pw,
                                 reg_role,
-                                admin_secret=admin_code,
                                 phone=reg_phone.strip() if reg_phone else None,
                                 business_name=reg_bname.strip() if reg_bname else None,
                                 category=reg_cat.strip() if reg_cat else None
@@ -217,11 +255,11 @@ def render_dashboard_page():
     role = st.session_state["role"]
     token = st.session_state["token"]
     user_name = st.session_state.get("user_name", "User")
-    current_theme = st.session_state.get("theme", "🛍️ ShopSense Hybrid (Flipkart + Amazon + Meesho)")
+    current_theme = st.session_state.get("theme", _theme_module.DEFAULT_THEME)
 
-    st.markdown(_theme_module.render_top_navbar(user_name, role, current_theme), unsafe_allow_html=True)
+    st.markdown(_theme_module.render_top_navbar(user_name,role , current_theme), unsafe_allow_html=True)
     st.title(f"📊 {'Marketplace Executive Dashboard' if role == 'ADMIN' else 'Vendor Performance Portal'}")
-    st.markdown(f"Logged in as **{user_name}** • Flipkart & Amazon Seller Central View")
+    st.markdown(f"Logged in as **{user_name}** • Seller Central & Analytics Portal")
 
     # Fetch Summary KPIs
     try:
@@ -364,7 +402,7 @@ def render_vendors_page():
     token = st.session_state["token"]
     role = st.session_state["role"]
     user_name = st.session_state.get("user_name", "User")
-    current_theme = st.session_state.get("theme", "🛍️ ShopSense Hybrid (Flipkart + Amazon + Meesho)")
+    current_theme = st.session_state.get("theme", _theme_module.DEFAULT_THEME)
 
     st.markdown(_theme_module.render_top_navbar(user_name, role, current_theme), unsafe_allow_html=True)
     st.title("🏢 Vendor Management & Onboarding")
@@ -479,7 +517,7 @@ def render_products_page():
     token = st.session_state["token"]
     role = st.session_state["role"]
     user_name = st.session_state.get("user_name", "User")
-    current_theme = st.session_state.get("theme", "🛍️ ShopSense Hybrid (Flipkart + Amazon + Meesho)")
+    current_theme = st.session_state.get("theme", _theme_module.DEFAULT_THEME)
 
     st.markdown(_theme_module.render_top_navbar(user_name, role, current_theme), unsafe_allow_html=True)
     st.title("📦 Product Catalog Management")
@@ -590,7 +628,7 @@ def render_inventory_page():
     token = st.session_state["token"]
     role = st.session_state.get("role", "VENDOR")
     user_name = st.session_state.get("user_name", "User")
-    current_theme = st.session_state.get("theme", "🛍️ ShopSense Hybrid (Flipkart + Amazon + Meesho)")
+    current_theme = st.session_state.get("theme", _theme_module.DEFAULT_THEME)
 
     st.markdown(_theme_module.render_top_navbar(user_name, role, current_theme), unsafe_allow_html=True)
     st.title("📋 Inventory Management & Warehouse Tracking")
@@ -660,7 +698,7 @@ def render_transactions_page():
     token = st.session_state["token"]
     role = st.session_state["role"]
     user_name = st.session_state.get("user_name", "User")
-    current_theme = st.session_state.get("theme", "🛍️ ShopSense Hybrid (Flipkart + Amazon + Meesho)")
+    current_theme = st.session_state.get("theme", _theme_module.DEFAULT_THEME)
 
     st.markdown(_theme_module.render_top_navbar(user_name, role, current_theme), unsafe_allow_html=True)
     st.title("💳 Transaction Management & Sales Ledger")
@@ -733,7 +771,7 @@ def render_analytics_page():
     token = st.session_state["token"]
     role = st.session_state["role"]
     user_name = st.session_state.get("user_name", "User")
-    current_theme = st.session_state.get("theme", "🛍️ ShopSense Hybrid (Flipkart + Amazon + Meesho)")
+    current_theme = st.session_state.get("theme", _theme_module.DEFAULT_THEME)
 
     st.markdown(_theme_module.render_top_navbar(user_name, role, current_theme), unsafe_allow_html=True)
     st.title("📈 Marketplace Analytics & Performance Reports")
@@ -833,7 +871,7 @@ def render_customer_catalog():
     token = st.session_state["token"]
     user_name = st.session_state.get("user_name", "Customer")
     role = st.session_state.get("role", "CUSTOMER")
-    current_theme = st.session_state.get("theme", "🛍️ ShopSense Hybrid (Flipkart + Amazon + Meesho)")
+    current_theme = st.session_state.get("theme", _theme_module.DEFAULT_THEME)
 
     # 1. Top E-Commerce Header Bar
     st.markdown(_theme_module.render_top_navbar(user_name, role, current_theme), unsafe_allow_html=True)
@@ -851,7 +889,7 @@ def render_customer_catalog():
     # Extract all categories
     categories = ["All Categories"] + sorted(list(set(p.get("category", "General") for p in products)))
 
-    # Category Ribbon (Flipkart / Meesho style)
+    # Category Ribbon
     cat_selection = st.session_state.get("customer_cat_filter", "All Categories")
     st.markdown(_theme_module.render_category_ribbon(cat_selection), unsafe_allow_html=True)
 
@@ -919,7 +957,7 @@ def render_customer_catalog():
             if i + j < len(filtered):
                 p = filtered[i + j]
                 with row_cols[j]:
-                    # Render realistic Amazon / Flipkart / Meesho Product Card
+                    # Render modern product card
                     st.markdown(_theme_module.render_product_card_html(p, current_theme), unsafe_allow_html=True)
 
                     stock_qty = p.get("stock", 0)
@@ -957,7 +995,7 @@ def render_customer_orders():
     token = st.session_state["token"]
     user_name = st.session_state.get("user_name", "Customer")
     role = st.session_state.get("role", "CUSTOMER")
-    current_theme = st.session_state.get("theme", "🛍️ ShopSense Hybrid (Flipkart + Amazon + Meesho)")
+    current_theme = st.session_state.get("theme", _theme_module.DEFAULT_THEME)
 
     st.markdown(_theme_module.render_top_navbar(user_name, role, current_theme), unsafe_allow_html=True)
     st.title("📦 Your Orders & Purchase History")
@@ -979,7 +1017,7 @@ def render_customer_orders():
 
             st.markdown("---")
 
-            # Render individual Amazon / Flipkart style order cards
+            # Render individual order cards
             for tx in txs:
                 st.markdown(_theme_module.render_order_card_html(tx, current_theme), unsafe_allow_html=True)
 
@@ -1003,7 +1041,7 @@ def render_customer_profile():
     user_name = st.session_state.get("user_name", "Customer")
     user_email = st.session_state.get("user", "")
     role = st.session_state.get("role", "CUSTOMER")
-    current_theme = st.session_state.get("theme", "🛍️ ShopSense Hybrid (Flipkart + Amazon + Meesho)")
+    current_theme = st.session_state.get("theme", _theme_module.DEFAULT_THEME)
 
     st.markdown(_theme_module.render_top_navbar(user_name, role, current_theme), unsafe_allow_html=True)
     st.title("👤 My Account & Membership")

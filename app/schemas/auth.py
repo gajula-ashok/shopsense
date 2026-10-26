@@ -25,6 +25,19 @@ class UserLoginRequest(BaseModel):
     email: EmailStr
     password: str
 
+class PasswordResetRequest(BaseModel):
+    """Schema for resetting a user's password via email verification."""
+    email: EmailStr
+    new_password: str = Field(..., min_length=6, max_length=128)
+
+    @field_validator("new_password")
+    @classmethod
+    def new_password_within_bcrypt_limit(cls, v: str) -> str:
+        """Bcrypt silently truncates at 72 bytes; reject passwords that exceed this."""
+        if len(v.encode("utf-8")) > 72:
+            raise ValueError("Password must be at most 72 bytes long")
+        return v
+
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"

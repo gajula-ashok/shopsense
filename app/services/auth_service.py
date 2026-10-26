@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
 from app.models.user import User, UserRole
 from app.models.vendor import Vendor, VendorStatus
-from app.schemas.auth import UserRegisterRequest, UserLoginRequest, TokenResponse, UserResponse
+from app.schemas.auth import UserRegisterRequest, UserLoginRequest, TokenResponse, UserResponse, PasswordResetRequest
 from app.utils.security import hash_password, verify_password, create_access_token
 from app.utils.validators import validate_email_format, validate_owner_name, validate_phone_number
 
@@ -156,3 +156,33 @@ def get_user_profile(db: Session, user: User) -> UserResponse:
         created_at=user.created_at,
         vendor_id=vendor_id
     )
+
+def reset_password(db: Session, request: PasswordResetRequest) -> dict:
+    """Reset a user's password by email. Returns a success message dict."""
+    # 1. Validate email format
+    is_valid_email, norm_email = validate_email_format(request.email)
+    if not is_valid_email:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=norm_email
+        )
+
+    # 2. Look up the user
+    user = db.query(User).filter(User.email == norm_email).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="No account found with this email address."
+        )
+
+    if not user.is_active:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="This account is deactivated. Please contact support."
+        )
+
+    # 3. Hash and update the new password
+    user.password_hash = hash_password(request.new_password)
+    db.commit()
+
+    return {"message": f"Password has been reset successfully for {norm_email}."}

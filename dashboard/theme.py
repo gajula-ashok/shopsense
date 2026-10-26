@@ -1,7 +1,6 @@
 """
 ShopSense E-Commerce Theme Engine
-Inspired by Flipkart, Amazon, and Meesho apps.
-Provides theme presets, dynamic CSS generation, and reusable e-commerce UI components.
+Provides theme presets, dynamic CSS generation, and reusable marketplace UI components.
 """
 
 from typing import Dict, Any, Tuple
@@ -64,8 +63,10 @@ CATEGORY_ICONS = {
     "General": "🛍️",
 }
 
+DEFAULT_THEME = "🛍️ ShopSense Modern (Default)"
+
 THEME_CONFIGS = {
-    "🛍️ ShopSense Hybrid (Flipkart + Amazon + Meesho)": {
+    "🛍️ ShopSense Modern (Default)": {
         "primary": "#2874f0",
         "primary_dark": "#1a5ecc",
         "secondary": "#fb641b",
@@ -82,7 +83,7 @@ THEME_CONFIGS = {
         "brand_badge_bg": "#ffe11b",
         "brand_badge_color": "#2874f0",
     },
-    "💙 Flipkart Blue Edition": {
+    "💙 Royal Blue Edition": {
         "primary": "#2874f0",
         "primary_dark": "#1259c7",
         "secondary": "#fb641b",
@@ -95,11 +96,11 @@ THEME_CONFIGS = {
         "header_grad": "linear-gradient(90deg, #2874f0 0%, #1a64db 100%)",
         "cta_grad": "linear-gradient(90deg, #fb641b 0%, #ff782d 100%)",
         "cta_color": "#ffffff",
-        "brand_badge": "⭐ Plus Assured",
+        "brand_badge": "⭐ ShopSense Plus",
         "brand_badge_bg": "#ffe500",
         "brand_badge_color": "#2874f0",
     },
-    "📦 Amazon Prime Edition": {
+    "📦 Dark Slate Edition": {
         "primary": "#131921",
         "primary_dark": "#0c1017",
         "secondary": "#ffa41c",
@@ -112,11 +113,11 @@ THEME_CONFIGS = {
         "header_grad": "linear-gradient(135deg, #131921 0%, #232f3e 100%)",
         "cta_grad": "linear-gradient(180deg, #ffd814 0%, #f7ca00 100%)",
         "cta_color": "#0f1111",
-        "brand_badge": "✓prime Delivery",
+        "brand_badge": "✓ Express Delivery",
         "brand_badge_bg": "#00a8e1",
         "brand_badge_color": "#ffffff",
     },
-    "💖 Meesho Pink Edition": {
+    "💖 Vibrant Magenta Edition": {
         "primary": "#9f2089",
         "primary_dark": "#6a0959",
         "secondary": "#f43397",
@@ -129,11 +130,24 @@ THEME_CONFIGS = {
         "header_grad": "linear-gradient(135deg, #540b51 0%, #9f2089 50%, #f43397 100%)",
         "cta_grad": "linear-gradient(90deg, #9f2089 0%, #bd2c97 100%)",
         "cta_color": "#ffffff",
-        "brand_badge": "🛡️ Meesho Trusted",
+        "brand_badge": "🛡️ Verified Seller",
         "brand_badge_bg": "#e5f7f1",
         "brand_badge_color": "#038d63",
     },
 }
+
+def get_theme_config(theme_name: str) -> Dict[str, Any]:
+    """Safely retrieves theme configuration with backward-compatible fallback."""
+    if theme_name in THEME_CONFIGS:
+        return THEME_CONFIGS[theme_name]
+    legacy_map = {
+        "🛍️ ShopSense Hybrid (Flipkart + Amazon + Meesho)": "🛍️ ShopSense Modern (Default)",
+        "💙 Flipkart Blue Edition": "💙 Royal Blue Edition",
+        "📦 Amazon Prime Edition": "📦 Dark Slate Edition",
+        "💖 Meesho Pink Edition": "💖 Vibrant Magenta Edition",
+    }
+    resolved = legacy_map.get(theme_name, DEFAULT_THEME)
+    return THEME_CONFIGS.get(resolved, THEME_CONFIGS[DEFAULT_THEME])
 
 def get_product_image(product_name: str, category: str = "General") -> str:
     """Return high-resolution photo URL matching product or fallback category."""
@@ -157,9 +171,9 @@ def get_product_meta(product_id: int, price: float) -> Tuple[float, int, float, 
     mrp = round(price / (1.0 - (discount_pct / 100.0)), 2)
     return rating, reviews_count, mrp, discount_pct
 
-def generate_ecommerce_css(theme_name: str = "🛍️ ShopSense Hybrid (Flipkart + Amazon + Meesho)") -> str:
+def generate_ecommerce_css(theme_name: str = DEFAULT_THEME) -> str:
     """Generates the full CSS stylesheet for the selected e-commerce aesthetic."""
-    cfg = THEME_CONFIGS.get(theme_name, THEME_CONFIGS["🛍️ ShopSense Hybrid (Flipkart + Amazon + Meesho)"])
+    cfg = get_theme_config(theme_name)
 
     return f"""
 <style>
@@ -263,7 +277,7 @@ header[data-testid="stHeader"] {{
     font-weight: 600;
 }}
 
-/* Category Navigation Ribbon (Flipkart/Meesho style) */
+/* Category Navigation Ribbon */
 .ss-category-ribbon {{
     background: var(--ss-card-bg);
     border-radius: 10px;
@@ -298,7 +312,7 @@ header[data-testid="stHeader"] {{
     box-shadow: 0 4px 10px rgba(40,116,240,0.25);
 }}
 
-/* Modern Product Card (Amazon / Flipkart / Meesho aesthetic) */
+/* Modern Product Card */
 .ss-product-card {{
     background: var(--ss-card-bg);
     border-radius: 12px;
@@ -449,7 +463,7 @@ header[data-testid="stHeader"] {{
     margin-bottom: 12px;
 }}
 
-/* Metric Cards (Amazon Seller Central / Flipkart Seller Hub) */
+/* Metric Cards (Seller Hub / Analytics Portal) */
 div[data-testid="stMetric"] {{
     background-color: var(--ss-card-bg) !important;
     border-radius: 12px !important;
@@ -500,7 +514,7 @@ div[data-testid="stMetricValue"] {{
     margin: 4px 0;
 }}
 
-/* Streamlit Buttons: Flipkart Orange / Amazon Amber / Meesho Pink */
+/* Streamlit Action Buttons */
 .stButton > button {{
     border-radius: 8px !important;
     font-weight: 700 !important;
@@ -609,7 +623,7 @@ div[data-baseweb="select"] > div {{
     box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important;
 }}
 
-/* Auth Card (Amazon / Flipkart Sign-in) */
+/* Auth Card (Clean Sign-in) */
 .ss-auth-wrapper {{
     background: #ffffff;
     border-radius: 14px;
@@ -666,8 +680,8 @@ div[data-baseweb="select"] > div {{
 """
 
 def render_top_navbar(user_name: str, role: str, theme_name: str) -> str:
-    """Returns HTML for Flipkart/Amazon/Meesho style top header bar."""
-    cfg = THEME_CONFIGS.get(theme_name, THEME_CONFIGS["🛍️ ShopSense Hybrid (Flipkart + Amazon + Meesho)"])
+    """Returns HTML for top brand navigation bar."""
+    cfg = get_theme_config(theme_name)
     brand_badge = cfg["brand_badge"]
     
     role_display = {"CUSTOMER": "Shopper", "VENDOR": "Seller Hub", "ADMIN": "Admin Portal"}.get(role, role)
@@ -688,7 +702,6 @@ def render_top_navbar(user_name: str, role: str, theme_name: str) -> str:
         </div>
     </div>
     <div class="ss-trust-ribbon">
-        <span class="ss-navbar-pill">📍 Deliver to Chiru - 560001</span>
         <span class="ss-navbar-pill">👤 {user_name} ({role_display})</span>
     </div>
 </div>
@@ -717,8 +730,8 @@ def render_category_ribbon(active_category: str = "All") -> str:
 """
 
 def render_product_card_html(product: Dict[str, Any], theme_name: str) -> str:
-    """Renders a complete Amazon/Flipkart/Meesho styled product card in HTML."""
-    cfg = THEME_CONFIGS.get(theme_name, THEME_CONFIGS["🛍️ ShopSense Hybrid (Flipkart + Amazon + Meesho)"])
+    """Renders a complete modern product card in HTML."""
+    cfg = get_theme_config(theme_name)
     
     p_id = product.get("product_id", 0)
     p_name = product.get("product_name", "Product")
@@ -776,7 +789,7 @@ def render_product_card_html(product: Dict[str, Any], theme_name: str) -> str:
 """
 
 def render_order_card_html(order: Dict[str, Any], theme_name: str) -> str:
-    """Renders an Amazon / Flipkart style order tracking item card."""
+    """Renders an order tracking item card."""
     tx_id = order.get("transaction_id", 0)
     p_name = order.get("product_name", "Product")
     v_name = order.get("vendor_name", "Vendor")
@@ -804,8 +817,8 @@ def render_order_card_html(order: Dict[str, Any], theme_name: str) -> str:
 """
 
 def render_customer_profile_card(user_name: str, user_email: str, role: str, theme_name: str) -> str:
-    """Renders Flipkart Plus / Amazon Prime customer profile card."""
-    cfg = THEME_CONFIGS.get(theme_name, THEME_CONFIGS["🛍️ ShopSense Hybrid (Flipkart + Amazon + Meesho)"])
+    """Renders customer profile card."""
+    cfg = get_theme_config(theme_name)
     initial = user_name[0].upper() if user_name else 'U'
     return f"""
 <div style="background:#ffffff; border-radius:12px; border:1px solid var(--ss-border); padding:24px; box-shadow:0 2px 10px rgba(0,0,0,0.05); margin-bottom:20px;">
@@ -836,7 +849,7 @@ def render_customer_profile_card(user_name: str, user_email: str, role: str, the
 """
 
 def render_trust_footer() -> str:
-    """Returns HTML for the bottom trust assurance footer like Amazon/Flipkart/Meesho."""
+    """Returns HTML for the bottom trust assurance footer."""
     return """
 <div class="ss-footer">
     <div class="ss-footer-item">

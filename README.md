@@ -13,7 +13,7 @@ In a typical multi-vendor marketplace, managing different sellers, dynamic stock
 
 ### What Milestone 1 Delivers:
 - **Authentication & RBAC:** Secure JWT-based login with role-based permissions (`ADMIN`, `VENDOR`, and `CUSTOMER`).
-- **Amazon / Flipkart / Meesho Modern UI:** Premium e-commerce storefront with customizable themes (ShopSense Hybrid, Flipkart Blue, Amazon Prime, Meesho Pink), top brand ribbon, category pills, high-definition product cards with star ratings, discounts, delivery badges, and Amazon/Flipkart Seller Central KPI styling.
+- **Modern E-Commerce Storefront UI:** Premium marketplace UI with customizable themes (ShopSense Modern, Royal Blue, Dark Slate, Vibrant Magenta), top brand ribbon, category pills, high-definition product cards with star ratings, discounts, delivery badges, and Seller Central KPI styling.
 - **Vendor Onboarding:** Seller registration with validation (business name, category, commission rates, duplicate email prevention) and lifecycle statuses (`PENDING`, `ACTIVE`, `SUSPENDED`).
 - **Product Catalog:** Full catalog management with search, category filtering, and strict vendor isolation.
 - **Inventory Tracking:** Automatic stock synchronization, reorder level alerts, and statuses (`IN STOCK`, `LOW STOCK`, `OUT OF STOCK`).

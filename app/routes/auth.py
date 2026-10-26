@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.schemas.auth import UserRegisterRequest, UserLoginRequest, TokenResponse, UserResponse
+from app.schemas.auth import UserRegisterRequest, UserLoginRequest, TokenResponse, UserResponse, PasswordResetRequest
 from app.services import auth_service
 from app.utils.security import get_current_active_user
 from app.models.user import User
@@ -23,6 +23,14 @@ def login(
 ):
     """Authenticate with email and password and receive a JWT Bearer token."""
     return auth_service.authenticate_user(db, payload)
+
+@router.post("/reset-password")
+def reset_password(
+    payload: PasswordResetRequest,
+    db: Session = Depends(get_db)
+):
+    """Reset a user's password using their registered email address."""
+    return auth_service.reset_password(db, payload)
 
 @router.get("/me", response_model=UserResponse)
 def get_current_user_profile(
