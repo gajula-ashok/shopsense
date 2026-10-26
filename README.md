@@ -122,20 +122,30 @@ python seed_data.py
 
 ## Running the Project
 
-You will need **two terminal windows**:
+### ⚡ Single Command Startup (Recommended)
+Run both the **FastAPI Backend** and **Streamlit Dashboard** simultaneously with a single command:
+```powershell
+python run.py
+```
+- **Dashboard UI:** [http://localhost:8501](http://localhost:8501)
+- **API Docs (Swagger):** [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+- **API Health Check:** [http://127.0.0.1:8000/health](http://127.0.0.1:8000/health)
 
-### Terminal 1: Start FastAPI Backend
+*(Press `Ctrl+C` in the terminal to cleanly terminate both servers at any time).*
+
+<details>
+<summary><b>Alternative: Run services in two separate terminals</b></summary>
+
+#### Terminal 1: Start FastAPI Backend
 ```powershell
 python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
-- API Docs (Swagger): [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-- API Health Check: [http://127.0.0.1:8000/health](http://127.0.0.1:8000/health)
 
-### Terminal 2: Start Streamlit Dashboard
+#### Terminal 2: Start Streamlit Dashboard
 ```powershell
 python -m streamlit run dashboard/dashboard.py
 ```
-- Dashboard UI will open at: [http://localhost:8501](http://localhost:8501)
+</details>
 
 ---
 

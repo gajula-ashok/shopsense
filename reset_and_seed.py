@@ -30,8 +30,8 @@ def run_clean_setup():
         print("🌱 Seeding accounts and profile variables...")
         # 3a. Platform Admin - GAJULA ASHOK
         admin_user = User(
-            full_name="GAJULA ASHOK (Admin)",
-            email="chiruashok12@gmail.com",
+            full_name="SHOPSENSE (Admin)",
+            email="administrator@shopsense.com",
             password_hash=hash_password("ashok@123"),
             role=UserRole.ADMIN,
             is_active=True
