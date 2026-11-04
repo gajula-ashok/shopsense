@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from app.database import get_db
-from app.schemas.vendor import VendorCreate, VendorUpdate, VendorResponse
+from app.schemas.vendor import VendorCreate, VendorUpdate, VendorResponse, VendorApplicationReview
 from app.services import vendor_service
 from app.utils.security import get_current_active_user, require_admin
 from app.models.user import User
@@ -22,12 +22,13 @@ def create_vendor(
 def get_vendors(
     search: Optional[str] = Query(None, description="Search by business, owner, or email"),
     category: Optional[str] = Query(None, description="Filter by category"),
-    status_filter: Optional[str] = Query(None, alias="status", description="Filter by status (PENDING, ACTIVE, SUSPENDED)"),
+    status_filter: Optional[str] = Query(None, alias="status", description="Filter by operational status (PENDING, ACTIVE, SUSPENDED)"),
+    application_status: Optional[str] = Query(None, description="Filter by application status (PENDING, APPROVED, MORE_INFO_NEEDED, REJECTED)"),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user)
 ):
     """Retrieve vendors (Admins view all; Vendors view own)."""
-    return vendor_service.get_vendors(db, current_user, search, category, status_filter)
+    return vendor_service.get_vendors(db, current_user, search, category, status_filter, application_status)
 
 @router.get("/{vendor_id}", response_model=VendorResponse)
 def get_vendor(
@@ -37,6 +38,16 @@ def get_vendor(
 ):
     """Get single vendor details by ID."""
     return vendor_service.get_vendor_by_id(db, vendor_id, current_user)
+
+@router.post("/{vendor_id}/review", response_model=VendorResponse)
+def review_application(
+    vendor_id: int,
+    payload: VendorApplicationReview,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_admin)
+):
+    """Admin review of vendor application: APPROVE, REQUEST_INFO, or REJECT."""
+    return vendor_service.review_vendor_application(db, vendor_id, payload, current_user)
 
 @router.put("/{vendor_id}", response_model=VendorResponse)
 def update_vendor(

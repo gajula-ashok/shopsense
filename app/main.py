@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, status , Response
+from fastapi import FastAPI, Request, status, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
@@ -12,12 +12,15 @@ from app.routes import (
     inventory_router,
     transactions_router,
     analytics_router,
+    warehouses_router,
+    categories_router,
+    recommendations_router,
 )
 
 app = FastAPI(
     title="ShopSense – Multi-Vendor E-Commerce Analytics Platform",
-    description="Backend REST API for ShopSense Milestone 1: Vendor onboarding, product catalog, inventory tracking, sales transactions, and marketplace analytics.",
-    version="1.0.0",
+    description="Backend REST API for ShopSense: Multi-Vendor Catalog, Inventory Tracking & Forecasting, Customer Analytics, and Recommendation Engine (Milestones 1 & 2).",
+    version="2.0.0",
     docs_url="/docs",
     redoc_url="/redoc"
 )
@@ -25,7 +28,6 @@ app = FastAPI(
 @app.get("/favicon.ico", include_in_schema=False)
 async def silence_favicon_warning():
     return Response(status_code=status.HTTP_204_NO_CONTENT)
-
 
 # Enable CORS for frontend applications (e.g. Streamlit dashboard)
 app.add_middleware(
@@ -52,7 +54,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 @app.exception_handler(IntegrityError)
 async def integrity_exception_handler(request: Request, exc: IntegrityError):
     orig_msg = str(exc.orig) if hasattr(exc, "orig") else str(exc)
-    if "Duplicate entry" in orig_msg:
+    if "Duplicate entry" in orig_msg or "unique constraint" in orig_msg.lower():
         return JSONResponse(
             status_code=status.HTTP_409_CONFLICT,
             content={"detail": "A record with this unique attribute already exists."}
@@ -69,12 +71,15 @@ app.include_router(products_router)
 app.include_router(inventory_router)
 app.include_router(transactions_router)
 app.include_router(analytics_router)
+app.include_router(warehouses_router)
+app.include_router(categories_router)
+app.include_router(recommendations_router)
 
 @app.get("/", tags=["System"])
 def root():
     return {
-        "platform": "ShopSense Multi-Vendor Analytics Platform",
-        "milestone": "Milestone 1 (Weeks 1-2)",
+        "platform": "ShopSense Multi-Vendor Analytics & Intelligence Platform",
+        "milestone": "Milestone 2 (Inventory Intelligence & Customer Analytics)",
         "status": "Operational",
         "api_docs": "/docs",
         "health": "/health"
@@ -84,8 +89,8 @@ def root():
 def health_check():
     return {
         "status": "healthy",
-        "database": "MySQL (SQLAlchemy)",
-        "version": "1.0.0"
+        "database": "PostgreSQL (SQLAlchemy)",
+        "version": "2.0.0"
     }
 
 if __name__ == "__main__":

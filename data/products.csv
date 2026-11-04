@@ -1,0 +1,501 @@
+product_id,product_name,category,price,vendor_id,stock,sku,created_at
+1,Noise-Cancelling Wireless Headphones Pro,Electronics,2807.57,1,31,SKU-ELE-0001,2026-10-30 19:39:14.173193
+2,Ultra-Slim RGB Mechanical Gaming Keyboard (Apex Edition),Electronics,1808.07,1,41,SKU-ELE-0002,2026-10-30 19:39:14.190609
+3,High-Speed 65W GaN Fast Charger (Apex Edition),Electronics,1090.72,1,50,SKU-ELE-0003,2026-10-30 19:39:14.205478
+4,Smart Fitness Band with SpO2 Monitor (Apex Edition),Electronics,1503.89,1,112,SKU-ELE-0004,2026-10-30 19:39:14.213077
+5,Portable Waterproof Bluetooth Speaker 20W (Apex Edition),Electronics,1859.28,1,22,SKU-ELE-0005,2026-10-30 19:39:14.219989
+6,Heavy-Duty Braided Type-C to Lightning Cable (Apex Edition),Electronics,424.66,1,58,SKU-ELE-0006,2026-10-30 19:39:14.226838
+7,Thunderbolt 4 Quad-Display USB-C Hub (Apex Edition),Electronics,3270.21,1,53,SKU-ELE-0007,2026-10-30 19:39:14.233586
+8,Full HD 1080P Dual-Mic Streamer Webcam (Apex Edition),Electronics,1563.54,1,56,SKU-ELE-0008,2026-10-30 19:39:14.240543
+9,Ergonomic Vertical Wireless Mouse (Apex Edition),Electronics,921.82,1,73,SKU-ELE-0009,2026-10-30 19:39:14.248221
+10,Surge Protected 6-Way Extension Board (Apex Edition),Electronics,685.98,1,31,SKU-ELE-0010,2026-10-30 19:39:14.255350
+11,Pure Cotton Regular Fit Casual Shirt,Fashion,814.98,2,49,SKU-FAS-0011,2026-10-30 19:39:14.262447
+12,Slim-Fit Stretchable Denim Jeans (Aura Edition),Fashion,1422.73,2,68,SKU-FAS-0012,2026-10-30 19:39:14.269395
+13,Classic Round Neck Graphic T-Shirt (Aura Edition),Fashion,477.65,2,63,SKU-FAS-0013,2026-10-30 19:39:14.276414
+14,Floral Printed Anarkali Kurta Set (Aura Edition),Fashion,1447.66,2,49,SKU-FAS-0014,2026-10-30 19:39:14.283235
+15,Banarasi Art Silk Festive Saree with Blouse (Aura Edition),Fashion,2505.33,2,118,SKU-FAS-0015,2026-10-30 19:39:14.290217
+16,Waterproof Outdoor Hooded Windbreaker (Aura Edition),Fashion,1888.66,2,0,SKU-FAS-0016,2026-10-30 19:39:14.296956
+17,Genuine Leather Casual Bifold Wallet (Aura Edition),Fashion,559.93,2,32,SKU-FAS-0017,2026-10-30 19:39:14.304163
+18,Polarized UV400 Aviator Sunglasses (Aura Edition),Fashion,652.39,2,18,SKU-FAS-0018,2026-10-30 19:39:14.311171
+19,Classic Stainless Steel Analog Watch (Aura Edition),Fashion,1740.25,2,74,SKU-FAS-0019,2026-10-30 19:39:14.318015
+20,Canvas Casual Everyday Backpack (Aura Edition),Fashion,853.08,2,35,SKU-FAS-0020,2026-10-30 19:39:14.325350
+21,Data Structures & Algorithms Made Easy in Python,Books,587.6,3,33,SKU-BOO-0021,2026-10-30 19:39:14.332322
+22,Modern Cloud Architecture with Microservices & Docker (Heritage Edition),Books,735.74,3,60,SKU-BOO-0022,2026-10-30 19:39:14.339498
+23,Atomic Habits for High-Performance Success (Heritage Edition),Books,445.27,3,108,SKU-BOO-0023,2026-10-30 19:39:14.346782
+24,The Psychology of Wealth & Financial Freedom (Heritage Edition),Books,449.64,3,29,SKU-BOO-0024,2026-10-30 19:39:14.354306
+25,Complete Guide to Machine Learning & Deep Learning (Heritage Edition),Books,746.85,3,0,SKU-BOO-0025,2026-10-30 19:39:14.361382
+26,Indian Polity & Governance for Competitive Exams (Heritage Edition),Books,485.49,3,1,SKU-BOO-0026,2026-10-30 19:39:14.370757
+27,FastAPI & React Microservices Engineering Blueprint (Heritage Edition),Books,679.89,3,84,SKU-BOO-0027,2026-10-30 19:39:14.377968
+28,Clean Code in Enterprise Systems (Indian Edition) (Heritage Edition),Books,570.0,3,4,SKU-BOO-0028,2026-10-30 19:39:14.385332
+29,Database Internals & Distributed Systems Design (Heritage Edition),Books,886.38,3,61,SKU-BOO-0029,2026-10-30 19:39:14.392587
+30,Ancient Indian Heritage & Architectural Wonders (Heritage Edition),Books,513.33,3,32,SKU-BOO-0030,2026-10-30 19:39:14.399902
+31,Ergonomic High-Back Mesh Desk Chair,Home & Kitchen,5649.23,4,44,SKU-HOM-0031,2026-10-30 19:39:14.406893
+32,Non-Stick Induction Granito Cookware 3-Piece (Urban Edition),Home & Kitchen,1926.64,4,56,SKU-HOM-0032,2026-10-30 19:39:14.414307
+33,Stainless Steel Electric Kettle 1.8 Litre (Urban Edition),Home & Kitchen,801.65,4,38,SKU-HOM-0033,2026-10-30 19:39:14.421032
+34,Ultrasonic Aromatherapy Essential Oil Diffuser (Urban Edition),Home & Kitchen,977.65,4,28,SKU-HOM-0034,2026-10-30 19:39:14.428125
+35,Microfiber Soft Touch King Bedsheet with Pillows (Urban Edition),Home & Kitchen,673.88,4,42,SKU-HOM-0035,2026-10-30 19:39:14.435410
+36,Heavy-Duty 750W Mixer Grinder 3 Jars (Urban Edition),Home & Kitchen,2404.54,4,41,SKU-HOM-0036,2026-10-30 19:39:14.442395
+37,Cold Press Masticating Slow Juicer (Urban Edition),Home & Kitchen,5528.12,4,16,SKU-HOM-0037,2026-10-30 19:39:14.449429
+38,Digital Air Fryer 4.5L with Rapid Heat (Urban Edition),Home & Kitchen,3743.91,4,75,SKU-HOM-0038,2026-10-30 19:39:14.456787
+39,Memory Foam Cervical Orthopedic Bed Pillow (Urban Edition),Home & Kitchen,752.22,4,25,SKU-HOM-0039,2026-10-30 19:39:14.463961
+40,Automatic Cordless Water Dispenser Pump (Urban Edition),Home & Kitchen,353.7,4,23,SKU-HOM-0040,2026-10-30 19:39:14.471238
+41,Vitamin C + Hyaluronic Acid Brightening Serum,Beauty & Personal Care,477.98,5,0,SKU-BEA-0041,2026-10-30 19:39:14.478644
+42,Organic Herbal Tea Tree Anti-Dandruff Shampoo (AyurGlow Edition),Beauty & Personal Care,342.37,5,38,SKU-BEA-0042,2026-10-30 19:39:14.486239
+43,SPF 50+ PA++++ Dewy Finish Matte Sunscreen Gel (AyurGlow Edition),Beauty & Personal Care,405.9,5,122,SKU-BEA-0043,2026-10-30 19:39:14.493626
+44,Deep Moisturizing Shea Butter Body Lotion 400ml (AyurGlow Edition),Beauty & Personal Care,324.48,5,4,SKU-BEA-0044,2026-10-30 19:39:14.500934
+45,Salicylic Acid 2% Gentle Foaming Face Wash (AyurGlow Edition),Beauty & Personal Care,341.7,5,28,SKU-BEA-0045,2026-10-30 19:39:14.508767
+46,Ayurvedic Bhringraj Herbal Hair Growth Oil 200ml (AyurGlow Edition),Beauty & Personal Care,435.72,5,0,SKU-BEA-0046,2026-10-30 19:39:14.516379
+47,Matte Waterproof Liquid Lipstick Long-Lasting (AyurGlow Edition),Beauty & Personal Care,359.35,5,90,SKU-BEA-0047,2026-10-30 19:39:14.523823
+48,Exfoliating Himalayan Coffee Walnut Body Scrub (AyurGlow Edition),Beauty & Personal Care,372.3,5,19,SKU-BEA-0048,2026-10-30 19:39:14.531268
+49,Professional Hair Straightener Brush 2-in-1 (AyurGlow Edition),Beauty & Personal Care,1055.8,5,40,SKU-BEA-0049,2026-10-30 19:39:14.538663
+50,Men's Beard Growth Oil & Softener Balm Combo (AyurGlow Edition),Beauty & Personal Care,425.46,5,117,SKU-BEA-0050,2026-10-30 19:39:14.546110
+51,Noise-Cancelling Wireless Headphones Pro,Electronics,2640.79,6,62,SKU-ELE-0051,2026-10-30 19:39:14.553301
+52,Ultra-Slim RGB Mechanical Gaming Keyboard (Bharat Edition),Electronics,2002.01,6,30,SKU-ELE-0052,2026-10-30 19:39:14.560293
+53,High-Speed 65W GaN Fast Charger (Bharat Edition),Electronics,1072.96,6,7,SKU-ELE-0053,2026-10-30 19:39:14.567677
+54,Smart Fitness Band with SpO2 Monitor (Bharat Edition),Electronics,1424.2,6,40,SKU-ELE-0054,2026-10-30 19:39:14.575106
+55,Portable Waterproof Bluetooth Speaker 20W (Bharat Edition),Electronics,2039.48,6,109,SKU-ELE-0055,2026-10-30 19:39:14.582214
+56,Heavy-Duty Braided Type-C to Lightning Cable (Bharat Edition),Electronics,424.08,6,17,SKU-ELE-0056,2026-10-30 19:39:14.589557
+57,Thunderbolt 4 Quad-Display USB-C Hub (Bharat Edition),Electronics,3651.75,6,74,SKU-ELE-0057,2026-10-30 19:39:14.596725
+58,Full HD 1080P Dual-Mic Streamer Webcam (Bharat Edition),Electronics,1599.43,6,0,SKU-ELE-0058,2026-10-30 19:39:14.604931
+59,Ergonomic Vertical Wireless Mouse (Bharat Edition),Electronics,853.24,6,10,SKU-ELE-0059,2026-10-30 19:39:14.612410
+60,Surge Protected 6-Way Extension Board (Bharat Edition),Electronics,741.42,6,80,SKU-ELE-0060,2026-10-30 19:39:14.620183
+61,Pure Cotton Regular Fit Casual Shirt,Fashion,857.81,7,73,SKU-FAS-0061,2026-10-30 19:39:14.629012
+62,Slim-Fit Stretchable Denim Jeans (Vogue Edition),Fashion,1457.44,7,3,SKU-FAS-0062,2026-10-30 19:39:14.636515
+63,Classic Round Neck Graphic T-Shirt (Vogue Edition),Fashion,441.21,7,30,SKU-FAS-0063,2026-10-30 19:39:14.644182
+64,Floral Printed Anarkali Kurta Set (Vogue Edition),Fashion,1616.11,7,56,SKU-FAS-0064,2026-10-30 19:39:14.651824
+65,Banarasi Art Silk Festive Saree with Blouse (Vogue Edition),Fashion,2150.09,7,85,SKU-FAS-0065,2026-10-30 19:39:14.659131
+66,Waterproof Outdoor Hooded Windbreaker (Vogue Edition),Fashion,2024.12,7,13,SKU-FAS-0066,2026-10-30 19:39:14.669051
+67,Genuine Leather Casual Bifold Wallet (Vogue Edition),Fashion,497.36,7,3,SKU-FAS-0067,2026-10-30 19:39:14.676513
+68,Polarized UV400 Aviator Sunglasses (Vogue Edition),Fashion,762.25,7,55,SKU-FAS-0068,2026-10-30 19:39:14.683731
+69,Classic Stainless Steel Analog Watch (Vogue Edition),Fashion,1474.64,7,0,SKU-FAS-0069,2026-10-30 19:39:14.691209
+70,Canvas Casual Everyday Backpack (Vogue Edition),Fashion,939.89,7,60,SKU-FAS-0070,2026-10-30 19:39:14.698485
+71,Ergonomic High-Back Mesh Desk Chair,Home & Kitchen,5723.42,8,6,SKU-HOM-0071,2026-10-30 19:39:14.706295
+72,Non-Stick Induction Granito Cookware 3-Piece (KitchenCraft Edition),Home & Kitchen,2139.73,8,70,SKU-HOM-0072,2026-10-30 19:39:14.714372
+73,Stainless Steel Electric Kettle 1.8 Litre (KitchenCraft Edition),Home & Kitchen,750.72,8,35,SKU-HOM-0073,2026-10-30 19:39:14.724017
+74,Ultrasonic Aromatherapy Essential Oil Diffuser (KitchenCraft Edition),Home & Kitchen,988.38,8,119,SKU-HOM-0074,2026-10-30 19:39:14.733525
+75,Microfiber Soft Touch King Bedsheet with Pillows (KitchenCraft Edition),Home & Kitchen,763.57,8,135,SKU-HOM-0075,2026-10-30 19:39:14.741969
+76,Heavy-Duty 750W Mixer Grinder 3 Jars (KitchenCraft Edition),Home & Kitchen,2392.48,8,71,SKU-HOM-0076,2026-10-30 19:39:14.750073
+77,Cold Press Masticating Slow Juicer (KitchenCraft Edition),Home & Kitchen,5073.12,8,7,SKU-HOM-0077,2026-10-30 19:39:14.758873
+78,Digital Air Fryer 4.5L with Rapid Heat (KitchenCraft Edition),Home & Kitchen,3864.69,8,32,SKU-HOM-0078,2026-10-30 19:39:14.766663
+79,Memory Foam Cervical Orthopedic Bed Pillow (KitchenCraft Edition),Home & Kitchen,764.34,8,75,SKU-HOM-0079,2026-10-30 19:39:14.774640
+80,Automatic Cordless Water Dispenser Pump (KitchenCraft Edition),Home & Kitchen,324.19,8,67,SKU-HOM-0080,2026-10-30 19:39:14.782603
+81,Eco-Friendly Non-Slip 6mm EVA Yoga Mat with Strap,Sports & Fitness,564.49,9,4,SKU-SPO-0081,2026-10-30 19:39:14.790523
+82,Adjustable Rubber Coated Dumbbell Set 10KG (FitNation Edition),Sports & Fitness,1202.15,9,5,SKU-SPO-0082,2026-10-30 19:39:14.800415
+83,Latex Resistance Loop Exercise Bands Set of 5 (FitNation Edition),Sports & Fitness,390.46,9,102,SKU-SPO-0083,2026-10-30 19:39:14.808391
+84,High-Speed Ball Bearing Skipping Jump Rope (FitNation Edition),Sports & Fitness,265.82,9,46,SKU-SPO-0084,2026-10-30 19:39:14.816079
+85,Muscle Massage Roller Stick for Deep Tissue Relief (FitNation Edition),Sports & Fitness,453.27,9,0,SKU-SPO-0085,2026-10-30 19:39:14.824691
+86,Stainless Steel Gym Protein Shaker Bottle 700ml (FitNation Edition),Sports & Fitness,335.41,9,82,SKU-SPO-0086,2026-10-30 19:39:14.832880
+87,Wrist Support Weightlifting Padded Gym Gloves (FitNation Edition),Sports & Fitness,282.53,9,44,SKU-SPO-0087,2026-10-30 19:39:14.842227
+88,Heavy-Duty Pull-Up Doorway Exercise Bar (FitNation Edition),Sports & Fitness,1270.25,9,56,SKU-SPO-0088,2026-10-30 19:39:14.850605
+89,Professional Badminton Racket Carbon Fiber 2-Pack (FitNation Edition),Sports & Fitness,1444.61,9,0,SKU-SPO-0089,2026-10-30 19:39:14.858932
+90,Hydration Hydropack Backpack with 2L Bladder (FitNation Edition),Sports & Fitness,919.47,9,123,SKU-SPO-0090,2026-10-30 19:39:14.868783
+91,Cold-Pressed Virgin Mustard Oil Kachi Ghani 1L,Grocery,205.15,10,38,SKU-GRO-0091,2026-10-30 19:39:14.876951
+92,Organic Raw Wild Forest Honey 500g (PureNature Edition),Grocery,355.7,10,119,SKU-GRO-0092,2026-10-30 19:39:14.886199
+93,Premium California Almonds 500g Pouch (PureNature Edition),Grocery,495.11,10,49,SKU-GRO-0093,2026-10-30 19:39:14.893872
+94,Aromatic Royal Basmati Rice aged 2 Years 5KG (PureNature Edition),Grocery,593.69,10,64,SKU-GRO-0094,2026-10-30 19:39:14.902793
+95,Assam Long-Leaf CTC Premium Black Tea 1KG (PureNature Edition),Grocery,384.33,10,11,SKU-GRO-0095,2026-10-30 19:39:14.911884
+96,Organic Unpolished Toor Dal Arhar 1KG (PureNature Edition),Grocery,192.03,10,54,SKU-GRO-0096,2026-10-30 19:39:14.921267
+97,Roasted Salted Cashew Nuts 250g (PureNature Edition),Grocery,314.22,10,32,SKU-GRO-0097,2026-10-30 19:39:14.929636
+98,Ground Roasted South Indian Filter Coffee 200g (PureNature Edition),Grocery,196.21,10,63,SKU-GRO-0098,2026-10-30 19:39:14.938411
+99,Pure Desi Gir Cow A2 Ghee 500ml (PureNature Edition),Grocery,801.87,10,63,SKU-GRO-0099,2026-10-30 19:39:14.946156
+100,Crunchy Dark Chocolate Peanut Butter 1KG (PureNature Edition),Grocery,386.69,10,57,SKU-GRO-0100,2026-10-30 19:39:14.954745
+101,Noise-Cancelling Wireless Headphones Pro,Electronics,2347.82,11,46,SKU-ELE-0101,2026-10-30 19:39:14.964057
+102,Ultra-Slim RGB Mechanical Gaming Keyboard (NextGen Edition),Electronics,1787.87,11,123,SKU-ELE-0102,2026-10-30 19:39:14.972832
+103,High-Speed 65W GaN Fast Charger (NextGen Edition),Electronics,990.41,11,16,SKU-ELE-0103,2026-10-30 19:39:14.981479
+104,Smart Fitness Band with SpO2 Monitor (NextGen Edition),Electronics,1395.01,11,134,SKU-ELE-0104,2026-10-30 19:39:14.989914
+105,Portable Waterproof Bluetooth Speaker 20W (NextGen Edition),Electronics,1973.06,11,37,SKU-ELE-0105,2026-10-30 19:39:14.998344
+106,Heavy-Duty Braided Type-C to Lightning Cable (NextGen Edition),Electronics,433.0,11,35,SKU-ELE-0106,2026-10-30 19:39:15.007493
+107,Thunderbolt 4 Quad-Display USB-C Hub (NextGen Edition),Electronics,3337.84,11,62,SKU-ELE-0107,2026-10-30 19:39:15.015215
+108,Full HD 1080P Dual-Mic Streamer Webcam (NextGen Edition),Electronics,1627.44,11,15,SKU-ELE-0108,2026-10-30 19:39:15.023095
+109,Ergonomic Vertical Wireless Mouse (NextGen Edition),Electronics,790.89,11,8,SKU-ELE-0109,2026-10-30 19:39:15.030415
+110,Surge Protected 6-Way Extension Board (NextGen Edition),Electronics,664.52,11,60,SKU-ELE-0110,2026-10-30 19:39:15.038108
+111,Pure Cotton Regular Fit Casual Shirt,Fashion,844.51,12,119,SKU-FAS-0111,2026-10-30 19:39:15.045189
+112,Slim-Fit Stretchable Denim Jeans (Royal Edition),Fashion,1438.58,12,133,SKU-FAS-0112,2026-10-30 19:39:15.052662
+113,Classic Round Neck Graphic T-Shirt (Royal Edition),Fashion,506.73,12,62,SKU-FAS-0113,2026-10-30 19:39:15.059706
+114,Floral Printed Anarkali Kurta Set (Royal Edition),Fashion,1676.1,12,68,SKU-FAS-0114,2026-10-30 19:39:15.067363
+115,Banarasi Art Silk Festive Saree with Blouse (Royal Edition),Fashion,2345.59,12,56,SKU-FAS-0115,2026-10-30 19:39:15.074789
+116,Waterproof Outdoor Hooded Windbreaker (Royal Edition),Fashion,2020.82,12,5,SKU-FAS-0116,2026-10-30 19:39:15.082958
+117,Genuine Leather Casual Bifold Wallet (Royal Edition),Fashion,485.99,12,3,SKU-FAS-0117,2026-10-30 19:39:15.090249
+118,Polarized UV400 Aviator Sunglasses (Royal Edition),Fashion,665.33,12,4,SKU-FAS-0118,2026-10-30 19:39:15.098136
+119,Classic Stainless Steel Analog Watch (Royal Edition),Fashion,1494.7,12,54,SKU-FAS-0119,2026-10-30 19:39:15.105316
+120,Canvas Casual Everyday Backpack (Royal Edition),Fashion,913.05,12,7,SKU-FAS-0120,2026-10-30 19:39:15.113002
+121,Noise-Cancelling Wireless Headphones Pro,Electronics,2819.15,13,67,SKU-ELE-0121,2026-10-30 19:39:15.120439
+122,Ultra-Slim RGB Mechanical Gaming Keyboard (Pinnacle Edition),Electronics,2131.72,13,20,SKU-ELE-0122,2026-10-30 19:39:15.128300
+123,High-Speed 65W GaN Fast Charger (Pinnacle Edition),Electronics,1135.69,13,14,SKU-ELE-0123,2026-10-30 19:39:15.135680
+124,Smart Fitness Band with SpO2 Monitor (Pinnacle Edition),Electronics,1686.49,13,72,SKU-ELE-0124,2026-10-30 19:39:15.143601
+125,Portable Waterproof Bluetooth Speaker 20W (Pinnacle Edition),Electronics,1959.05,13,46,SKU-ELE-0125,2026-10-30 19:39:15.151358
+126,Heavy-Duty Braided Type-C to Lightning Cable (Pinnacle Edition),Electronics,387.22,13,37,SKU-ELE-0126,2026-10-30 19:39:15.159451
+127,Thunderbolt 4 Quad-Display USB-C Hub (Pinnacle Edition),Electronics,3489.59,13,66,SKU-ELE-0127,2026-10-30 19:39:15.166605
+128,Full HD 1080P Dual-Mic Streamer Webcam (Pinnacle Edition),Electronics,1531.78,13,54,SKU-ELE-0128,2026-10-30 19:39:15.174323
+129,Ergonomic Vertical Wireless Mouse (Pinnacle Edition),Electronics,885.38,13,116,SKU-ELE-0129,2026-10-30 19:39:15.181818
+130,Surge Protected 6-Way Extension Board (Pinnacle Edition),Electronics,749.67,13,0,SKU-ELE-0130,2026-10-30 19:39:15.188888
+131,Ergonomic High-Back Mesh Desk Chair,Home & Kitchen,5706.31,14,29,SKU-HOM-0131,2026-10-30 19:39:15.196105
+132,Non-Stick Induction Granito Cookware 3-Piece (Modern Edition),Home & Kitchen,1912.66,14,6,SKU-HOM-0132,2026-10-30 19:39:15.203629
+133,Stainless Steel Electric Kettle 1.8 Litre (Modern Edition),Home & Kitchen,820.22,14,36,SKU-HOM-0133,2026-10-30 19:39:15.211594
+134,Ultrasonic Aromatherapy Essential Oil Diffuser (Modern Edition),Home & Kitchen,999.71,14,28,SKU-HOM-0134,2026-10-30 19:39:15.218459
+135,Microfiber Soft Touch King Bedsheet with Pillows (Modern Edition),Home & Kitchen,803.84,14,1,SKU-HOM-0135,2026-10-30 19:39:15.225450
+136,Heavy-Duty 750W Mixer Grinder 3 Jars (Modern Edition),Home & Kitchen,2732.59,14,133,SKU-HOM-0136,2026-10-30 19:39:15.232263
+137,Cold Press Masticating Slow Juicer (Modern Edition),Home & Kitchen,4622.51,14,8,SKU-HOM-0137,2026-10-30 19:39:15.239537
+138,Digital Air Fryer 4.5L with Rapid Heat (Modern Edition),Home & Kitchen,3757.84,14,44,SKU-HOM-0138,2026-10-30 19:39:15.246532
+139,Memory Foam Cervical Orthopedic Bed Pillow (Modern Edition),Home & Kitchen,863.62,14,53,SKU-HOM-0139,2026-10-30 19:39:15.253634
+140,Automatic Cordless Water Dispenser Pump (Modern Edition),Home & Kitchen,369.82,14,62,SKU-HOM-0140,2026-10-30 19:39:15.260653
+141,Vitamin C + Hyaluronic Acid Brightening Serum,Beauty & Personal Care,553.11,15,117,SKU-BEA-0141,2026-10-30 19:39:15.267865
+142,Organic Herbal Tea Tree Anti-Dandruff Shampoo (Glamour Edition),Beauty & Personal Care,323.14,15,7,SKU-BEA-0142,2026-10-30 19:39:15.274869
+143,SPF 50+ PA++++ Dewy Finish Matte Sunscreen Gel (Glamour Edition),Beauty & Personal Care,453.48,15,8,SKU-BEA-0143,2026-10-30 19:39:15.282048
+144,Deep Moisturizing Shea Butter Body Lotion 400ml (Glamour Edition),Beauty & Personal Care,282.09,15,32,SKU-BEA-0144,2026-10-30 19:39:15.289446
+145,Salicylic Acid 2% Gentle Foaming Face Wash (Glamour Edition),Beauty & Personal Care,329.84,15,35,SKU-BEA-0145,2026-10-30 19:39:15.296550
+146,Ayurvedic Bhringraj Herbal Hair Growth Oil 200ml (Glamour Edition),Beauty & Personal Care,415.97,15,45,SKU-BEA-0146,2026-10-30 19:39:15.304090
+147,Matte Waterproof Liquid Lipstick Long-Lasting (Glamour Edition),Beauty & Personal Care,373.06,15,0,SKU-BEA-0147,2026-10-30 19:39:15.311542
+148,Exfoliating Himalayan Coffee Walnut Body Scrub (Glamour Edition),Beauty & Personal Care,442.55,15,0,SKU-BEA-0148,2026-10-30 19:39:15.318661
+149,Professional Hair Straightener Brush 2-in-1 (Glamour Edition),Beauty & Personal Care,1065.12,15,42,SKU-BEA-0149,2026-10-30 19:39:15.325619
+150,Men's Beard Growth Oil & Softener Balm Combo (Glamour Edition),Beauty & Personal Care,431.27,15,56,SKU-BEA-0150,2026-10-30 19:39:15.332909
+151,Neo 5G Smartphone (8GB/128GB AMOLED),Mobiles,21010.72,16,49,SKU-MOB-0151,2026-10-30 19:39:15.339918
+152,Prime Pro 5G Flagship (12GB/256GB) (Elite Edition),Mobiles,33664.99,16,37,SKU-MOB-0152,2026-10-30 19:39:15.347363
+153,Starlight Ultra Smartphone (6GB/128GB) (Elite Edition),Mobiles,15063.45,16,30,SKU-MOB-0153,2026-10-30 19:39:15.354492
+154,Shockproof Military-Grade Armor Case (Elite Edition),Mobiles,391.85,16,10,SKU-MOB-0154,2026-10-30 19:39:15.362044
+155,9H Tempered Glass Screen Protector 2-Pack (Elite Edition),Mobiles,211.01,16,44,SKU-MOB-0155,2026-10-30 19:39:15.369289
+156,Magnetic Wireless Car Phone Mount Charger (Elite Edition),Mobiles,1449.32,16,6,SKU-MOB-0156,2026-10-30 19:39:15.376600
+157,Ultra-Compact 10000mAh Power Bank 22.5W (Elite Edition),Mobiles,1323.1,16,9,SKU-MOB-0157,2026-10-30 19:39:15.383653
+158,Fast Wireless Charging Pad 15W (Elite Edition),Mobiles,942.0,16,20,SKU-MOB-0158,2026-10-30 19:39:15.390991
+159,OTG Dual USB 3.2 Flash Drive 128GB (Elite Edition),Mobiles,876.99,16,73,SKU-MOB-0159,2026-10-30 19:39:15.398377
+160,Selfie Stick Tripod with Bluetooth Shutter (Elite Edition),Mobiles,584.19,16,48,SKU-MOB-0160,2026-10-30 19:39:15.405562
+161,Men's Formal Oxford Cotton Shirt,Men's Clothing,991.03,17,0,SKU-MEN-0161,2026-10-30 19:39:15.412867
+162,Men's Cotton Chino Trousers Khaki (IndoFab Edition),Men's Clothing,1214.6,17,12,SKU-MEN-0162,2026-10-30 19:39:15.420011
+163,Men's Casual Linen Blend Kurta (IndoFab Edition),Men's Clothing,822.05,17,67,SKU-MEN-0163,2026-10-30 19:39:15.427368
+164,Men's Athletic Quick-Dry Gym Trackpants (IndoFab Edition),Men's Clothing,679.24,17,37,SKU-MEN-0164,2026-10-30 19:39:15.434451
+165,Men's Cotton Boxer Shorts Pack of 3 (IndoFab Edition),Men's Clothing,494.27,17,6,SKU-MEN-0165,2026-10-30 19:39:15.441883
+166,Men's Reversible Formal Faux-Leather Belt (IndoFab Edition),Men's Clothing,425.43,17,27,SKU-MEN-0166,2026-10-30 19:39:15.449041
+167,Men's Breathable Polo Collar T-Shirt (IndoFab Edition),Men's Clothing,580.89,17,73,SKU-MEN-0167,2026-10-30 19:39:15.456212
+168,Men's Cotton Cargo Joggers 6-Pockets (IndoFab Edition),Men's Clothing,1455.89,17,4,SKU-MEN-0168,2026-10-30 19:39:15.463393
+169,Men's Nehru Jacket Festive Waistcoat (IndoFab Edition),Men's Clothing,1283.59,17,17,SKU-MEN-0169,2026-10-30 19:39:15.470694
+170,Men's Sports Compression Active Tights (IndoFab Edition),Men's Clothing,648.62,17,1,SKU-MEN-0170,2026-10-30 19:39:15.478538
+171,Cold-Pressed Virgin Mustard Oil Kachi Ghani 1L,Grocery,197.93,18,55,SKU-GRO-0171,2026-10-30 19:39:15.486867
+172,Organic Raw Wild Forest Honey 500g (Shree Edition),Grocery,390.79,18,49,SKU-GRO-0172,2026-10-30 19:39:15.494148
+173,Premium California Almonds 500g Pouch (Shree Edition),Grocery,491.71,18,28,SKU-GRO-0173,2026-10-30 19:39:15.501406
+174,Aromatic Royal Basmati Rice aged 2 Years 5KG (Shree Edition),Grocery,684.1,18,2,SKU-GRO-0174,2026-10-30 19:39:15.508703
+175,Assam Long-Leaf CTC Premium Black Tea 1KG (Shree Edition),Grocery,431.43,18,49,SKU-GRO-0175,2026-10-30 19:39:15.516415
+176,Organic Unpolished Toor Dal Arhar 1KG (Shree Edition),Grocery,179.95,18,0,SKU-GRO-0176,2026-10-30 19:39:15.523847
+177,Roasted Salted Cashew Nuts 250g (Shree Edition),Grocery,330.86,18,95,SKU-GRO-0177,2026-10-30 19:39:15.531111
+178,Ground Roasted South Indian Filter Coffee 200g (Shree Edition),Grocery,188.5,18,63,SKU-GRO-0178,2026-10-30 19:39:15.538374
+179,Pure Desi Gir Cow A2 Ghee 500ml (Shree Edition),Grocery,825.3,18,13,SKU-GRO-0179,2026-10-30 19:39:15.545493
+180,Crunchy Dark Chocolate Peanut Butter 1KG (Shree Edition),Grocery,408.42,18,52,SKU-GRO-0180,2026-10-30 19:39:15.553096
+181,Eco-Friendly Non-Slip 6mm EVA Yoga Mat with Strap,Sports & Fitness,494.13,19,72,SKU-SPO-0181,2026-10-30 19:39:15.560230
+182,Adjustable Rubber Coated Dumbbell Set 10KG (ProActive Edition),Sports & Fitness,1224.73,19,31,SKU-SPO-0182,2026-10-30 19:39:15.567579
+183,Latex Resistance Loop Exercise Bands Set of 5 (ProActive Edition),Sports & Fitness,374.09,19,9,SKU-SPO-0183,2026-10-30 19:39:15.574887
+184,High-Speed Ball Bearing Skipping Jump Rope (ProActive Edition),Sports & Fitness,233.38,19,0,SKU-SPO-0184,2026-10-30 19:39:15.582603
+185,Muscle Massage Roller Stick for Deep Tissue Relief (ProActive Edition),Sports & Fitness,430.34,19,27,SKU-SPO-0185,2026-10-30 19:39:15.589940
+186,Stainless Steel Gym Protein Shaker Bottle 700ml (ProActive Edition),Sports & Fitness,344.21,19,2,SKU-SPO-0186,2026-10-30 19:39:15.597653
+187,Wrist Support Weightlifting Padded Gym Gloves (ProActive Edition),Sports & Fitness,322.35,19,122,SKU-SPO-0187,2026-10-30 19:39:15.604948
+188,Heavy-Duty Pull-Up Doorway Exercise Bar (ProActive Edition),Sports & Fitness,1324.77,19,4,SKU-SPO-0188,2026-10-30 19:39:15.613364
+189,Professional Badminton Racket Carbon Fiber 2-Pack (ProActive Edition),Sports & Fitness,1602.37,19,84,SKU-SPO-0189,2026-10-30 19:39:15.621972
+190,Hydration Hydropack Backpack with 2L Bladder (ProActive Edition),Sports & Fitness,932.78,19,72,SKU-SPO-0190,2026-10-30 19:39:15.631148
+191,Data Structures & Algorithms Made Easy in Python,Books,664.64,20,87,SKU-BOO-0191,2026-10-30 19:39:15.639917
+192,Modern Cloud Architecture with Microservices & Docker (Scholars Edition),Books,667.04,20,5,SKU-BOO-0192,2026-10-30 19:39:15.648663
+193,Atomic Habits for High-Performance Success (Scholars Edition),Books,464.76,20,51,SKU-BOO-0193,2026-10-30 19:39:15.657251
+194,The Psychology of Wealth & Financial Freedom (Scholars Edition),Books,370.74,20,55,SKU-BOO-0194,2026-10-30 19:39:15.666100
+195,Complete Guide to Machine Learning & Deep Learning (Scholars Edition),Books,781.09,20,0,SKU-BOO-0195,2026-10-30 19:39:15.675096
+196,Indian Polity & Governance for Competitive Exams (Scholars Edition),Books,526.46,20,0,SKU-BOO-0196,2026-10-30 19:39:15.683855
+197,FastAPI & React Microservices Engineering Blueprint (Scholars Edition),Books,735.72,20,45,SKU-BOO-0197,2026-10-30 19:39:15.692239
+198,Clean Code in Enterprise Systems (Indian Edition) (Scholars Edition),Books,570.61,20,28,SKU-BOO-0198,2026-10-30 19:39:15.701090
+199,Database Internals & Distributed Systems Design (Scholars Edition),Books,975.75,20,25,SKU-BOO-0199,2026-10-30 19:39:15.710134
+200,Ancient Indian Heritage & Architectural Wonders (Scholars Edition),Books,513.02,20,59,SKU-BOO-0200,2026-10-30 19:39:15.719083
+201,UltraBook 14-inch Thin & Light Laptop Core i5,Laptops,51922.24,21,12,SKU-LAP-0201,2026-10-30 19:39:15.729040
+202,Gaming Beast 15.6-inch RTX 4050 16GB RAM (Quantum Edition),Laptops,77545.81,21,72,SKU-LAP-0202,2026-10-30 19:39:15.739590
+203,Student Study Laptop 15.6-inch Quad-Core (Quantum Edition),Laptops,31751.44,21,0,SKU-LAP-0203,2026-10-30 19:39:15.748355
+204,Water-Resistant Neoprene Laptop Sleeve (Quantum Edition),Laptops,495.18,21,14,SKU-LAP-0204,2026-10-30 19:39:15.757638
+205,Adjustable Aluminum Ergonomic Laptop Stand (Quantum Edition),Laptops,829.65,21,109,SKU-LAP-0205,2026-10-30 19:39:15.767307
+206,Silent Dual-Fan Cooling Pad for Laptops (Quantum Edition),Laptops,1014.03,21,10,SKU-LAP-0206,2026-10-30 19:39:15.776180
+207,USB-C to HDMI 4K 60Hz Display Adapter (Quantum Edition),Laptops,764.69,21,26,SKU-LAP-0207,2026-10-30 19:39:15.785617
+208,Wireless Numeric Keypad for Accountants (Quantum Edition),Laptops,587.87,21,8,SKU-LAP-0208,2026-10-30 19:39:15.795077
+209,Anti-Glare Blue Light Filter Screen Protector (Quantum Edition),Laptops,504.05,21,75,SKU-LAP-0209,2026-10-30 19:39:15.804289
+210,Universal 100W Multi-Pin Laptop Adapter (Quantum Edition),Laptops,2022.25,21,34,SKU-LAP-0210,2026-10-30 19:39:15.813498
+211,Women's Straight Cotton Kurti Mustard Yellow,Women's Clothing,731.64,22,27,SKU-WOM-0211,2026-10-30 19:39:15.823117
+212,Women's A-Line Western Midi Dress (Zaveri Edition),Women's Clothing,1147.07,22,140,SKU-WOM-0212,2026-10-30 19:39:15.833206
+213,Women's High-Rise Denim Skinny Jeans (Zaveri Edition),Women's Clothing,1135.47,22,65,SKU-WOM-0213,2026-10-30 19:39:15.843461
+214,Women's Chanderi Silk Zari Border Saree (Zaveri Edition),Women's Clothing,1874.56,22,73,SKU-WOM-0214,2026-10-30 19:39:15.852808
+215,Women's Rayon Palazzo Pants Off-White (Zaveri Edition),Women's Clothing,514.46,22,55,SKU-WOM-0215,2026-10-30 19:39:15.862943
+216,Women's Seamless Padded Sports Bra (Zaveri Edition),Women's Clothing,428.02,22,17,SKU-WOM-0216,2026-10-30 19:39:15.872937
+217,Women's Woolen Cardigan Button-Down Sweater (Zaveri Edition),Women's Clothing,1199.72,22,5,SKU-WOM-0217,2026-10-30 19:39:15.882775
+218,Women's Chikankari Embroidered Tunic (Zaveri Edition),Women's Clothing,986.85,22,67,SKU-WOM-0218,2026-10-30 19:39:15.891574
+219,Women's Cotton Nightwear Top & Pyjama Set (Zaveri Edition),Women's Clothing,828.39,22,63,SKU-WOM-0219,2026-10-30 19:39:15.900782
+220,Women's Satin Formal Office Blouse (Zaveri Edition),Women's Clothing,641.65,22,75,SKU-WOM-0220,2026-10-30 19:39:15.909549
+221,Engineered Wood Multipurpose Study Computer Table,Furniture,3147.83,23,38,SKU-FUR-0221,2026-10-30 19:39:15.918256
+222,Solid Sheesham Wood 4-Seater Dining Table (ComfortZone Edition),Furniture,13609.19,23,40,SKU-FUR-0222,2026-10-30 19:39:15.927108
+223,Foldable Recliner Relaxation Balcony Chair (ComfortZone Edition),Furniture,2462.9,23,116,SKU-FUR-0223,2026-10-30 19:39:15.935532
+224,Multi-Tier Wooden Shoe Rack Cabinet with Seat (ComfortZone Edition),Furniture,1914.35,23,22,SKU-FUR-0224,2026-10-30 19:39:15.944535
+225,Modular 3-Door Wardrobe with Mirror White (ComfortZone Edition),Furniture,8937.63,23,44,SKU-FUR-0225,2026-10-30 19:39:15.953820
+226,Fabric Upholstered 2-Seater Living Room Sofa (ComfortZone Edition),Furniture,11472.2,23,46,SKU-FUR-0226,2026-10-30 19:39:15.962940
+227,Space-Saving Wall Mounted Drop-Leaf Table (ComfortZone Edition),Furniture,1483.34,23,11,SKU-FUR-0227,2026-10-30 19:39:15.971518
+228,Metal Frame Queen Bed with Headboard (ComfortZone Edition),Furniture,8399.11,23,26,SKU-FUR-0228,2026-10-30 19:39:15.981386
+229,Floating TV Entertainment Wall Unit (ComfortZone Edition),Furniture,2601.38,23,41,SKU-FUR-0229,2026-10-30 19:39:15.990182
+230,Stackable Plastic Armchairs Pack of 2 (ComfortZone Edition),Furniture,1343.26,23,110,SKU-FUR-0230,2026-10-30 19:39:15.998969
+231,Cold-Pressed Virgin Mustard Oil Kachi Ghani 1L,Grocery,207.85,24,13,SKU-GRO-0231,2026-10-30 19:39:16.009328
+232,Organic Raw Wild Forest Honey 500g (EverFresh Edition),Grocery,373.24,24,49,SKU-GRO-0232,2026-10-30 19:39:16.017953
+233,Premium California Almonds 500g Pouch (EverFresh Edition),Grocery,568.59,24,75,SKU-GRO-0233,2026-10-30 19:39:16.026838
+234,Aromatic Royal Basmati Rice aged 2 Years 5KG (EverFresh Edition),Grocery,625.62,24,55,SKU-GRO-0234,2026-10-30 19:39:16.036264
+235,Assam Long-Leaf CTC Premium Black Tea 1KG (EverFresh Edition),Grocery,419.11,24,2,SKU-GRO-0235,2026-10-30 19:39:16.045494
+236,Organic Unpolished Toor Dal Arhar 1KG (EverFresh Edition),Grocery,172.35,24,0,SKU-GRO-0236,2026-10-30 19:39:16.054077
+237,Roasted Salted Cashew Nuts 250g (EverFresh Edition),Grocery,305.59,24,15,SKU-GRO-0237,2026-10-30 19:39:16.063010
+238,Ground Roasted South Indian Filter Coffee 200g (EverFresh Edition),Grocery,197.93,24,0,SKU-GRO-0238,2026-10-30 19:39:16.072502
+239,Pure Desi Gir Cow A2 Ghee 500ml (EverFresh Edition),Grocery,753.65,24,14,SKU-GRO-0239,2026-10-30 19:39:16.080977
+240,Crunchy Dark Chocolate Peanut Butter 1KG (EverFresh Edition),Grocery,419.02,24,26,SKU-GRO-0240,2026-10-30 19:39:16.091170
+241,Vitamin C + Hyaluronic Acid Brightening Serum,Beauty & Personal Care,468.14,25,68,SKU-BEA-0241,2026-10-30 19:39:16.100001
+242,Organic Herbal Tea Tree Anti-Dandruff Shampoo (VelvetSkin Edition),Beauty & Personal Care,340.41,25,94,SKU-BEA-0242,2026-10-30 19:39:16.108751
+243,SPF 50+ PA++++ Dewy Finish Matte Sunscreen Gel (VelvetSkin Edition),Beauty & Personal Care,409.4,25,11,SKU-BEA-0243,2026-10-30 19:39:16.118092
+244,Deep Moisturizing Shea Butter Body Lotion 400ml (VelvetSkin Edition),Beauty & Personal Care,275.73,25,60,SKU-BEA-0244,2026-10-30 19:39:16.128314
+245,Salicylic Acid 2% Gentle Foaming Face Wash (VelvetSkin Edition),Beauty & Personal Care,312.67,25,0,SKU-BEA-0245,2026-10-30 19:39:16.137591
+246,Ayurvedic Bhringraj Herbal Hair Growth Oil 200ml (VelvetSkin Edition),Beauty & Personal Care,457.72,25,12,SKU-BEA-0246,2026-10-30 19:39:16.147419
+247,Matte Waterproof Liquid Lipstick Long-Lasting (VelvetSkin Edition),Beauty & Personal Care,341.16,25,39,SKU-BEA-0247,2026-10-30 19:39:16.157993
+248,Exfoliating Himalayan Coffee Walnut Body Scrub (VelvetSkin Edition),Beauty & Personal Care,445.39,25,0,SKU-BEA-0248,2026-10-30 19:39:16.167764
+249,Professional Hair Straightener Brush 2-in-1 (VelvetSkin Edition),Beauty & Personal Care,1050.49,25,18,SKU-BEA-0249,2026-10-30 19:39:16.177454
+250,Men's Beard Growth Oil & Softener Balm Combo (VelvetSkin Edition),Beauty & Personal Care,514.07,25,17,SKU-BEA-0250,2026-10-30 19:39:16.187725
+251,Noise-Cancelling Wireless Headphones Pro,Accessories,2624.36,26,71,SKU-ACC-0251,2026-10-30 19:39:16.197733
+252,Ultra-Slim RGB Mechanical Gaming Keyboard (AudioVibe Edition),Accessories,2011.94,26,66,SKU-ACC-0252,2026-10-30 19:39:16.207414
+253,High-Speed 65W GaN Fast Charger (AudioVibe Edition),Accessories,1102.63,26,31,SKU-ACC-0253,2026-10-30 19:39:16.218796
+254,Smart Fitness Band with SpO2 Monitor (AudioVibe Edition),Accessories,1598.57,26,55,SKU-ACC-0254,2026-10-30 19:39:16.229111
+255,Portable Waterproof Bluetooth Speaker 20W (AudioVibe Edition),Accessories,1695.28,26,32,SKU-ACC-0255,2026-10-30 19:39:16.239572
+256,Heavy-Duty Braided Type-C to Lightning Cable (AudioVibe Edition),Accessories,439.45,26,0,SKU-ACC-0256,2026-10-30 19:39:16.250257
+257,Thunderbolt 4 Quad-Display USB-C Hub (AudioVibe Edition),Accessories,3808.46,26,0,SKU-ACC-0257,2026-10-30 19:39:16.262014
+258,Full HD 1080P Dual-Mic Streamer Webcam (AudioVibe Edition),Accessories,1591.24,26,23,SKU-ACC-0258,2026-10-30 19:39:16.272412
+259,Ergonomic Vertical Wireless Mouse (AudioVibe Edition),Accessories,934.66,26,50,SKU-ACC-0259,2026-10-30 19:39:16.283779
+260,Surge Protected 6-Way Extension Board (AudioVibe Edition),Accessories,723.75,26,5,SKU-ACC-0260,2026-10-30 19:39:16.295439
+261,Air-Cushioned Lightweight Running Shoes,Footwear,1807.24,27,127,SKU-FOO-0261,2026-10-30 19:39:16.305564
+262,Men's Derby Lace-Up Formal Leather Shoes (StepUp Edition),Footwear,2127.24,27,24,SKU-FOO-0262,2026-10-30 19:39:16.317963
+263,Women's Pointed Block Heel Pumps (StepUp Edition),Footwear,1237.13,27,134,SKU-FOO-0263,2026-10-30 19:39:16.329562
+264,Unisex Eva Lightweight Slip-On Slides (StepUp Edition),Footwear,440.92,27,20,SKU-FOO-0264,2026-10-30 19:39:16.339789
+265,Breathable Mesh Walking Sports Sneakers (StepUp Edition),Footwear,979.84,27,11,SKU-FOO-0265,2026-10-30 19:39:16.349385
+266,Traditional Kolhapuri Handcrafted Chappals (StepUp Edition),Footwear,763.5,27,14,SKU-FOO-0266,2026-10-30 19:39:16.359470
+267,Waterproof Rubber Sole Trekking Boots (StepUp Edition),Footwear,2666.1,27,45,SKU-FOO-0267,2026-10-30 19:39:16.369579
+268,Women's Casual Canvas Slip-On Loafers (StepUp Edition),Footwear,739.68,27,100,SKU-FOO-0268,2026-10-30 19:39:16.380911
+269,Memory Foam Orthopedic Comfort Flip-Flops (StepUp Edition),Footwear,564.12,27,8,SKU-FOO-0269,2026-10-30 19:39:16.390678
+270,Kids Light-Up Active Sports Shoes (StepUp Edition),Footwear,902.2,27,2,SKU-FOO-0270,2026-10-30 19:39:16.400108
+271,Tri-Ply Stainless Steel Pressure Cooker 3 Litre,Kitchen Products,1712.92,28,111,SKU-KIT-0271,2026-10-30 19:39:16.410085
+272,Hard Anodized Roti Tawa 25cm Non-Toxic (ChefElite Edition),Kitchen Products,567.08,28,5,SKU-KIT-0272,2026-10-30 19:39:16.419571
+273,Multi-Purpose Vegetable Chopper & Slicer 900ml (ChefElite Edition),Kitchen Products,301.81,28,51,SKU-KIT-0273,2026-10-30 19:39:16.428331
+274,Borosilicate Glass Food Storage Containers Set of 3 (ChefElite Edition),Kitchen Products,737.51,28,61,SKU-KIT-0274,2026-10-30 19:39:16.438021
+275,Silicone Heat-Resistant Spatula & Spoon Set (ChefElite Edition),Kitchen Products,329.03,28,37,SKU-KIT-0275,2026-10-30 19:39:16.447788
+276,Stainless Steel Insulated Water Bottle 1 Litre (ChefElite Edition),Kitchen Products,462.83,28,48,SKU-KIT-0276,2026-10-30 19:39:16.456777
+277,Knife Block Set High-Carbon Steel 6-Piece (ChefElite Edition),Kitchen Products,1023.63,28,75,SKU-KIT-0277,2026-10-30 19:39:16.466053
+278,Rotary Dish Drying Rack with Drainer Tray (ChefElite Edition),Kitchen Products,753.32,28,20,SKU-KIT-0278,2026-10-30 19:39:16.475707
+279,Compact Sandwich & Panini Griller 750W (ChefElite Edition),Kitchen Products,1010.56,28,8,SKU-KIT-0279,2026-10-30 19:39:16.485344
+280,Manual Citrus Juicer & Squeezer Heavy Metal (ChefElite Edition),Kitchen Products,375.49,28,1,SKU-KIT-0280,2026-10-30 19:39:16.495199
+281,Eco-Friendly Non-Slip 6mm EVA Yoga Mat with Strap,Sports & Fitness,464.88,29,10,SKU-SPO-0281,2026-10-30 19:39:16.504375
+282,Adjustable Rubber Coated Dumbbell Set 10KG (ActiveLife Edition),Sports & Fitness,1256.39,29,38,SKU-SPO-0282,2026-10-30 19:39:16.514012
+283,Latex Resistance Loop Exercise Bands Set of 5 (ActiveLife Edition),Sports & Fitness,368.15,29,36,SKU-SPO-0283,2026-10-30 19:39:16.524167
+284,High-Speed Ball Bearing Skipping Jump Rope (ActiveLife Edition),Sports & Fitness,273.43,29,25,SKU-SPO-0284,2026-10-30 19:39:16.534285
+285,Muscle Massage Roller Stick for Deep Tissue Relief (ActiveLife Edition),Sports & Fitness,392.53,29,114,SKU-SPO-0285,2026-10-30 19:39:16.544356
+286,Stainless Steel Gym Protein Shaker Bottle 700ml (ActiveLife Edition),Sports & Fitness,341.2,29,3,SKU-SPO-0286,2026-10-30 19:39:16.553369
+287,Wrist Support Weightlifting Padded Gym Gloves (ActiveLife Edition),Sports & Fitness,276.1,29,52,SKU-SPO-0287,2026-10-30 19:39:16.563179
+288,Heavy-Duty Pull-Up Doorway Exercise Bar (ActiveLife Edition),Sports & Fitness,1192.37,29,3,SKU-SPO-0288,2026-10-30 19:39:16.572625
+289,Professional Badminton Racket Carbon Fiber 2-Pack (ActiveLife Edition),Sports & Fitness,1634.8,29,43,SKU-SPO-0289,2026-10-30 19:39:16.581683
+290,Hydration Hydropack Backpack with 2L Bladder (ActiveLife Edition),Sports & Fitness,1022.08,29,31,SKU-SPO-0290,2026-10-30 19:39:16.591162
+291,Data Structures & Algorithms Made Easy in Python,Books,613.35,30,2,SKU-BOO-0291,2026-10-30 19:39:16.600346
+292,Modern Cloud Architecture with Microservices & Docker (PrimePage Edition),Books,705.64,30,99,SKU-BOO-0292,2026-10-30 19:39:16.610443
+293,Atomic Habits for High-Performance Success (PrimePage Edition),Books,460.38,30,110,SKU-BOO-0293,2026-10-30 19:39:16.622107
+294,The Psychology of Wealth & Financial Freedom (PrimePage Edition),Books,444.84,30,44,SKU-BOO-0294,2026-10-30 19:39:16.635538
+295,Complete Guide to Machine Learning & Deep Learning (PrimePage Edition),Books,866.0,30,33,SKU-BOO-0295,2026-10-30 19:39:16.645408
+296,Indian Polity & Governance for Competitive Exams (PrimePage Edition),Books,528.89,30,0,SKU-BOO-0296,2026-10-30 19:39:16.655074
+297,FastAPI & React Microservices Engineering Blueprint (PrimePage Edition),Books,743.45,30,41,SKU-BOO-0297,2026-10-30 19:39:16.664233
+298,Clean Code in Enterprise Systems (Indian Edition) (PrimePage Edition),Books,630.67,30,52,SKU-BOO-0298,2026-10-30 19:39:16.673913
+299,Database Internals & Distributed Systems Design (PrimePage Edition),Books,899.3,30,0,SKU-BOO-0299,2026-10-30 19:39:16.683260
+300,Ancient Indian Heritage & Architectural Wonders (PrimePage Edition),Books,556.96,30,71,SKU-BOO-0300,2026-10-30 19:39:16.693140
+301,Noise-Cancelling Wireless Headphones Pro,Electronics,2796.54,31,41,SKU-ELE-0301,2026-10-30 19:39:16.702714
+302,Ultra-Slim RGB Mechanical Gaming Keyboard (Titanium Edition),Electronics,1895.12,31,66,SKU-ELE-0302,2026-10-30 19:39:16.711952
+303,High-Speed 65W GaN Fast Charger (Titanium Edition),Electronics,940.93,31,40,SKU-ELE-0303,2026-10-30 19:39:16.721563
+304,Smart Fitness Band with SpO2 Monitor (Titanium Edition),Electronics,1707.85,31,24,SKU-ELE-0304,2026-10-30 19:39:16.731883
+305,Portable Waterproof Bluetooth Speaker 20W (Titanium Edition),Electronics,1692.83,31,0,SKU-ELE-0305,2026-10-30 19:39:16.740932
+306,Heavy-Duty Braided Type-C to Lightning Cable (Titanium Edition),Electronics,375.94,31,50,SKU-ELE-0306,2026-10-30 19:39:16.750933
+307,Thunderbolt 4 Quad-Display USB-C Hub (Titanium Edition),Electronics,3267.35,31,101,SKU-ELE-0307,2026-10-30 19:39:16.760645
+308,Full HD 1080P Dual-Mic Streamer Webcam (Titanium Edition),Electronics,1717.49,31,75,SKU-ELE-0308,2026-10-30 19:39:16.770082
+309,Ergonomic Vertical Wireless Mouse (Titanium Edition),Electronics,959.92,31,0,SKU-ELE-0309,2026-10-30 19:39:16.780160
+310,Surge Protected 6-Way Extension Board (Titanium Edition),Electronics,739.61,31,57,SKU-ELE-0310,2026-10-30 19:39:16.789171
+311,Pure Cotton Regular Fit Casual Shirt,Fashion,774.18,32,69,SKU-FAS-0311,2026-10-30 19:39:16.799290
+312,Slim-Fit Stretchable Denim Jeans (Kalamkari Edition),Fashion,1227.41,32,24,SKU-FAS-0312,2026-10-30 19:39:16.809980
+313,Classic Round Neck Graphic T-Shirt (Kalamkari Edition),Fashion,491.83,32,74,SKU-FAS-0313,2026-10-30 19:39:16.819367
+314,Floral Printed Anarkali Kurta Set (Kalamkari Edition),Fashion,1572.48,32,64,SKU-FAS-0314,2026-10-30 19:39:16.829220
+315,Banarasi Art Silk Festive Saree with Blouse (Kalamkari Edition),Fashion,2364.46,32,67,SKU-FAS-0315,2026-10-30 19:39:16.838353
+316,Waterproof Outdoor Hooded Windbreaker (Kalamkari Edition),Fashion,2109.36,32,5,SKU-FAS-0316,2026-10-30 19:39:16.848715
+317,Genuine Leather Casual Bifold Wallet (Kalamkari Edition),Fashion,539.73,32,6,SKU-FAS-0317,2026-10-30 19:39:16.858303
+318,Polarized UV400 Aviator Sunglasses (Kalamkari Edition),Fashion,644.06,32,67,SKU-FAS-0318,2026-10-30 19:39:16.867641
+319,Classic Stainless Steel Analog Watch (Kalamkari Edition),Fashion,1618.48,32,2,SKU-FAS-0319,2026-10-30 19:39:16.877346
+320,Canvas Casual Everyday Backpack (Kalamkari Edition),Fashion,981.35,32,8,SKU-FAS-0320,2026-10-30 19:39:16.887561
+321,Energy-Saving BLDC Inverter Ceiling Fan with Remote,Home Appliances,2894.38,33,66,SKU-HOM-0321,2026-10-30 19:39:16.897008
+322,HEPA True Filter Room Air Purifier CADR 250 (CleanNest Edition),Home Appliances,7954.53,33,22,SKU-HOM-0322,2026-10-30 19:39:16.906441
+323,Compact 20L Solo Microwave Oven 800W (CleanNest Edition),Home Appliances,4780.07,33,30,SKU-HOM-0323,2026-10-30 19:39:16.915134
+324,Dry Iron with Non-Stick American Teflon Soleplate (CleanNest Edition),Home Appliances,612.13,33,53,SKU-HOM-0324,2026-10-30 19:39:16.924247
+325,Handheld Garment Steam Iron 1200W (CleanNest Edition),Home Appliances,1521.88,33,4,SKU-HOM-0325,2026-10-30 19:39:16.932855
+326,High-Pressure Car Washer Spray Machine 1600W (CleanNest Edition),Home Appliances,3996.56,33,0,SKU-HOM-0326,2026-10-30 19:39:16.941565
+327,Smart Wi-Fi Robot Vacuum Cleaner & Mop (CleanNest Edition),Home Appliances,15477.85,33,27,SKU-HOM-0327,2026-10-30 19:39:16.950205
+328,Insect Mosquito Electronic Trapper Lamp (CleanNest Edition),Home Appliances,504.44,33,26,SKU-HOM-0328,2026-10-30 19:39:16.959154
+329,Under-Sink Water Purifier RO+UV+TDS Mineral (CleanNest Edition),Home Appliances,7913.62,33,5,SKU-HOM-0329,2026-10-30 19:39:16.968314
+330,Rechargeable Portable Handheld Desk Fan (CleanNest Edition),Home Appliances,492.3,33,0,SKU-HOM-0330,2026-10-30 19:39:16.977095
+331,Vitamin C + Hyaluronic Acid Brightening Serum,Beauty & Personal Care,544.81,34,9,SKU-BEA-0331,2026-10-30 19:39:16.986242
+332,Organic Herbal Tea Tree Anti-Dandruff Shampoo (HerbalRoots Edition),Beauty & Personal Care,377.56,34,21,SKU-BEA-0332,2026-10-30 19:39:16.994839
+333,SPF 50+ PA++++ Dewy Finish Matte Sunscreen Gel (HerbalRoots Edition),Beauty & Personal Care,403.52,34,21,SKU-BEA-0333,2026-10-30 19:39:17.004022
+334,Deep Moisturizing Shea Butter Body Lotion 400ml (HerbalRoots Edition),Beauty & Personal Care,306.7,34,0,SKU-BEA-0334,2026-10-30 19:39:17.013064
+335,Salicylic Acid 2% Gentle Foaming Face Wash (HerbalRoots Edition),Beauty & Personal Care,314.67,34,38,SKU-BEA-0335,2026-10-30 19:39:17.022037
+336,Ayurvedic Bhringraj Herbal Hair Growth Oil 200ml (HerbalRoots Edition),Beauty & Personal Care,377.65,34,0,SKU-BEA-0336,2026-10-30 19:39:17.031221
+337,Matte Waterproof Liquid Lipstick Long-Lasting (HerbalRoots Edition),Beauty & Personal Care,334.88,34,133,SKU-BEA-0337,2026-10-30 19:39:17.039958
+338,Exfoliating Himalayan Coffee Walnut Body Scrub (HerbalRoots Edition),Beauty & Personal Care,430.37,34,74,SKU-BEA-0338,2026-10-30 19:39:17.049300
+339,Professional Hair Straightener Brush 2-in-1 (HerbalRoots Edition),Beauty & Personal Care,943.4,34,53,SKU-BEA-0339,2026-10-30 19:39:17.058123
+340,Men's Beard Growth Oil & Softener Balm Combo (HerbalRoots Edition),Beauty & Personal Care,421.2,34,31,SKU-BEA-0340,2026-10-30 19:39:17.067017
+341,Noise-Cancelling Wireless Headphones Pro,Accessories,2490.52,35,4,SKU-ACC-0341,2026-10-30 19:39:17.076464
+342,Ultra-Slim RGB Mechanical Gaming Keyboard (SpeedLink Edition),Accessories,1978.83,35,6,SKU-ACC-0342,2026-10-30 19:39:17.085588
+343,High-Speed 65W GaN Fast Charger (SpeedLink Edition),Accessories,1086.21,35,30,SKU-ACC-0343,2026-10-30 19:39:17.095399
+344,Smart Fitness Band with SpO2 Monitor (SpeedLink Edition),Accessories,1414.52,35,10,SKU-ACC-0344,2026-10-30 19:39:17.104529
+345,Portable Waterproof Bluetooth Speaker 20W (SpeedLink Edition),Accessories,1718.33,35,24,SKU-ACC-0345,2026-10-30 19:39:17.113681
+346,Heavy-Duty Braided Type-C to Lightning Cable (SpeedLink Edition),Accessories,454.38,35,68,SKU-ACC-0346,2026-10-30 19:39:17.123100
+347,Thunderbolt 4 Quad-Display USB-C Hub (SpeedLink Edition),Accessories,3672.76,35,66,SKU-ACC-0347,2026-10-30 19:39:17.132175
+348,Full HD 1080P Dual-Mic Streamer Webcam (SpeedLink Edition),Accessories,1704.72,35,26,SKU-ACC-0348,2026-10-30 19:39:17.141419
+349,Ergonomic Vertical Wireless Mouse (SpeedLink Edition),Accessories,866.95,35,67,SKU-ACC-0349,2026-10-30 19:39:17.150817
+350,Surge Protected 6-Way Extension Board (SpeedLink Edition),Accessories,687.24,35,0,SKU-ACC-0350,2026-10-30 19:39:17.160532
+351,Men's Formal Oxford Cotton Shirt,Men's Clothing,842.42,36,16,SKU-MEN-0351,2026-10-30 19:39:17.170354
+352,Men's Cotton Chino Trousers Khaki (UrbanDenim Edition),Men's Clothing,1204.77,36,7,SKU-MEN-0352,2026-10-30 19:39:17.184535
+353,Men's Casual Linen Blend Kurta (UrbanDenim Edition),Men's Clothing,820.11,36,41,SKU-MEN-0353,2026-10-30 19:39:17.193729
+354,Men's Athletic Quick-Dry Gym Trackpants (UrbanDenim Edition),Men's Clothing,732.77,36,35,SKU-MEN-0354,2026-10-30 19:39:17.202724
+355,Men's Cotton Boxer Shorts Pack of 3 (UrbanDenim Edition),Men's Clothing,528.52,36,41,SKU-MEN-0355,2026-10-30 19:39:17.211779
+356,Men's Reversible Formal Faux-Leather Belt (UrbanDenim Edition),Men's Clothing,423.77,36,125,SKU-MEN-0356,2026-10-30 19:39:17.220725
+357,Men's Breathable Polo Collar T-Shirt (UrbanDenim Edition),Men's Clothing,562.7,36,28,SKU-MEN-0357,2026-10-30 19:39:17.229508
+358,Men's Cotton Cargo Joggers 6-Pockets (UrbanDenim Edition),Men's Clothing,1514.77,36,113,SKU-MEN-0358,2026-10-30 19:39:17.238354
+359,Men's Nehru Jacket Festive Waistcoat (UrbanDenim Edition),Men's Clothing,1377.27,36,41,SKU-MEN-0359,2026-10-30 19:39:17.247235
+360,Men's Sports Compression Active Tights (UrbanDenim Edition),Men's Clothing,607.4,36,2,SKU-MEN-0360,2026-10-30 19:39:17.256094
+361,Cold-Pressed Virgin Mustard Oil Kachi Ghani 1L,Grocery,208.19,37,34,SKU-GRO-0361,2026-10-30 19:39:17.265434
+362,Organic Raw Wild Forest Honey 500g (Gourmet Edition),Grocery,328.67,37,33,SKU-GRO-0362,2026-10-30 19:39:17.274260
+363,Premium California Almonds 500g Pouch (Gourmet Edition),Grocery,542.14,37,34,SKU-GRO-0363,2026-10-30 19:39:17.283488
+364,Aromatic Royal Basmati Rice aged 2 Years 5KG (Gourmet Edition),Grocery,597.01,37,73,SKU-GRO-0364,2026-10-30 19:39:17.292512
+365,Assam Long-Leaf CTC Premium Black Tea 1KG (Gourmet Edition),Grocery,389.18,37,88,SKU-GRO-0365,2026-10-30 19:39:17.301417
+366,Organic Unpolished Toor Dal Arhar 1KG (Gourmet Edition),Grocery,178.61,37,115,SKU-GRO-0366,2026-10-30 19:39:17.310146
+367,Roasted Salted Cashew Nuts 250g (Gourmet Edition),Grocery,300.98,37,57,SKU-GRO-0367,2026-10-30 19:39:17.318832
+368,Ground Roasted South Indian Filter Coffee 200g (Gourmet Edition),Grocery,215.25,37,85,SKU-GRO-0368,2026-10-30 19:39:17.327908
+369,Pure Desi Gir Cow A2 Ghee 500ml (Gourmet Edition),Grocery,800.37,37,18,SKU-GRO-0369,2026-10-30 19:39:17.337122
+370,Crunchy Dark Chocolate Peanut Butter 1KG (Gourmet Edition),Grocery,400.36,37,6,SKU-GRO-0370,2026-10-30 19:39:17.346979
+371,Eco-Friendly Non-Slip 6mm EVA Yoga Mat with Strap,Sports & Fitness,567.84,38,23,SKU-SPO-0371,2026-10-30 19:39:17.362238
+372,Adjustable Rubber Coated Dumbbell Set 10KG (IronCore Edition),Sports & Fitness,1241.37,38,1,SKU-SPO-0372,2026-10-30 19:39:17.372999
+373,Latex Resistance Loop Exercise Bands Set of 5 (IronCore Edition),Sports & Fitness,374.21,38,33,SKU-SPO-0373,2026-10-30 19:39:17.383491
+374,High-Speed Ball Bearing Skipping Jump Rope (IronCore Edition),Sports & Fitness,263.28,38,10,SKU-SPO-0374,2026-10-30 19:39:17.394489
+375,Muscle Massage Roller Stick for Deep Tissue Relief (IronCore Edition),Sports & Fitness,441.33,38,1,SKU-SPO-0375,2026-10-30 19:39:17.406680
+376,Stainless Steel Gym Protein Shaker Bottle 700ml (IronCore Edition),Sports & Fitness,354.06,38,43,SKU-SPO-0376,2026-10-30 19:39:17.418716
+377,Wrist Support Weightlifting Padded Gym Gloves (IronCore Edition),Sports & Fitness,317.07,38,34,SKU-SPO-0377,2026-10-30 19:39:17.429800
+378,Heavy-Duty Pull-Up Doorway Exercise Bar (IronCore Edition),Sports & Fitness,1250.34,38,15,SKU-SPO-0378,2026-10-30 19:39:17.442347
+379,Professional Badminton Racket Carbon Fiber 2-Pack (IronCore Edition),Sports & Fitness,1667.0,38,53,SKU-SPO-0379,2026-10-30 19:39:17.454416
+380,Hydration Hydropack Backpack with 2L Bladder (IronCore Edition),Sports & Fitness,1025.16,38,9,SKU-SPO-0380,2026-10-30 19:39:17.464911
+381,Ergonomic High-Back Mesh Desk Chair,Home & Kitchen,6246.85,39,131,SKU-HOM-0381,2026-10-30 19:39:17.474655
+382,Non-Stick Induction Granito Cookware 3-Piece (Lumiere Edition),Home & Kitchen,2011.18,39,54,SKU-HOM-0382,2026-10-30 19:39:17.484146
+383,Stainless Steel Electric Kettle 1.8 Litre (Lumiere Edition),Home & Kitchen,771.87,39,58,SKU-HOM-0383,2026-10-30 19:39:17.494414
+384,Ultrasonic Aromatherapy Essential Oil Diffuser (Lumiere Edition),Home & Kitchen,1001.99,39,22,SKU-HOM-0384,2026-10-30 19:39:17.504462
+385,Microfiber Soft Touch King Bedsheet with Pillows (Lumiere Edition),Home & Kitchen,765.77,39,5,SKU-HOM-0385,2026-10-30 19:39:17.514299
+386,Heavy-Duty 750W Mixer Grinder 3 Jars (Lumiere Edition),Home & Kitchen,2776.74,39,0,SKU-HOM-0386,2026-10-30 19:39:17.525956
+387,Cold Press Masticating Slow Juicer (Lumiere Edition),Home & Kitchen,5538.1,39,106,SKU-HOM-0387,2026-10-30 19:39:17.538287
+388,Digital Air Fryer 4.5L with Rapid Heat (Lumiere Edition),Home & Kitchen,3261.94,39,39,SKU-HOM-0388,2026-10-30 19:39:17.549511
+389,Memory Foam Cervical Orthopedic Bed Pillow (Lumiere Edition),Home & Kitchen,917.84,39,33,SKU-HOM-0389,2026-10-30 19:39:17.560030
+390,Automatic Cordless Water Dispenser Pump (Lumiere Edition),Home & Kitchen,395.8,39,67,SKU-HOM-0390,2026-10-30 19:39:17.571999
+391,Neo 5G Smartphone (8GB/128GB AMOLED),Mobiles,18117.28,40,0,SKU-MOB-0391,2026-10-30 19:39:17.583284
+392,Prime Pro 5G Flagship (12GB/256GB) (Zenith Edition),Mobiles,35642.11,40,8,SKU-MOB-0392,2026-10-30 19:39:17.593805
+393,Starlight Ultra Smartphone (6GB/128GB) (Zenith Edition),Mobiles,14329.59,40,96,SKU-MOB-0393,2026-10-30 19:39:17.604602
+394,Shockproof Military-Grade Armor Case (Zenith Edition),Mobiles,338.39,40,17,SKU-MOB-0394,2026-10-30 19:39:17.614587
+395,9H Tempered Glass Screen Protector 2-Pack (Zenith Edition),Mobiles,202.45,40,34,SKU-MOB-0395,2026-10-30 19:39:17.625438
+396,Magnetic Wireless Car Phone Mount Charger (Zenith Edition),Mobiles,1231.48,40,15,SKU-MOB-0396,2026-10-30 19:39:17.636305
+397,Ultra-Compact 10000mAh Power Bank 22.5W (Zenith Edition),Mobiles,1120.4,40,58,SKU-MOB-0397,2026-10-30 19:39:17.646819
+398,Fast Wireless Charging Pad 15W (Zenith Edition),Mobiles,937.92,40,40,SKU-MOB-0398,2026-10-30 19:39:17.657445
+399,OTG Dual USB 3.2 Flash Drive 128GB (Zenith Edition),Mobiles,975.65,40,6,SKU-MOB-0399,2026-10-30 19:39:17.668277
+400,Selfie Stick Tripod with Bluetooth Shutter (Zenith Edition),Mobiles,584.22,40,46,SKU-MOB-0400,2026-10-30 19:39:17.678051
+401,Women's Straight Cotton Kurti Mustard Yellow,Women's Clothing,799.78,41,0,SKU-WOM-0401,2026-10-30 19:39:17.688856
+402,Women's A-Line Western Midi Dress (Elegance Edition),Women's Clothing,1044.09,41,60,SKU-WOM-0402,2026-10-30 19:39:17.699209
+403,Women's High-Rise Denim Skinny Jeans (Elegance Edition),Women's Clothing,1108.69,41,53,SKU-WOM-0403,2026-10-30 19:39:17.710364
+404,Women's Chanderi Silk Zari Border Saree (Elegance Edition),Women's Clothing,1916.06,41,35,SKU-WOM-0404,2026-10-30 19:39:17.720315
+405,Women's Rayon Palazzo Pants Off-White (Elegance Edition),Women's Clothing,549.58,41,6,SKU-WOM-0405,2026-10-30 19:39:17.731797
+406,Women's Seamless Padded Sports Bra (Elegance Edition),Women's Clothing,426.86,41,69,SKU-WOM-0406,2026-10-30 19:39:17.742688
+407,Women's Woolen Cardigan Button-Down Sweater (Elegance Edition),Women's Clothing,1173.56,41,64,SKU-WOM-0407,2026-10-30 19:39:17.755033
+408,Women's Chikankari Embroidered Tunic (Elegance Edition),Women's Clothing,926.03,41,2,SKU-WOM-0408,2026-10-30 19:39:17.768146
+409,Women's Cotton Nightwear Top & Pyjama Set (Elegance Edition),Women's Clothing,866.67,41,98,SKU-WOM-0409,2026-10-30 19:39:17.780067
+410,Women's Satin Formal Office Blouse (Elegance Edition),Women's Clothing,627.17,41,33,SKU-WOM-0410,2026-10-30 19:39:17.792013
+411,Engineered Wood Multipurpose Study Computer Table,Furniture,3743.29,42,55,SKU-FUR-0411,2026-10-30 19:39:17.803341
+412,Solid Sheesham Wood 4-Seater Dining Table (Apex Edition),Furniture,12716.43,42,33,SKU-FUR-0412,2026-10-30 19:39:17.813877
+413,Foldable Recliner Relaxation Balcony Chair (Apex Edition),Furniture,2203.63,42,34,SKU-FUR-0413,2026-10-30 19:39:17.824131
+414,Multi-Tier Wooden Shoe Rack Cabinet with Seat (Apex Edition),Furniture,1801.45,42,67,SKU-FUR-0414,2026-10-30 19:39:17.835707
+415,Modular 3-Door Wardrobe with Mirror White (Apex Edition),Furniture,9189.23,42,91,SKU-FUR-0415,2026-10-30 19:39:17.845624
+416,Fabric Upholstered 2-Seater Living Room Sofa (Apex Edition),Furniture,10340.23,42,42,SKU-FUR-0416,2026-10-30 19:39:17.856751
+417,Space-Saving Wall Mounted Drop-Leaf Table (Apex Edition),Furniture,1434.44,42,40,SKU-FUR-0417,2026-10-30 19:39:17.867609
+418,Metal Frame Queen Bed with Headboard (Apex Edition),Furniture,7938.17,42,43,SKU-FUR-0418,2026-10-30 19:39:17.878028
+419,Floating TV Entertainment Wall Unit (Apex Edition),Furniture,2483.7,42,0,SKU-FUR-0419,2026-10-30 19:39:17.888508
+420,Stackable Plastic Armchairs Pack of 2 (Apex Edition),Furniture,1187.6,42,30,SKU-FUR-0420,2026-10-30 19:39:17.899084
+421,Vitamin C + Hyaluronic Acid Brightening Serum,Beauty & Personal Care,538.24,43,59,SKU-BEA-0421,2026-10-30 19:39:17.910018
+422,Organic Herbal Tea Tree Anti-Dandruff Shampoo (GlowBio Edition),Beauty & Personal Care,390.92,43,37,SKU-BEA-0422,2026-10-30 19:39:17.920848
+423,SPF 50+ PA++++ Dewy Finish Matte Sunscreen Gel (GlowBio Edition),Beauty & Personal Care,425.76,43,17,SKU-BEA-0423,2026-10-30 19:39:17.932100
+424,Deep Moisturizing Shea Butter Body Lotion 400ml (GlowBio Edition),Beauty & Personal Care,321.24,43,72,SKU-BEA-0424,2026-10-30 19:39:17.942155
+425,Salicylic Acid 2% Gentle Foaming Face Wash (GlowBio Edition),Beauty & Personal Care,321.8,43,134,SKU-BEA-0425,2026-10-30 19:39:17.952869
+426,Ayurvedic Bhringraj Herbal Hair Growth Oil 200ml (GlowBio Edition),Beauty & Personal Care,422.84,43,21,SKU-BEA-0426,2026-10-30 19:39:17.963156
+427,Matte Waterproof Liquid Lipstick Long-Lasting (GlowBio Edition),Beauty & Personal Care,326.48,43,40,SKU-BEA-0427,2026-10-30 19:39:17.974137
+428,Exfoliating Himalayan Coffee Walnut Body Scrub (GlowBio Edition),Beauty & Personal Care,402.21,43,34,SKU-BEA-0428,2026-10-30 19:39:17.984526
+429,Professional Hair Straightener Brush 2-in-1 (GlowBio Edition),Beauty & Personal Care,1075.11,43,108,SKU-BEA-0429,2026-10-30 19:39:17.996081
+430,Men's Beard Growth Oil & Softener Balm Combo (GlowBio Edition),Beauty & Personal Care,491.88,43,48,SKU-BEA-0430,2026-10-30 19:39:18.006395
+431,Noise-Cancelling Wireless Headphones Pro,Accessories,2527.86,44,22,SKU-ACC-0431,2026-10-30 19:39:18.017121
+432,Ultra-Slim RGB Mechanical Gaming Keyboard (PowerTech Edition),Accessories,1758.4,44,13,SKU-ACC-0432,2026-10-30 19:39:18.028437
+433,High-Speed 65W GaN Fast Charger (PowerTech Edition),Accessories,1128.98,44,0,SKU-ACC-0433,2026-10-30 19:39:18.040950
+434,Smart Fitness Band with SpO2 Monitor (PowerTech Edition),Accessories,1621.81,44,10,SKU-ACC-0434,2026-10-30 19:39:18.051535
+435,Portable Waterproof Bluetooth Speaker 20W (PowerTech Edition),Accessories,1942.23,44,87,SKU-ACC-0435,2026-10-30 19:39:18.062434
+436,Heavy-Duty Braided Type-C to Lightning Cable (PowerTech Edition),Accessories,379.54,44,0,SKU-ACC-0436,2026-10-30 19:39:18.073310
+437,Thunderbolt 4 Quad-Display USB-C Hub (PowerTech Edition),Accessories,3942.31,44,64,SKU-ACC-0437,2026-10-30 19:39:18.084268
+438,Full HD 1080P Dual-Mic Streamer Webcam (PowerTech Edition),Accessories,1721.87,44,59,SKU-ACC-0438,2026-10-30 19:39:18.094733
+439,Ergonomic Vertical Wireless Mouse (PowerTech Edition),Accessories,848.92,44,0,SKU-ACC-0439,2026-10-30 19:39:18.105316
+440,Surge Protected 6-Way Extension Board (PowerTech Edition),Accessories,689.76,44,3,SKU-ACC-0440,2026-10-30 19:39:18.117352
+441,Air-Cushioned Lightweight Running Shoes,Footwear,1762.98,45,25,SKU-FOO-0441,2026-10-30 19:39:18.128030
+442,Men's Derby Lace-Up Formal Leather Shoes (TrendSetter Edition),Footwear,2093.03,45,1,SKU-FOO-0442,2026-10-30 19:39:18.138744
+443,Women's Pointed Block Heel Pumps (TrendSetter Edition),Footwear,1302.91,45,71,SKU-FOO-0443,2026-10-30 19:39:18.149852
+444,Unisex Eva Lightweight Slip-On Slides (TrendSetter Edition),Footwear,457.29,45,2,SKU-FOO-0444,2026-10-30 19:39:18.161767
+445,Breathable Mesh Walking Sports Sneakers (TrendSetter Edition),Footwear,990.15,45,113,SKU-FOO-0445,2026-10-30 19:39:18.171915
+446,Traditional Kolhapuri Handcrafted Chappals (TrendSetter Edition),Footwear,709.12,45,29,SKU-FOO-0446,2026-10-30 19:39:18.182966
+447,Waterproof Rubber Sole Trekking Boots (TrendSetter Edition),Footwear,2371.11,45,8,SKU-FOO-0447,2026-10-30 19:39:18.194861
+448,Women's Casual Canvas Slip-On Loafers (TrendSetter Edition),Footwear,820.69,45,71,SKU-FOO-0448,2026-10-30 19:39:18.205050
+449,Memory Foam Orthopedic Comfort Flip-Flops (TrendSetter Edition),Footwear,554.23,45,36,SKU-FOO-0449,2026-10-30 19:39:18.216134
+450,Kids Light-Up Active Sports Shoes (TrendSetter Edition),Footwear,876.18,45,2,SKU-FOO-0450,2026-10-30 19:39:18.229753
+451,Tri-Ply Stainless Steel Pressure Cooker 3 Litre,Kitchen Products,1999.08,46,27,SKU-KIT-0451,2026-10-30 19:39:18.240430
+452,Hard Anodized Roti Tawa 25cm Non-Toxic (MasterChef Edition),Kitchen Products,573.39,46,102,SKU-KIT-0452,2026-10-30 19:39:18.251144
+453,Multi-Purpose Vegetable Chopper & Slicer 900ml (MasterChef Edition),Kitchen Products,340.24,46,71,SKU-KIT-0453,2026-10-30 19:39:18.261960
+454,Borosilicate Glass Food Storage Containers Set of 3 (MasterChef Edition),Kitchen Products,655.76,46,9,SKU-KIT-0454,2026-10-30 19:39:18.273461
+455,Silicone Heat-Resistant Spatula & Spoon Set (MasterChef Edition),Kitchen Products,331.13,46,3,SKU-KIT-0455,2026-10-30 19:39:18.284501
+456,Stainless Steel Insulated Water Bottle 1 Litre (MasterChef Edition),Kitchen Products,516.76,46,5,SKU-KIT-0456,2026-10-30 19:39:18.295067
+457,Knife Block Set High-Carbon Steel 6-Piece (MasterChef Edition),Kitchen Products,862.48,46,46,SKU-KIT-0457,2026-10-30 19:39:18.306149
+458,Rotary Dish Drying Rack with Drainer Tray (MasterChef Edition),Kitchen Products,778.53,46,18,SKU-KIT-0458,2026-10-30 19:39:18.316785
+459,Compact Sandwich & Panini Griller 750W (MasterChef Edition),Kitchen Products,929.53,46,41,SKU-KIT-0459,2026-10-30 19:39:18.327459
+460,Manual Citrus Juicer & Squeezer Heavy Metal (MasterChef Edition),Kitchen Products,426.83,46,59,SKU-KIT-0460,2026-10-30 19:39:18.338572
+461,Data Structures & Algorithms Made Easy in Python,Books,639.11,47,43,SKU-BOO-0461,2026-10-30 19:39:18.349457
+462,Modern Cloud Architecture with Microservices & Docker (KnowledgeTree Edition),Books,692.9,47,7,SKU-BOO-0462,2026-10-30 19:39:18.360037
+463,Atomic Habits for High-Performance Success (KnowledgeTree Edition),Books,443.8,47,0,SKU-BOO-0463,2026-10-30 19:39:18.371794
+464,The Psychology of Wealth & Financial Freedom (KnowledgeTree Edition),Books,381.59,47,33,SKU-BOO-0464,2026-10-30 19:39:18.382741
+465,Complete Guide to Machine Learning & Deep Learning (KnowledgeTree Edition),Books,797.6,47,12,SKU-BOO-0465,2026-10-30 19:39:18.393832
+466,Indian Polity & Governance for Competitive Exams (KnowledgeTree Edition),Books,572.48,47,3,SKU-BOO-0466,2026-10-30 19:39:18.404784
+467,FastAPI & React Microservices Engineering Blueprint (KnowledgeTree Edition),Books,765.37,47,33,SKU-BOO-0467,2026-10-30 19:39:18.416748
+468,Clean Code in Enterprise Systems (Indian Edition) (KnowledgeTree Edition),Books,535.6,47,4,SKU-BOO-0468,2026-10-30 19:39:18.427562
+469,Database Internals & Distributed Systems Design (KnowledgeTree Edition),Books,808.59,47,0,SKU-BOO-0469,2026-10-30 19:39:18.438843
+470,Ancient Indian Heritage & Architectural Wonders (KnowledgeTree Edition),Books,558.26,47,67,SKU-BOO-0470,2026-10-30 19:39:18.449654
+471,Noise-Cancelling Wireless Headphones Pro,Electronics,2487.28,48,29,SKU-ELE-0471,2026-10-30 19:39:18.461487
+472,Ultra-Slim RGB Mechanical Gaming Keyboard (PulseTrack Edition),Electronics,2080.39,48,54,SKU-ELE-0472,2026-10-30 19:39:18.472192
+473,High-Speed 65W GaN Fast Charger (PulseTrack Edition),Electronics,1033.68,48,2,SKU-ELE-0473,2026-10-30 19:39:18.483169
+474,Smart Fitness Band with SpO2 Monitor (PulseTrack Edition),Electronics,1704.97,48,28,SKU-ELE-0474,2026-10-30 19:39:18.494227
+475,Portable Waterproof Bluetooth Speaker 20W (PulseTrack Edition),Electronics,1896.45,48,0,SKU-ELE-0475,2026-10-30 19:39:18.504902
+476,Heavy-Duty Braided Type-C to Lightning Cable (PulseTrack Edition),Electronics,412.5,48,98,SKU-ELE-0476,2026-10-30 19:39:18.516099
+477,Thunderbolt 4 Quad-Display USB-C Hub (PulseTrack Edition),Electronics,3650.99,48,28,SKU-ELE-0477,2026-10-30 19:39:18.526505
+478,Full HD 1080P Dual-Mic Streamer Webcam (PulseTrack Edition),Electronics,1795.62,48,43,SKU-ELE-0478,2026-10-30 19:39:18.537322
+479,Ergonomic Vertical Wireless Mouse (PulseTrack Edition),Electronics,789.91,48,0,SKU-ELE-0479,2026-10-30 19:39:18.548634
+480,Surge Protected 6-Way Extension Board (PulseTrack Edition),Electronics,674.37,48,37,SKU-ELE-0480,2026-10-30 19:39:18.560221
+481,Ergonomic High-Back Mesh Desk Chair,Home & Kitchen,6214.84,49,69,SKU-HOM-0481,2026-10-30 19:39:18.571891
+482,Non-Stick Induction Granito Cookware 3-Piece (CozyNest Edition),Home & Kitchen,2179.09,49,21,SKU-HOM-0482,2026-10-30 19:39:18.583264
+483,Stainless Steel Electric Kettle 1.8 Litre (CozyNest Edition),Home & Kitchen,857.06,49,52,SKU-HOM-0483,2026-10-30 19:39:18.594528
+484,Ultrasonic Aromatherapy Essential Oil Diffuser (CozyNest Edition),Home & Kitchen,1021.23,49,53,SKU-HOM-0484,2026-10-30 19:39:18.607030
+485,Microfiber Soft Touch King Bedsheet with Pillows (CozyNest Edition),Home & Kitchen,724.93,49,15,SKU-HOM-0485,2026-10-30 19:39:18.619456
+486,Heavy-Duty 750W Mixer Grinder 3 Jars (CozyNest Edition),Home & Kitchen,2377.84,49,9,SKU-HOM-0486,2026-10-30 19:39:18.632002
+487,Cold Press Masticating Slow Juicer (CozyNest Edition),Home & Kitchen,5124.51,49,33,SKU-HOM-0487,2026-10-30 19:39:18.643976
+488,Digital Air Fryer 4.5L with Rapid Heat (CozyNest Edition),Home & Kitchen,3483.02,49,40,SKU-HOM-0488,2026-10-30 19:39:18.656900
+489,Memory Foam Cervical Orthopedic Bed Pillow (CozyNest Edition),Home & Kitchen,917.13,49,54,SKU-HOM-0489,2026-10-30 19:39:18.669161
+490,Automatic Cordless Water Dispenser Pump (CozyNest Edition),Home & Kitchen,348.08,49,56,SKU-HOM-0490,2026-10-30 19:39:18.680921
+491,Cold-Pressed Virgin Mustard Oil Kachi Ghani 1L,Grocery,204.69,50,6,SKU-GRO-0491,2026-10-30 19:39:18.694271
+492,Organic Raw Wild Forest Honey 500g (Omkar Edition),Grocery,347.67,50,0,SKU-GRO-0492,2026-10-30 19:39:18.706212
+493,Premium California Almonds 500g Pouch (Omkar Edition),Grocery,526.07,50,51,SKU-GRO-0493,2026-10-30 19:39:18.718394
+494,Aromatic Royal Basmati Rice aged 2 Years 5KG (Omkar Edition),Grocery,616.46,50,116,SKU-GRO-0494,2026-10-30 19:39:18.730454
+495,Assam Long-Leaf CTC Premium Black Tea 1KG (Omkar Edition),Grocery,378.24,50,0,SKU-GRO-0495,2026-10-30 19:39:18.742221
+496,Organic Unpolished Toor Dal Arhar 1KG (Omkar Edition),Grocery,162.11,50,74,SKU-GRO-0496,2026-10-30 19:39:18.756059
+497,Roasted Salted Cashew Nuts 250g (Omkar Edition),Grocery,332.93,50,1,SKU-GRO-0497,2026-10-30 19:39:18.768443
+498,Ground Roasted South Indian Filter Coffee 200g (Omkar Edition),Grocery,209.29,50,16,SKU-GRO-0498,2026-10-30 19:39:18.779973
+499,Pure Desi Gir Cow A2 Ghee 500ml (Omkar Edition),Grocery,765.06,50,64,SKU-GRO-0499,2026-10-30 19:39:18.791050
+500,Crunchy Dark Chocolate Peanut Butter 1KG (Omkar Edition),Grocery,385.79,50,55,SKU-GRO-0500,2026-10-30 19:39:18.804326

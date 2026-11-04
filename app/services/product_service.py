@@ -69,13 +69,14 @@ def create_product(db: Session, data: ProductCreate, current_user: User) -> Prod
         category=data.category.strip(),
         price=data.price,
         stock=data.stock,
-        vendor_id=target_vendor_id
+        vendor_id=target_vendor_id,
+        image_url=data.image_url.strip() if data.image_url else None
     )
     db.add(product)
     db.commit()
     db.refresh(product)
 
-    # 5. Automatically create corresponding Inventory record
+    # 6. Automatically create corresponding Inventory record
     inventory = Inventory(
         product_id=product.product_id,
         current_stock=product.stock,
@@ -154,6 +155,9 @@ def update_product(db: Session, product_id: int, data: ProductUpdate, current_us
 
     if "category" in update_dict and update_dict["category"] is not None:
         product.category = update_dict["category"].strip()
+
+    if "image_url" in update_dict:
+        product.image_url = update_dict["image_url"].strip() if update_dict["image_url"] else None
 
     if "stock" in update_dict and update_dict["stock"] is not None:
         if update_dict["stock"] < 0:

@@ -39,13 +39,25 @@ def register_user(db: Session, request: UserRegisterRequest) -> UserResponse:
             detail=name_msg
         )
 
-    # 4. Hash password
+    # 4. Validate phone number if provided
+    phone_clean = None
+    if request.phone and request.phone.strip():
+        is_valid_phone, phone_msg = validate_phone_number(request.phone.strip())
+        if not is_valid_phone:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail=phone_msg
+            )
+        phone_clean = phone_msg
+
+    # 5. Hash password
     hashed_pw = hash_password(request.password)
 
-    # 5. Create user
+    # 6. Create user
     new_user = User(
         full_name=request.full_name.strip(),
         email=norm_email,
+        phone=phone_clean,
         password_hash=hashed_pw,
         role=request.role,
         is_active=True
@@ -54,36 +66,26 @@ def register_user(db: Session, request: UserRegisterRequest) -> UserResponse:
     db.commit()
     db.refresh(new_user)
 
-    # 6. If user is VENDOR, check if a vendor record already matches email or create placeholder
+    # 7. If user is VENDOR, link or create vendor profile
     vendor_id = None
     if new_user.role == UserRole.VENDOR:
         existing_vendor = db.query(Vendor).filter(Vendor.email == norm_email).first()
         if existing_vendor:
             existing_vendor.user_id = new_user.user_id
+            if phone_clean:
+                existing_vendor.phone = phone_clean
             db.commit()
             vendor_id = existing_vendor.vendor_id
         else:
-            # Determine vendor details from registration request
             store_name = request.business_name.strip() if request.business_name and request.business_name.strip() else f"{new_user.full_name}'s Store"
             store_cat = request.category.strip() if request.category and request.category.strip() else "General"
+            vendor_phone = phone_clean or "0000000000"
 
-            # Validate phone number if provided
-            phone_val = "0000000000"
-            if request.phone and request.phone.strip():
-                is_valid_phone, phone_msg = validate_phone_number(request.phone.strip())
-                if not is_valid_phone:
-                    raise HTTPException(
-                        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                        detail=phone_msg
-                    )
-                phone_val = phone_msg
-
-            # Auto-create linked vendor profile (starts PENDING until admin activates)
             new_vendor = Vendor(
                 business_name=store_name,
                 owner_name=new_user.full_name,
                 email=norm_email,
-                phone=phone_val,
+                phone=vendor_phone,
                 category=store_cat,
                 status=VendorStatus.PENDING,
                 user_id=new_user.user_id
@@ -97,6 +99,7 @@ def register_user(db: Session, request: UserRegisterRequest) -> UserResponse:
         user_id=new_user.user_id,
         full_name=new_user.full_name,
         email=new_user.email,
+        phone=new_user.phone,
         role=new_user.role,
         is_active=new_user.is_active,
         created_at=new_user.created_at,
@@ -142,6 +145,7 @@ def authenticate_user(db: Session, request: UserLoginRequest) -> TokenResponse:
         user_id=user.user_id,
         email=user.email,
         full_name=user.full_name,
+        phone=user.phone,
         vendor_id=vendor_id
     )
 
@@ -151,6 +155,7 @@ def get_user_profile(db: Session, user: User) -> UserResponse:
         user_id=user.user_id,
         full_name=user.full_name,
         email=user.email,
+        phone=user.phone,
         role=user.role,
         is_active=user.is_active,
         created_at=user.created_at,
@@ -159,7 +164,6 @@ def get_user_profile(db: Session, user: User) -> UserResponse:
 
 def reset_password(db: Session, request: PasswordResetRequest) -> dict:
     """Reset a user's password by email. Returns a success message dict."""
-    # 1. Validate email format
     is_valid_email, norm_email = validate_email_format(request.email)
     if not is_valid_email:
         raise HTTPException(
@@ -167,7 +171,6 @@ def reset_password(db: Session, request: PasswordResetRequest) -> dict:
             detail=norm_email
         )
 
-    # 2. Look up the user
     user = db.query(User).filter(User.email == norm_email).first()
     if not user:
         raise HTTPException(
@@ -181,7 +184,6 @@ def reset_password(db: Session, request: PasswordResetRequest) -> dict:
             detail="This account is deactivated. Please contact support."
         )
 
-    # 3. Hash and update the new password
     user.password_hash = hash_password(request.new_password)
     db.commit()
 

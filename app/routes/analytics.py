@@ -9,8 +9,14 @@ from app.schemas.analytics import (
     RevenueTrendItem,
     CategoryPerformanceItem,
 )
+from app.schemas.customer_recommendation import (
+    CustomerBehaviorSummary,
+    CustomerSegmentationResponse
+)
 from app.services import analytics_service
-from app.utils.security import get_current_active_user
+from app.customer import analytics as customer_analytics
+from app.customer import segmentation as customer_segmentation
+from app.utils.security import get_current_active_user, require_admin
 from app.models.user import User
 
 router = APIRouter(prefix="/api/analytics", tags=["Analytics"])
@@ -56,5 +62,35 @@ def get_category_performance_metrics(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user)
 ):
-    """Get category-level sales breakdown."""
+    """Get revenue and unit sales breakdown grouped by product category."""
     return analytics_service.get_category_performance(db, current_user, vendor_id)
+
+# ===================================================
+# Milestone 2: Customer Analytics & Segmentation APIs
+# ===================================================
+@router.get("/customers", response_model=List[CustomerBehaviorSummary])
+def get_customers_behavior(
+    customer_id: Optional[int] = Query(None, description="Filter for single customer"),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
+):
+    """Analyze customer behavior: total orders, total spent, AOV, purchase frequency, top products."""
+    return customer_analytics.get_customer_behavior_metrics(db, customer_id)
+
+@router.get("/customer-behavior", response_model=List[CustomerBehaviorSummary])
+def get_customer_behavior_alias(
+    customer_id: Optional[int] = Query(None),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
+):
+    """Alias for /api/analytics/customers behavior analysis."""
+    return customer_analytics.get_customer_behavior_metrics(db, customer_id)
+
+@router.get("/segments", response_model=CustomerSegmentationResponse)
+def get_customer_segments(
+    n_clusters: int = Query(3, ge=2, le=6),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
+):
+    """Customer segmentation using K-Means with StandardScaler and Silhouette Score evaluation."""
+    return customer_segmentation.perform_customer_segmentation(db, n_clusters)

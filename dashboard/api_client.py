@@ -1,9 +1,10 @@
-import requests
+﻿import requests
 from typing import Optional, Dict, Any, List
 
 class ApiClient:
     def __init__(self, base_url: str = "http://127.0.0.1:8000"):
         self.base_url = base_url.rstrip("/")
+        self.session = requests.Session()
 
     def _headers(self, token: Optional[str] = None) -> Dict[str, str]:
         headers = {"Content-Type": "application/json"}
@@ -30,7 +31,7 @@ class ApiClient:
     # 1. Auth APIs
     def login(self, email: str, password: str) -> Dict[str, Any]:
         url = f"{self.base_url}/auth/login"
-        resp = requests.post(url, json={"email": email, "password": password})
+        resp = self.session.post(url, json={"email": email, "password": password})
         return self._handle_response(resp)
 
     def register(
@@ -59,18 +60,17 @@ class ApiClient:
             payload["business_name"] = business_name
         if category:
             payload["category"] = category
-        resp = requests.post(url, json=payload)
+        resp = self.session.post(url, json=payload)
         return self._handle_response(resp)
 
     def reset_password(self, email: str, new_password: str) -> Dict[str, Any]:
-        """Reset a user's password via the /auth/reset-password endpoint."""
         url = f"{self.base_url}/auth/reset-password"
-        resp = requests.post(url, json={"email": email, "new_password": new_password})
+        resp = self.session.post(url, json={"email": email, "new_password": new_password})
         return self._handle_response(resp)
 
     def get_me(self, token: str) -> Dict[str, Any]:
         url = f"{self.base_url}/auth/me"
-        resp = requests.get(url, headers=self._headers(token))
+        resp = self.session.get(url, headers=self._headers(token))
         return self._handle_response(resp)
 
     # 2. Analytics APIs
@@ -79,12 +79,12 @@ class ApiClient:
         params = {}
         if vendor_id:
             params["vendor_id"] = vendor_id
-        resp = requests.get(url, headers=self._headers(token), params=params)
+        resp = self.session.get(url, headers=self._headers(token), params=params)
         return self._handle_response(resp)
 
     def get_vendor_performance(self, token: str) -> List[Dict[str, Any]]:
         url = f"{self.base_url}/api/analytics/vendor-performance"
-        resp = requests.get(url, headers=self._headers(token))
+        resp = self.session.get(url, headers=self._headers(token))
         return self._handle_response(resp)
 
     def get_product_performance(self, token: str, vendor_id: Optional[int] = None) -> List[Dict[str, Any]]:
@@ -92,7 +92,7 @@ class ApiClient:
         params = {}
         if vendor_id:
             params["vendor_id"] = vendor_id
-        resp = requests.get(url, headers=self._headers(token), params=params)
+        resp = self.session.get(url, headers=self._headers(token), params=params)
         return self._handle_response(resp)
 
     def get_revenue_trend(self, token: str, vendor_id: Optional[int] = None) -> List[Dict[str, Any]]:
@@ -100,7 +100,7 @@ class ApiClient:
         params = {}
         if vendor_id:
             params["vendor_id"] = vendor_id
-        resp = requests.get(url, headers=self._headers(token), params=params)
+        resp = self.session.get(url, headers=self._headers(token), params=params)
         return self._handle_response(resp)
 
     def get_category_performance(self, token: str, vendor_id: Optional[int] = None) -> List[Dict[str, Any]]:
@@ -108,7 +108,22 @@ class ApiClient:
         params = {}
         if vendor_id:
             params["vendor_id"] = vendor_id
-        resp = requests.get(url, headers=self._headers(token), params=params)
+        resp = self.session.get(url, headers=self._headers(token), params=params)
+        return self._handle_response(resp)
+
+    # 2b. Milestone 2 Customer Analytics & Segmentation
+    def get_customer_behavior(self, token: str, customer_id: Optional[int] = None) -> List[Dict[str, Any]]:
+        url = f"{self.base_url}/api/analytics/customers"
+        params = {}
+        if customer_id:
+            params["customer_id"] = customer_id
+        resp = self.session.get(url, headers=self._headers(token), params=params)
+        return self._handle_response(resp)
+
+    def get_customer_segments(self, token: str, n_clusters: int = 3) -> Dict[str, Any]:
+        url = f"{self.base_url}/api/analytics/segments"
+        params = {"n_clusters": n_clusters}
+        resp = self.session.get(url, headers=self._headers(token), params=params)
         return self._handle_response(resp)
 
     # 3. Vendor APIs
@@ -117,7 +132,8 @@ class ApiClient:
         token: str,
         search: Optional[str] = None,
         category: Optional[str] = None,
-        status: Optional[str] = None
+        status: Optional[str] = None,
+        application_status: Optional[str] = None
     ) -> List[Dict[str, Any]]:
         url = f"{self.base_url}/api/vendors"
         params = {}
@@ -127,22 +143,30 @@ class ApiClient:
             params["category"] = category
         if status and status != "All":
             params["status"] = status
-        resp = requests.get(url, headers=self._headers(token), params=params)
+        if application_status and application_status != "All":
+            params["application_status"] = application_status
+        resp = self.session.get(url, headers=self._headers(token), params=params)
+        return self._handle_response(resp)
+
+    def review_vendor_application(self, token: str, vendor_id: int, action: str, notes: Optional[str] = None) -> Dict[str, Any]:
+        """Admin review of vendor application: APPROVE, REQUEST_INFO, or REJECT."""
+        url = f"{self.base_url}/api/vendors/{vendor_id}/review"
+        resp = self.session.post(url, headers=self._headers(token), json={"action": action, "notes": notes})
         return self._handle_response(resp)
 
     def create_vendor(self, token: str, data: Dict[str, Any]) -> Dict[str, Any]:
         url = f"{self.base_url}/api/vendors"
-        resp = requests.post(url, headers=self._headers(token), json=data)
+        resp = self.session.post(url, headers=self._headers(token), json=data)
         return self._handle_response(resp)
 
     def update_vendor(self, token: str, vendor_id: int, data: Dict[str, Any]) -> Dict[str, Any]:
         url = f"{self.base_url}/api/vendors/{vendor_id}"
-        resp = requests.put(url, headers=self._headers(token), json=data)
+        resp = self.session.put(url, headers=self._headers(token), json=data)
         return self._handle_response(resp)
 
     def delete_vendor(self, token: str, vendor_id: int) -> Dict[str, Any]:
         url = f"{self.base_url}/api/vendors/{vendor_id}"
-        resp = requests.delete(url, headers=self._headers(token))
+        resp = self.session.delete(url, headers=self._headers(token))
         return self._handle_response(resp)
 
     # 4. Product APIs
@@ -161,22 +185,22 @@ class ApiClient:
             params["category"] = category
         if search:
             params["search"] = search
-        resp = requests.get(url, headers=self._headers(token), params=params)
+        resp = self.session.get(url, headers=self._headers(token), params=params)
         return self._handle_response(resp)
 
     def create_product(self, token: str, data: Dict[str, Any]) -> Dict[str, Any]:
         url = f"{self.base_url}/api/products"
-        resp = requests.post(url, headers=self._headers(token), json=data)
+        resp = self.session.post(url, headers=self._headers(token), json=data)
         return self._handle_response(resp)
 
     def update_product(self, token: str, product_id: int, data: Dict[str, Any]) -> Dict[str, Any]:
         url = f"{self.base_url}/api/products/{product_id}"
-        resp = requests.put(url, headers=self._headers(token), json=data)
+        resp = self.session.put(url, headers=self._headers(token), json=data)
         return self._handle_response(resp)
 
     def delete_product(self, token: str, product_id: int) -> Dict[str, Any]:
         url = f"{self.base_url}/api/products/{product_id}"
-        resp = requests.delete(url, headers=self._headers(token))
+        resp = self.session.delete(url, headers=self._headers(token))
         return self._handle_response(resp)
 
     # 5. Inventory APIs
@@ -185,15 +209,98 @@ class ApiClient:
         params = {}
         if status and status != "All":
             params["status"] = status
-        resp = requests.get(url, headers=self._headers(token), params=params)
+        resp = self.session.get(url, headers=self._headers(token), params=params)
         return self._handle_response(resp)
 
     def update_inventory(self, token: str, product_id: int, data: Dict[str, Any]) -> Dict[str, Any]:
         url = f"{self.base_url}/api/inventory/{product_id}"
-        resp = requests.put(url, headers=self._headers(token), json=data)
+        resp = self.session.put(url, headers=self._headers(token), json=data)
         return self._handle_response(resp)
 
-    # 6. Transaction APIs
+    def get_inventory_alerts(self, token: str) -> List[Dict[str, Any]]:
+        url = f"{self.base_url}/api/inventory/alerts"
+        resp = self.session.get(url, headers=self._headers(token))
+        return self._handle_response(resp)
+
+    def get_inventory_turnover(self, token: str) -> Dict[str, Any]:
+        url = f"{self.base_url}/api/inventory/turnover"
+        resp = self.session.get(url, headers=self._headers(token))
+        return self._handle_response(resp)
+
+    def get_inventory_forecast(self, token: str) -> Dict[str, Any]:
+        url = f"{self.base_url}/api/inventory/forecast"
+        resp = self.session.get(url, headers=self._headers(token))
+        return self._handle_response(resp)
+
+    def get_replenishment_recommendations(self, token: str) -> List[Dict[str, Any]]:
+        url = f"{self.base_url}/api/inventory/replenishment"
+        resp = self.session.get(url, headers=self._headers(token))
+        return self._handle_response(resp)
+
+    def get_stock_movements(self, token: str, product_id: Optional[int] = None) -> List[Dict[str, Any]]:
+        url = f"{self.base_url}/api/inventory/movements"
+        params = {}
+        if product_id:
+            params["product_id"] = product_id
+        resp = self.session.get(url, headers=self._headers(token), params=params)
+        return self._handle_response(resp)
+
+    def record_stock_movement(self, token: str, data: Dict[str, Any]) -> Dict[str, Any]:
+        url = f"{self.base_url}/api/inventory/movements"
+        resp = self.session.post(url, headers=self._headers(token), json=data)
+        return self._handle_response(resp)
+
+    # 6. Warehouse APIs
+    def get_warehouses(self, token: str) -> List[Dict[str, Any]]:
+        url = f"{self.base_url}/api/warehouses"
+        resp = self.session.get(url, headers=self._headers(token))
+        return self._handle_response(resp)
+
+    def create_warehouse(self, token: str, data: Dict[str, Any]) -> Dict[str, Any]:
+        url = f"{self.base_url}/api/warehouses"
+        resp = self.session.post(url, headers=self._headers(token), json=data)
+        return self._handle_response(resp)
+
+    def update_warehouse(self, token: str, warehouse_id: int, data: Dict[str, Any]) -> Dict[str, Any]:
+        url = f"{self.base_url}/api/warehouses/{warehouse_id}"
+        resp = self.session.put(url, headers=self._headers(token), json=data)
+        return self._handle_response(resp)
+
+    # 7. Category APIs
+    def get_categories(self, token: str) -> List[Dict[str, Any]]:
+        url = f"{self.base_url}/api/categories"
+        resp = self.session.get(url, headers=self._headers(token))
+        return self._handle_response(resp)
+
+    def get_category_tree(self, token: str) -> List[Dict[str, Any]]:
+        url = f"{self.base_url}/api/categories/tree"
+        resp = self.session.get(url, headers=self._headers(token))
+        return self._handle_response(resp)
+
+    def create_category(self, token: str, data: Dict[str, Any]) -> Dict[str, Any]:
+        url = f"{self.base_url}/api/categories"
+        resp = self.session.post(url, headers=self._headers(token), json=data)
+        return self._handle_response(resp)
+
+    def update_category(self, token: str, category_id: int, data: Dict[str, Any]) -> Dict[str, Any]:
+        url = f"{self.base_url}/api/categories/{category_id}"
+        resp = self.session.put(url, headers=self._headers(token), json=data)
+        return self._handle_response(resp)
+
+    # 8. Recommendation APIs
+    def get_recommendations(self, token: str, customer_id: int, top_n: int = 5) -> Dict[str, Any]:
+        url = f"{self.base_url}/api/recommendations/{customer_id}"
+        params = {"top_n": top_n}
+        resp = self.session.get(url, headers=self._headers(token), params=params)
+        return self._handle_response(resp)
+
+    def get_recommendation_evaluation(self, token: str, k: int = 5) -> Dict[str, Any]:
+        url = f"{self.base_url}/api/recommendations/evaluation"
+        params = {"k": k}
+        resp = self.session.get(url, headers=self._headers(token), params=params)
+        return self._handle_response(resp)
+
+    # 9. Transaction APIs
     def get_transactions(
         self,
         token: str,
@@ -206,10 +313,11 @@ class ApiClient:
             params["vendor_id"] = vendor_id
         if product_id:
             params["product_id"] = product_id
-        resp = requests.get(url, headers=self._headers(token), params=params)
+        resp = self.session.get(url, headers=self._headers(token), params=params)
         return self._handle_response(resp)
 
     def create_transaction(self, token: str, data: Dict[str, Any]) -> Dict[str, Any]:
         url = f"{self.base_url}/api/transactions"
-        resp = requests.post(url, headers=self._headers(token), json=data)
+        resp = self.session.post(url, headers=self._headers(token), json=data)
         return self._handle_response(resp)
+

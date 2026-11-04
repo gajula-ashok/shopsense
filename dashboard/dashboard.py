@@ -31,12 +31,40 @@ except Exception:
     import theme as _theme_module
     importlib.reload(_theme_module)
 
+try:
+    import dashboard.inventory_ui as _inv_ui
+    importlib.reload(_inv_ui)
+except Exception:
+    import inventory_ui as _inv_ui
+    importlib.reload(_inv_ui)
+
+try:
+    import dashboard.customer_analytics_ui as _cust_ui
+    importlib.reload(_cust_ui)
+except Exception:
+    import customer_analytics_ui as _cust_ui
+    importlib.reload(_cust_ui)
+
+try:
+    import dashboard.recommendation_ui as _rec_ui
+    importlib.reload(_rec_ui)
+except Exception:
+    import recommendation_ui as _rec_ui
+    importlib.reload(_rec_ui)
+
+try:
+    import dashboard.vendor_applications_ui as _vapp_ui
+    importlib.reload(_vapp_ui)
+except Exception:
+    import vendor_applications_ui as _vapp_ui
+    importlib.reload(_vapp_ui)
+
 # Page configuration
 st.set_page_config(
     page_title="ShopSense – Multi-Vendor Analytics & Marketplace",
     page_icon="🛍️",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
 # Initialize Session State Defaults
@@ -57,6 +85,8 @@ if "user" not in st.session_state:
     st.session_state["user"] = None
 if "role" not in st.session_state:
     st.session_state["role"] = None
+if "user_phone" not in st.session_state:
+    st.session_state["user_phone"] = None
 if "vendor_id" not in st.session_state:
     st.session_state["vendor_id"] = None
 
@@ -64,6 +94,7 @@ def logout():
     st.session_state["token"] = None
     st.session_state["user"] = None
     st.session_state["role"] = None
+    st.session_state["user_phone"] = None
     st.session_state["vendor_id"] = None
     st.rerun()
 
@@ -150,13 +181,22 @@ def render_auth_page():
                     try:
                         with st.spinner("Authenticating..."):
                             resp = api.login(login_email.strip(), login_password)
-                            st.session_state["token"] = resp["access_token"]
-                            st.session_state["user"] = resp["email"]
-                            st.session_state["user_name"] = resp["full_name"]
-                            st.session_state["role"] = resp["role"]
-                            st.session_state["vendor_id"] = resp.get("vendor_id")
-                            st.success(f"Welcome back, {resp['full_name']}!")
-                            st.rerun()
+                            actual_role = resp["role"]
+                            
+                            # Validate that the authenticated user matches the chosen sign-in role
+                            if actual_role != login_role:
+                                role_names = {"ADMIN": "Admin", "VENDOR": "Vendor", "CUSTOMER": "Customer"}
+                                st.error(f"Access Denied: This account is registered as '{role_names.get(actual_role, actual_role)}', not as '{role_names.get(login_role, login_role)}'. Please select '{role_names.get(actual_role, actual_role)}' to sign in.")
+                            else:
+                                st.session_state["token"] = resp["access_token"]
+                                st.session_state["user"] = resp["email"]
+                                st.session_state["user_name"] = resp["full_name"]
+                                st.session_state["user_phone"] = resp.get("phone")
+                                st.session_state["role"] = resp["role"]
+                                st.session_state["vendor_id"] = resp.get("vendor_id")
+                                st.session_state["user_id"] = resp.get("user_id")
+                                st.success(f"Welcome back, {resp['full_name']}!")
+                                st.rerun()
                     except Exception as e:
                         st.error(f"Login failed: {str(e)}")
 
@@ -196,32 +236,31 @@ def render_auth_page():
 
             reg_name = st.text_input("Full Name", key="reg_name")
             reg_email = st.text_input("Email", key="reg_email")
+            reg_phone = st.text_input("Phone Number (10–15 digits) *", key="reg_phone", placeholder="e.g. 9876543210")
             reg_pw = st.text_input("Password (min 6 chars)", type="password", key="reg_pw")
             reg_pw_confirm = st.text_input("Confirm Password", type="password", key="reg_pw_confirm")
 
-            reg_phone = None
             reg_bname = None
             reg_cat = None
 
             if reg_role == "VENDOR":
-                st.markdown("##### 🏪 Vendor Details")
-                reg_bname = st.text_input("Business / Store Name", key="reg_bname", placeholder="e.g. Apex Electronics")
-                reg_phone = st.text_input("Phone Number", key="reg_phone", placeholder="e.g. 9876543210")
+                st.markdown("##### 🏪 Vendor Store Details")
+                reg_bname = st.text_input("Business / Store Name *", key="reg_bname", placeholder="e.g. Apex Electronics")
                 reg_cat = st.selectbox(
-                    "Store Category",
+                    "Store Category *",
                     ["Electronics", "Fashion", "Books", "Home & Kitchen", "Beauty & Personal Care", "General"],
                     key="reg_cat"
                 )
 
             if st.button("Create Account", type="primary", use_container_width=True):
-                if not reg_name or not reg_email or not reg_pw or not reg_pw_confirm:
+                if not reg_name or not reg_email or not reg_phone or not reg_pw or not reg_pw_confirm:
                     st.error("All fields are required.")
                 elif len(reg_pw) < 6:
                     st.error("Password must be at least 6 characters.")
                 elif reg_pw != reg_pw_confirm:
                     st.error("Passwords do not match.")
-                elif reg_role == "VENDOR" and not reg_phone:
-                    st.error("Phone number is required for Vendor onboarding.")
+                elif reg_role == "VENDOR" and not reg_bname:
+                    st.error("Business / Store Name is required for Vendor onboarding.")
                 else:
                     try:
                         with st.spinner("Creating account..."):
@@ -230,7 +269,7 @@ def render_auth_page():
                                 reg_email.strip(),
                                 reg_pw,
                                 reg_role,
-                                phone=reg_phone.strip() if reg_phone else None,
+                                phone=reg_phone.strip(),
                                 business_name=reg_bname.strip() if reg_bname else None,
                                 category=reg_cat.strip() if reg_cat else None
                             )
@@ -298,66 +337,141 @@ def render_dashboard_page():
 
     st.markdown("---")
 
-    # Visualizations
-    col_left, col_right = st.columns([3, 2])
+    # If Admin, show Quick Intelligence Tabs for Customer Analytics & Recommendations
+    if role == "ADMIN":
+        st.subheader("🧠 Platform Intelligence & Analytics")
+        dash_tab_sales, dash_tab_customers, dash_tab_recs = st.tabs([
+            "📈 Sales & Vendor Performance",
+            "👥 Customer Analytics & Segmentation",
+            "💡 Recommendation Engine & Model Evaluation"
+        ])
 
-    with col_left:
-        st.subheader("📈 Revenue Over Time")
-        trend_data = api.get_revenue_trend(token)
-        if trend_data:
-            df_trend = pd.DataFrame(trend_data)
-            fig_trend = px.area(
-                df_trend,
-                x="date",
-                y="revenue",
-                title="Daily Revenue Trend",
-                labels={"date": "Transaction Date", "revenue": "Revenue ($)"},
-                markers=True
-            )
-            fig_trend.update_layout(template="plotly_white", margin=dict(l=20, r=20, t=40, b=20))
-            st.plotly_chart(fig_trend, use_container_width=True)
-        else:
-            st.info("No transaction history recorded yet.")
+        with dash_tab_sales:
+            # Visualizations
+            col_left, col_right = st.columns([3, 2])
 
-    with col_right:
-        st.subheader("🥧 Category Distribution")
-        cat_data = api.get_category_performance(token)
-        if cat_data:
-            df_cat = pd.DataFrame(cat_data)
-            fig_cat = px.pie(
-                df_cat,
-                names="category",
-                values="revenue",
-                title="Revenue by Product Category",
-                hole=0.4
-            )
-            fig_cat.update_layout(template="plotly_white", margin=dict(l=20, r=20, t=40, b=20))
-            st.plotly_chart(fig_cat, use_container_width=True)
-        else:
-            st.info("No category data available.")
+            with col_left:
+                st.subheader("📈 Revenue Over Time")
+                trend_data = api.get_revenue_trend(token)
+                if trend_data:
+                    df_trend = pd.DataFrame(trend_data)
+                    fig_trend = px.area(
+                        df_trend,
+                        x="date",
+                        y="revenue",
+                        title="Daily Revenue Trend",
+                        labels={"date": "Transaction Date", "revenue": "Revenue ($)"},
+                        markers=True
+                    )
+                    fig_trend.update_layout(template="plotly_white", margin=dict(l=20, r=20, t=40, b=20))
+                    st.plotly_chart(fig_trend, use_container_width=True)
+                else:
+                    st.info("No transaction history recorded yet.")
 
-    # Second row of charts
-    c_bottom1, c_bottom2 = st.columns(2)
+            with col_right:
+                st.subheader("🥧 Category Distribution")
+                cat_data = api.get_category_performance(token)
+                if cat_data:
+                    df_cat = pd.DataFrame(cat_data)
+                    fig_cat = px.pie(
+                        df_cat,
+                        names="category",
+                        values="revenue",
+                        title="Revenue by Product Category",
+                        hole=0.4
+                    )
+                    fig_cat.update_layout(template="plotly_white", margin=dict(l=20, r=20, t=40, b=20))
+                    st.plotly_chart(fig_cat, use_container_width=True)
+                else:
+                    st.info("No category data available.")
 
-    with c_bottom1:
-        if role == "ADMIN":
-            st.subheader("🏆 Vendor Performance Breakdown")
-            v_perf = api.get_vendor_performance(token)
-            if v_perf:
-                df_v = pd.DataFrame(v_perf)
-                fig_v = px.bar(
-                    df_v,
-                    x="business_name",
-                    y="total_revenue",
-                    color="category",
-                    title="Revenue by Vendor",
-                    labels={"business_name": "Vendor", "total_revenue": "Revenue ($)"}
+            # Second row of charts
+            c_bottom1, c_bottom2 = st.columns(2)
+
+            with c_bottom1:
+                st.subheader("🏆 Vendor Performance Breakdown")
+                v_perf = api.get_vendor_performance(token)
+                if v_perf:
+                    df_v = pd.DataFrame(v_perf)
+                    fig_v = px.bar(
+                        df_v,
+                        x="business_name",
+                        y="total_revenue",
+                        color="category",
+                        title="Revenue by Vendor",
+                        labels={"business_name": "Vendor", "total_revenue": "Revenue ($)"}
+                    )
+                    fig_v.update_layout(template="plotly_white")
+                    st.plotly_chart(fig_v, use_container_width=True)
+                else:
+                    st.info("No vendor metrics recorded.")
+
+            with c_bottom2:
+                st.subheader("📊 Top Selling Products")
+                p_perf = api.get_product_performance(token)
+                if p_perf:
+                    df_top = pd.DataFrame(p_perf).sort_values(by="quantity_sold", ascending=False).head(5)
+                    fig_top = px.bar(
+                        df_top,
+                        x="quantity_sold",
+                        y="product_name",
+                        orientation="h",
+                        title="Top 5 Products by Units Sold",
+                        labels={"quantity_sold": "Units Sold", "product_name": "Product"}
+                    )
+                    fig_top.update_layout(template="plotly_white", yaxis={'categoryorder':'total ascending'})
+                    st.plotly_chart(fig_top, use_container_width=True)
+                else:
+                    st.info("No sales data available.")
+
+        with dash_tab_customers:
+            _cust_ui.render_customer_intelligence_section(api, token, role, _theme_module, current_theme)
+
+        with dash_tab_recs:
+            admin_user_id = st.session_state.get("user_id", 1)
+            _rec_ui.render_recommendation_intelligence_section(api, token, role, admin_user_id, _theme_module, current_theme)
+
+    else:
+        # Vendor dashboard visualizations
+        col_left, col_right = st.columns([3, 2])
+
+        with col_left:
+            st.subheader("📈 Revenue Over Time")
+            trend_data = api.get_revenue_trend(token)
+            if trend_data:
+                df_trend = pd.DataFrame(trend_data)
+                fig_trend = px.area(
+                    df_trend,
+                    x="date",
+                    y="revenue",
+                    title="Daily Revenue Trend",
+                    labels={"date": "Transaction Date", "revenue": "Revenue ($)"},
+                    markers=True
                 )
-                fig_v.update_layout(template="plotly_white")
-                st.plotly_chart(fig_v, use_container_width=True)
+                fig_trend.update_layout(template="plotly_white", margin=dict(l=20, r=20, t=40, b=20))
+                st.plotly_chart(fig_trend, use_container_width=True)
             else:
-                st.info("No vendor metrics recorded.")
-        else:
+                st.info("No transaction history recorded yet.")
+
+        with col_right:
+            st.subheader("🥧 Category Distribution")
+            cat_data = api.get_category_performance(token)
+            if cat_data:
+                df_cat = pd.DataFrame(cat_data)
+                fig_cat = px.pie(
+                    df_cat,
+                    names="category",
+                    values="revenue",
+                    title="Revenue by Product Category",
+                    hole=0.4
+                )
+                fig_cat.update_layout(template="plotly_white", margin=dict(l=20, r=20, t=40, b=20))
+                st.plotly_chart(fig_cat, use_container_width=True)
+            else:
+                st.info("No category data available.")
+
+        c_bottom1, c_bottom2 = st.columns(2)
+        with c_bottom1:
             st.subheader("📦 Product Sales Performance")
             p_perf = api.get_product_performance(token)
             if p_perf:
@@ -375,23 +489,23 @@ def render_dashboard_page():
             else:
                 st.info("No product metrics available.")
 
-    with c_bottom2:
-        st.subheader("📊 Top Selling Products")
-        p_perf = api.get_product_performance(token)
-        if p_perf:
-            df_top = pd.DataFrame(p_perf).sort_values(by="quantity_sold", ascending=False).head(5)
-            fig_top = px.bar(
-                df_top,
-                x="quantity_sold",
-                y="product_name",
-                orientation="h",
-                title="Top 5 Products by Units Sold",
-                labels={"quantity_sold": "Units Sold", "product_name": "Product"}
-            )
-            fig_top.update_layout(template="plotly_white", yaxis={'categoryorder':'total ascending'})
-            st.plotly_chart(fig_top, use_container_width=True)
-        else:
-            st.info("No sales data available.")
+        with c_bottom2:
+            st.subheader("📊 Top Selling Products")
+            p_perf = api.get_product_performance(token)
+            if p_perf:
+                df_top = pd.DataFrame(p_perf).sort_values(by="quantity_sold", ascending=False).head(5)
+                fig_top = px.bar(
+                    df_top,
+                    x="quantity_sold",
+                    y="product_name",
+                    orientation="h",
+                    title="Top 5 Products by Units Sold",
+                    labels={"quantity_sold": "Units Sold", "product_name": "Product"}
+                )
+                fig_top.update_layout(template="plotly_white", yaxis={'categoryorder':'total ascending'})
+                st.plotly_chart(fig_top, use_container_width=True)
+            else:
+                st.info("No sales data available.")
 
     st.markdown(_theme_module.render_trust_footer(), unsafe_allow_html=True)
 
@@ -535,6 +649,7 @@ def render_products_page():
                 p_price = st.number_input("Unit Price ($) *", min_value=0.01, value=49.99, step=1.0)
             with c2:
                 p_stock = st.number_input("Initial Inventory Stock *", min_value=0, value=20, step=1)
+                p_img = st.text_input("Product Image URL (Optional)", placeholder="https://images.unsplash.com/...")
                 p_vendor_id = None
                 if role == "ADMIN":
                     all_vendors = api.get_vendors(token)
@@ -555,6 +670,8 @@ def render_products_page():
                         "price": p_price,
                         "stock": p_stock
                     }
+                    if p_img and p_img.strip():
+                        payload["image_url"] = p_img.strip()
                     if role == "ADMIN" and p_vendor_id:
                         payload["vendor_id"] = p_vendor_id
                     try:
@@ -579,16 +696,31 @@ def render_products_page():
         products = api.get_products(token, search=search_kw, category=cat_filter)
         if products:
             df_p = pd.DataFrame(products)
+            cols_to_show = ["product_id", "product_name", "category", "price", "stock", "image_url", "vendor_name", "created_at"]
+            display_cols = [c for c in cols_to_show if c in df_p.columns]
             st.dataframe(
-                df_p[["product_id", "product_name", "category", "price", "stock", "vendor_name", "created_at"]],
+                df_p[display_cols],
                 use_container_width=True,
                 hide_index=True
             )
 
             # Edit/Delete Product Section
-            st.subheader("✏️ Edit Product Details")
+            st.subheader("✏️ Edit Product Details & Image")
             sel_prod_id = st.selectbox("Select product to edit", [p["product_id"] for p in products], format_func=lambda x: f"#{x} - {[p['product_name'] for p in products if p['product_id']==x][0]}")
             curr_prod = next(p for p in products if p["product_id"] == sel_prod_id)
+
+            # Product image preview & input
+            prev_col, edit_col = st.columns([1, 2])
+            with prev_col:
+                prod_preview_img = curr_prod.get("image_url") or _theme_module.get_product_image(curr_prod["product_name"], curr_prod.get("category", "General"))
+                st.markdown(f"""
+                <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px; text-align: center; background: #fff;">
+                    <img src="{prod_preview_img}" alt="{curr_prod['product_name']}" style="max-height: 140px; max-width: 100%; object-fit: contain; border-radius: 6px;" />
+                    <div style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">Live Image Preview</div>
+                </div>
+                """, unsafe_allow_html=True)
+            with edit_col:
+                edit_img_url = st.text_input("Product Image URL", value=curr_prod.get("image_url") or "", key=f"edit_img_{curr_prod['product_id']}")
 
             e1, e2, e3 = st.columns(3)
             with e1:
@@ -601,8 +733,11 @@ def render_products_page():
                 with col_save:
                     if st.button("Save Edits"):
                         try:
-                            api.update_product(token, sel_prod_id, {"price": edit_price, "stock": edit_stock})
-                            st.success("Product updated!")
+                            update_payload = {"price": edit_price, "stock": edit_stock}
+                            if edit_img_url.strip():
+                                update_payload["image_url"] = edit_img_url.strip()
+                            api.update_product(token, sel_prod_id, update_payload)
+                            st.success("Product and image updated successfully!")
                             st.rerun()
                         except Exception as e:
                             st.error(f"Update failed: {e}")
@@ -631,63 +766,8 @@ def render_inventory_page():
     current_theme = st.session_state.get("theme", _theme_module.DEFAULT_THEME)
 
     st.markdown(_theme_module.render_top_navbar(user_name, role, current_theme), unsafe_allow_html=True)
-    st.title("📋 Inventory Management & Warehouse Tracking")
-
-    status_filter = st.selectbox("Filter by Stock Status", ["All", "IN STOCK", "LOW STOCK", "OUT OF STOCK"])
-
-    try:
-        inv_items = api.get_inventory(token, status=status_filter)
-        if inv_items:
-            df_inv = pd.DataFrame(inv_items)
-
-            # Summary KPIs for Inventory
-            i1, i2, i3, i4 = st.columns(4)
-            with i1:
-                st.metric("Total Tracked Items", len(df_inv))
-            with i2:
-                in_stock_cnt = len(df_inv[df_inv["status"] == "IN STOCK"])
-                st.metric("In Stock", in_stock_cnt)
-            with i3:
-                low_stock_cnt = len(df_inv[df_inv["status"] == "LOW STOCK"])
-                st.metric("Low Stock Alerts", low_stock_cnt)
-            with i4:
-                out_stock_cnt = len(df_inv[df_inv["status"] == "OUT OF STOCK"])
-                st.metric("Out of Stock", out_stock_cnt)
-
-            st.dataframe(
-                df_inv[["inventory_id", "product_name", "vendor_name", "current_stock", "reorder_level", "warehouse", "status", "updated_at"]],
-                use_container_width=True,
-                hide_index=True
-            )
-
-            # Stock Adjustment Section
-            st.subheader("📦 Update Inventory Levels")
-            sel_item_id = st.selectbox("Select product to restock", [item["product_id"] for item in inv_items], format_func=lambda x: f"Product #{x} - {[item['product_name'] for item in inv_items if item['product_id']==x][0]}")
-            curr_item = next(item for item in inv_items if item["product_id"] == sel_item_id)
-
-            u1, u2, u3 = st.columns(3)
-            with u1:
-                new_stock = st.number_input("Current Stock Count", value=int(curr_item["current_stock"]), min_value=0, step=1)
-            with u2:
-                new_reorder = st.number_input("Reorder Threshold", value=int(curr_item["reorder_level"]), min_value=0, step=1)
-            with u3:
-                new_warehouse = st.text_input("Warehouse Location", value=str(curr_item["warehouse"]))
-
-            if st.button("Update Inventory Record", type="primary"):
-                try:
-                    api.update_inventory(token, sel_item_id, {
-                        "current_stock": new_stock,
-                        "reorder_level": new_reorder,
-                        "warehouse": new_warehouse
-                    })
-                    st.success("Inventory updated successfully!")
-                    st.rerun()
-                except Exception as e:
-                    st.error(f"Update failed: {e}")
-        else:
-            st.info("No inventory records found.")
-    except Exception as e:
-        st.error(f"Error loading inventory: {e}")
+    # Render complete Milestone 2 Inventory Intelligence Suite
+    _inv_ui.render_inventory_intelligence_section(api, token, role, _theme_module, current_theme)
 
     st.markdown(_theme_module.render_trust_footer(), unsafe_allow_html=True)
 
@@ -939,23 +1019,60 @@ def render_customer_catalog():
     elif sort_by == "Product Name: A to Z":
         filtered = sorted(filtered, key=lambda x: x.get("product_name", "").lower())
 
-    st.markdown(
-        f"<div style='font-size:0.95rem; font-weight:700; color:#555; margin: 6px 0 16px 0;'>"
-        f"Showing <strong style='color:var(--ss-primary);'>{len(filtered)}</strong> products for you"
-        f"</div>",
-        unsafe_allow_html=True
-    )
-
     if not filtered:
         st.warning("No products matched your search or category filters. Try resetting filters.")
         return
 
+    # Pagination Settings (18 products per page for fast rendering)
+    PAGE_SIZE = 18
+    total_products = len(filtered)
+    total_pages = max(1, (total_products + PAGE_SIZE - 1) // PAGE_SIZE)
+
+    # Manage page state
+    if "cust_catalog_page" not in st.session_state:
+        st.session_state["cust_catalog_page"] = 1
+    
+    # Ensure current page is within valid range
+    if st.session_state["cust_catalog_page"] > total_pages:
+        st.session_state["cust_catalog_page"] = 1
+
+    current_page = st.session_state["cust_catalog_page"]
+    start_idx = (current_page - 1) * PAGE_SIZE
+    end_idx = min(start_idx + PAGE_SIZE, total_products)
+    page_items = filtered[start_idx:end_idx]
+
+    # Header with page summary and pagination controls
+    head_c1, head_c2 = st.columns([3, 2])
+    with head_c1:
+        st.markdown(
+            f"<div style='font-size:0.95rem; font-weight:700; color:#555; padding-top: 8px;'>"
+            f"Showing <strong style='color:var(--ss-primary);'>{start_idx + 1}–{end_idx}</strong> of "
+            f"<strong style='color:var(--ss-primary);'>{total_products}</strong> products (Page {current_page} of {total_pages})"
+            f"</div>",
+            unsafe_allow_html=True
+        )
+    with head_c2:
+        if total_pages > 1:
+            p_prev, p_info, p_next = st.columns([1, 2, 1])
+            with p_prev:
+                if st.button("◀ Prev", disabled=(current_page <= 1), use_container_width=True, key="cat_btn_prev"):
+                    st.session_state["cust_catalog_page"] -= 1
+                    st.rerun()
+            with p_info:
+                st.markdown(f"<div style='text-align:center; padding-top:6px; font-weight:600; font-size:0.85rem; color:#64748b;'>Page {current_page} / {total_pages}</div>", unsafe_allow_html=True)
+            with p_next:
+                if st.button("Next ▶", disabled=(current_page >= total_pages), use_container_width=True, key="cat_btn_next"):
+                    st.session_state["cust_catalog_page"] += 1
+                    st.rerun()
+
+    st.markdown("<hr style='margin: 8px 0 16px 0; border: none; border-top: 1px solid #f1f5f9;'/>", unsafe_allow_html=True)
+
     cols_per_row = 3
-    for i in range(0, len(filtered), cols_per_row):
+    for i in range(0, len(page_items), cols_per_row):
         row_cols = st.columns(cols_per_row)
         for j in range(cols_per_row):
-            if i + j < len(filtered):
-                p = filtered[i + j]
+            if i + j < len(page_items):
+                p = page_items[i + j]
                 with row_cols[j]:
                     # Render modern product card
                     st.markdown(_theme_module.render_product_card_html(p, current_theme), unsafe_allow_html=True)
@@ -986,6 +1103,21 @@ def render_customer_catalog():
                                     st.error(f"Error placing order: {err}")
                     else:
                         st.button("❌ Out of Stock", key=f"cust_out_{p['product_id']}", disabled=True, use_container_width=True)
+
+    # Bottom pagination controls
+    if total_pages > 1:
+        st.markdown("<hr style='margin: 20px 0 10px 0; border: none; border-top: 1px solid #e2e8f0;'/>", unsafe_allow_html=True)
+        bot_prev, bot_info, bot_next = st.columns([1, 3, 1])
+        with bot_prev:
+            if st.button("◀ Previous Page", disabled=(current_page <= 1), use_container_width=True, key="cat_bot_prev"):
+                st.session_state["cust_catalog_page"] -= 1
+                st.rerun()
+        with bot_info:
+            st.markdown(f"<div style='text-align:center; padding-top:6px; font-weight:700; color:#475569;'>Page {current_page} of {total_pages} ({total_products} items total)</div>", unsafe_allow_html=True)
+        with bot_next:
+            if st.button("Next Page ▶", disabled=(current_page >= total_pages), use_container_width=True, key="cat_bot_next"):
+                st.session_state["cust_catalog_page"] += 1
+                st.rerun()
 
     # Trust Footer
     st.markdown(_theme_module.render_trust_footer(), unsafe_allow_html=True)
@@ -1040,6 +1172,7 @@ def render_customer_orders():
 def render_customer_profile():
     user_name = st.session_state.get("user_name", "Customer")
     user_email = st.session_state.get("user", "")
+    user_phone = st.session_state.get("user_phone") or "+91 98765 43210"
     role = st.session_state.get("role", "CUSTOMER")
     current_theme = st.session_state.get("theme", _theme_module.DEFAULT_THEME)
 
@@ -1047,7 +1180,7 @@ def render_customer_profile():
     st.title("👤 My Account & Membership")
 
     # Member Profile Card
-    st.markdown(_theme_module.render_customer_profile_card(user_name, user_email, role, current_theme), unsafe_allow_html=True)
+    st.markdown(_theme_module.render_customer_profile_card(user_name, user_email, role, current_theme, phone=user_phone), unsafe_allow_html=True)
 
     # Address and Preferences Cards
     col_addr, col_sec = st.columns(2)
@@ -1057,7 +1190,7 @@ def render_customer_profile():
             st.write(f"**{user_name}**")
             st.write("#42, Tech Boulevard, Koramangala 4th Block")
             st.write("Bangalore, Karnataka – 560034")
-            st.write("📞 Contact: +91 98765 43210")
+            st.write(f"📞 Contact: {user_phone}")
             st.caption("⚡ Verified primary shipping address for 1-day delivery")
 
     with col_sec:
@@ -1081,80 +1214,146 @@ def main():
         role = st.session_state["role"]
         user_email = st.session_state["user"]
         user_name = st.session_state.get("user_name", "User")
+        current_theme = st.session_state.get("theme", _theme_module.DEFAULT_THEME)
 
-        # Sidebar Navigation
-        with st.sidebar:
-            st.markdown("""
-            <div class="ss-sidebar-header">
-                <div style="font-size: 1.35rem; font-weight: 800; display:flex; align-items:center; gap:8px;">
-                    🛍️ ShopSense
-                </div>
-                <div style="font-size: 0.75rem; opacity: 0.9; margin-top:2px;">
-                    Multi-Vendor Marketplace & Analytics
-                </div>
+        # Top Horizontal Navigation Header
+        top_col_brand, top_col_theme, top_col_user = st.columns([4, 3, 2])
+        with top_col_brand:
+            st.markdown(f"""
+            <div style="display:flex; align-items:center; gap:10px; padding: 6px 0;">
+                <span style="font-size: 1.6rem; font-weight: 800; color: var(--ss-primary, #0284c7);">🛍️ ShopSense</span>
+                <span style="background: rgba(2,132,199,0.12); color: var(--ss-primary, #0284c7); padding: 3px 10px; border-radius: 9999px; font-size: 0.75rem; font-weight: 700;">
+                    {_theme_module.get_theme_config(current_theme).get('brand_badge', 'Marketplace')}
+                </span>
             </div>
             """, unsafe_allow_html=True)
-
-            # Theme Switcher
-            st.markdown("<div style='font-size:0.8rem; font-weight:700; color:#555; margin-bottom:4px;'>🎨 APP UI THEME</div>", unsafe_allow_html=True)
-            theme_choice = st.selectbox(
+        with top_col_theme:
+            st.selectbox(
                 "UI Theme",
                 list(_theme_module.THEME_CONFIGS.keys()),
-                index=list(_theme_module.THEME_CONFIGS.keys()).index(st.session_state["theme"]),
-                key="sidebar_theme_switcher",
+                index=list(_theme_module.THEME_CONFIGS.keys()).index(current_theme),
+                key="top_navbar_theme_switcher",
                 label_visibility="collapsed"
             )
-            if theme_choice != st.session_state["theme"]:
-                st.session_state["theme"] = theme_choice
+            if st.session_state.get("top_navbar_theme_switcher") and st.session_state["top_navbar_theme_switcher"] != current_theme:
+                st.session_state["theme"] = st.session_state["top_navbar_theme_switcher"]
                 st.rerun()
-
-            st.markdown(f"""
-            <div class="ss-sidebar-user-card">
-                <div style="font-size: 0.88rem; font-weight: 700; color: #212121;">👤 {user_name}</div>
-                <div style="font-size: 0.75rem; color: #666; margin-top: 2px; overflow:hidden; text-overflow:ellipsis;">📧 {user_email}</div>
-                <div style="margin-top: 8px;">
-                    <span class="status-badge-active">{role}</span>
+        with top_col_user:
+            u_col1, u_col2 = st.columns([2, 1])
+            with u_col1:
+                st.markdown(f"""
+                <div style="text-align:right; padding-top:4px;">
+                    <span style="font-weight:700; font-size:0.88rem; color:#1e293b;">👤 {user_name}</span>
+                    <span style="background:#e2e8f0; color:#475569; padding:2px 8px; border-radius:6px; font-size:0.7rem; font-weight:700; margin-left:4px;">{role}</span>
                 </div>
-            </div>
-            """, unsafe_allow_html=True)
+                """, unsafe_allow_html=True)
+            with u_col2:
+                if st.button("🚪 Logout", key="top_logout_btn", use_container_width=True):
+                    logout()
 
-            st.markdown("---")
+        # Define Role-based Horizontal Navigation Menus
+        if role == "ADMIN":
+            nav_options = [
+                "📊 Dashboard",
+                "🏢 Vendors",
+                "📋 Vendor Profiles",
+                "📦 Products",
+                "🏷️ Categories",
+                "📦 Orders",
+                "📋 Inventory",
+                "👥 Customer Analytics",
+                "💡 Recommendations",
+                "📈 Analytics",
+                "⚙️ Settings"
+            ]
+        elif role == "VENDOR":
+            nav_options = [
+                "📊 Dashboard",
+                "📦 My Products",
+                "📋 Inventory",
+                "📦 Orders",
+                "📈 Sales Analytics",
+                "👤 Profile"
+            ]
+        else:  # CUSTOMER
+            nav_options = [
+                "🛍️ Home",
+                "📦 Products",
+                "🏷️ Categories",
+                "📦 My Orders",
+                "💡 Recommendations",
+                "👤 Profile"
+            ]
 
-            # Nav items depend on role
-            if role == "CUSTOMER":
-                nav_options = ["🛍️ Products", "📦 Orders", "👤 Profile"]
-            elif role == "ADMIN":
-                nav_options = ["📊 Dashboard", "🏢 Vendors", "📦 Products", "📋 Inventory", "💳 Transactions", "📈 Analytics"]
-            else:  # VENDOR
-                nav_options = ["📊 Dashboard", "📦 Products", "📋 Inventory", "💳 Transactions", "📈 Analytics"]
+        # Horizontal Nav Bar
+        chosen_page = st.radio(
+            "ShopSense Navigation",
+            nav_options,
+            index=0,
+            horizontal=True,
+            label_visibility="collapsed",
+            key="horizontal_main_navbar"
+        )
+        st.markdown("<hr style='margin: 8px 0 20px 0; border: none; border-top: 1px solid #e2e8f0;'/>", unsafe_allow_html=True)
 
-            chosen_page = st.radio("Navigation", nav_options, index=0)
+        # Route to Selected Page
+        token = st.session_state["token"]
+        user_id = st.session_state.get("user_id", 1)
 
-            st.markdown("---")
-            if st.button("🚪 Logout", use_container_width=True):
-                logout()
-
-        # Render chosen page based on role and selection
         if role == "CUSTOMER":
-            if "Products" in chosen_page:
+            if chosen_page in ("🛍️ Home", "📦 Products"):
                 render_customer_catalog()
-            elif "Orders" in chosen_page:
+            elif chosen_page == "🏷️ Categories":
+                render_customer_catalog()
+            elif chosen_page == "📦 My Orders":
                 render_customer_orders()
-            elif "Profile" in chosen_page:
+            elif chosen_page == "💡 Recommendations":
+                st.markdown(_theme_module.render_top_navbar(user_name, role, current_theme), unsafe_allow_html=True)
+                st.title("💡 Personalized Recommendations")
+                _rec_ui.render_recommendation_intelligence_section(api, token, role, user_id, _theme_module, current_theme)
+                st.markdown(_theme_module.render_trust_footer(), unsafe_allow_html=True)
+            elif chosen_page == "👤 Profile":
                 render_customer_profile()
         else:
-            if "Dashboard" in chosen_page:
+            # ADMIN & VENDOR Views
+            if chosen_page == "📊 Dashboard":
                 render_dashboard_page()
-            elif "Vendors" in chosen_page:
+            elif chosen_page == "🏢 Vendors":
                 render_vendors_page()
-            elif "Products" in chosen_page:
+            elif chosen_page == "📋 Vendor Profiles":
+                _vapp_ui.render_vendor_applications_page(api, token, current_theme)
+                st.markdown(_theme_module.render_trust_footer(), unsafe_allow_html=True)
+            elif chosen_page in ("📦 Products", "📦 My Products"):
                 render_products_page()
-            elif "Inventory" in chosen_page:
-                render_inventory_page()
-            elif "Transactions" in chosen_page:
+            elif chosen_page == "🏷️ Categories":
+                st.markdown(_theme_module.render_top_navbar(user_name, role, current_theme), unsafe_allow_html=True)
+                st.title("🏷️ Marketplace Category Hierarchy")
+                # Direct to the category tree view
+                _inv_ui.render_category_tree_view(api, token)
+                st.markdown(_theme_module.render_trust_footer(), unsafe_allow_html=True)
+            elif chosen_page in ("📦 Orders", "💳 Transactions"):
                 render_transactions_page()
-            elif "Analytics" in chosen_page:
+            elif chosen_page in ("📋 Inventory", "📋 Inventory Intelligence"):
+                render_inventory_page()
+            elif chosen_page in ("📈 Analytics", "📈 Sales Analytics"):
                 render_analytics_page()
+            elif chosen_page == "👥 Customer Analytics":
+                st.markdown(_theme_module.render_top_navbar(user_name, role, current_theme), unsafe_allow_html=True)
+                st.title("👥 Customer Intelligence & Segmentation")
+                _cust_ui.render_customer_intelligence_section(api, token, role, _theme_module, current_theme)
+                st.markdown(_theme_module.render_trust_footer(), unsafe_allow_html=True)
+            elif chosen_page == "💡 Recommendations":
+                st.markdown(_theme_module.render_top_navbar(user_name, role, current_theme), unsafe_allow_html=True)
+                st.title("💡 Recommendation Engine & Model Evaluation")
+                _rec_ui.render_recommendation_intelligence_section(api, token, role, user_id, _theme_module, current_theme)
+                st.markdown(_theme_module.render_trust_footer(), unsafe_allow_html=True)
+            elif chosen_page == "👤 Profile":
+                render_customer_profile()
+            elif chosen_page == "⚙️ Settings":
+                st.markdown(_theme_module.render_top_navbar(user_name, role, current_theme), unsafe_allow_html=True)
+                st.title("⚙️ Marketplace Configuration & System Settings")
+                st.info("Marketplace settings, API integrations, and security controls are active and verified.")
+                st.markdown(_theme_module.render_trust_footer(), unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()

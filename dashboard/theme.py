@@ -5,49 +5,234 @@ Provides theme presets, dynamic CSS generation, and reusable marketplace UI comp
 
 from typing import Dict, Any, Tuple
 import hashlib
+import re
 
-# Curated High-Definition E-Commerce Product Images (Unsplash royalty-free CDN)
-PRODUCT_IMAGES = {
-    # Electronics
-    "Noise-Cancelling Wireless Headphones Pro": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&auto=format&fit=crop&q=80",
-    "Ultra-Slim RGB Mechanical Keyboard": "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=600&auto=format&fit=crop&q=80",
-    "Smartwatch Series 7 Titanium": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format&fit=crop&q=80",
-    "Thunderbolt 4 High-Speed USB Dock": "https://images.unsplash.com/photo-1616440347437-b1c73416efc2?w=600&auto=format&fit=crop&q=80",
-    "4K Ultra HD Dual-Monitor Webcam 60FPS": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=600&auto=format&fit=crop&q=80",
+try:
+    from app.inventory.exact_images import EXACT_PRODUCT_IMAGE_MAP
+except Exception:
+    try:
+        import sys
+        import os
+        sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+        from app.inventory.exact_images import EXACT_PRODUCT_IMAGE_MAP
+    except Exception:
+        EXACT_PRODUCT_IMAGE_MAP = {}
 
-    # Fashion
-    "Organic Cotton Classic Graphic Tee": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=600&auto=format&fit=crop&q=80",
-    "Classic Slim-Fit Stretch Denim Jeans": "https://images.unsplash.com/photo-1542272604-787c3835535d?w=600&auto=format&fit=crop&q=80",
-    "Lightweight Waterproof All-Weather Windbreaker": "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600&auto=format&fit=crop&q=80",
-    "Merino Wool Thermal Crewneck Sweater": "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=600&auto=format&fit=crop&q=80",
+# Pexels CDN helper - works without referrer restrictions in Streamlit
+def _px(photo_id: int) -> str:
+    return f"https://images.pexels.com/photos/{photo_id}/pexels-photo-{photo_id}.jpeg?auto=compress&cs=tinysrgb&w=600"
 
-    # Books
-    "Data Science & AI Engineering Handbook": "https://images.unsplash.com/photo-1532012164546-f432f2e3777f?w=600&auto=format&fit=crop&q=80",
-    "Modern Web Architecture with FastAPI & React": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80",
-    "The Art of Scalable Cloud Computing": "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=600&auto=format&fit=crop&q=80",
-    "Deep Learning Illustrated (Hardcover Edition)": "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=600&auto=format&fit=crop&q=80",
+# Keyword-to-Image Matching using Pexels (loads reliably in Streamlit iframes)
+PRODUCT_KEYWORD_PATTERNS = [
+    # Electronics - most specific first
+    (r"noise.cancell|over.ear.*head|wireless.*headphone|headphone|earphone|earbud", _px(3394650)),
+    (r"bluetooth.*speaker|portable.*speaker|waterproof.*speaker|speaker",           _px(1706694)),
+    (r"rgb.*keyboard|mechanical.*keyboard|gaming.*keyboard|keyboard",               _px(2115256)),
+    (r"wireless.*mouse|ergonomic.*mouse|gaming.*mouse|mouse\b",                     _px(1037995)),
+    (r"gan.*charg|65w.*charg|fast.*charg|wireless.*charg.*pad",                     _px(4526408)),
+    (r"type-c.*cable|lightning.*cable|braided.*cable|usb.*cable",                   _px(4526418)),
+    (r"thunderbolt|usb.*hub|usb-c.*hub|quad.*display",                              _px(4526430)),
+    (r"webcam|web.*cam|streamer.*cam",                                               _px(4126743)),
+    (r"smartwatch|fitness.*band|smart.*band|spO2|heart.*rate",                      _px(393047)),
+    (r"gaming.*laptop|rtx.*laptop|gaming.*beast",                                   _px(777001)),
+    (r"ultrabook|thin.*light.*laptop|slim.*laptop",                                 _px(7974681)),
+    (r"laptop|notebook|study.*laptop|student.*laptop",                              _px(18105)),
+    (r"5g.*flagship|flagship.*phone|prime.*pro",                                    _px(607812)),
+    (r"smartphone|mobile.*phone|5g.*phone|amoled.*phone|iphone|samsung",           _px(1092644)),
+    (r"power.*bank|portable.*charg.*bank",                                          _px(4526403)),
+    (r"screen.*protect|tempered.*glass",                                            _px(404280)),
+    (r"armor.*case|phone.*case|mobile.*case|shockproof.*case",                     _px(1034662)),
+    (r"tripod|selfie.*stick",                                                       _px(1500355)),
+    (r"car.*mount|car.*phone.*mount|magnetic.*mount",                               _px(5187260)),
+    (r"flash.*drive|otg.*drive|usb.*drive|pendrive",                               _px(4526416)),
+    (r"hdmi.*adapt|usb.*hdmi|display.*adapt",                                       _px(4526414)),
+    (r"extension.*board|power.*strip|surge.*protect",                               _px(4526412)),
+    (r"cooling.*pad|laptop.*cooler",                                                _px(5082579)),
+    (r"laptop.*stand|aluminum.*stand|ergonomic.*stand",                             _px(1714208)),
+    (r"laptop.*sleeve|laptop.*bag|neoprene.*sleeve",                                _px(1649771)),
+    (r"robot.*vacuum|vacuum.*clean",                                                _px(3637786)),
+    (r"wireless.*charg.*pad|charging.*pad",                                         _px(4526422)),
+    (r"power.*adapter|multi.*pin.*adapter",                                         _px(4526427)),
+    (r"numeric.*keypad|accountant.*keypad",                                         _px(1772973)),
 
-    # Home & Kitchen
-    "Ergonomic Lumbar Support Mesh Office Chair": "https://images.unsplash.com/photo-1580481077195-c328865c4046?w=600&auto=format&fit=crop&q=80",
-    "Cold Brew Precision Espresso Coffee Maker": "https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?w=600&auto=format&fit=crop&q=80",
-    "Ultrasonic Aroma Diffuser with Ambient LED": "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=600&auto=format&fit=crop&q=80",
-    "Non-Stick Ceramic Cookware 10-Piece Set": "https://images.unsplash.com/photo-1584990347449-3995874c2bc0?w=600&auto=format&fit=crop&q=80",
+    # Fashion - Ethnic / Indian wear (most specific first)
+    (r"kurta|kurti|anarkali|chikankari|embroid.*kurti",                             _px(8285390)),
+    (r"saree|banarasi.*silk|silk.*saree",                                           _px(1536619)),
+    (r"palazzo|tunic.*set|palazzo.*tunic",                                          _px(8285357)),
+    (r"nehru.*jacket|festive.*waistcoat|kurta.*pyjama",                             _px(1656684)),
+    (r"linen.*kurta|casual.*kurta|cotton.*kurta",                                   _px(8285390)),
+
+    # Fashion - Outerwear (before generic shirt/tshirt)
+    (r"windbreaker|hooded.*outdoor.*jacket|waterproof.*jacket",                     _px(8386432)),
+    (r"blazer|wool.*blend.*blazer|business.*blazer",                                _px(1656684)),
+    (r"hoodie|zip.*up.*hoodie|fleece.*zip",                                         _px(6311423)),
+    (r"waistcoat|cardigan|sweater",                                                 _px(1656684)),
+
+    # Fashion - Tops
+    (r"graphic.*t.shirt|round.*neck.*t|classic.*tee",                              _px(1043474)),
+    (r"polo.*t.shirt|men.*polo|polo.*collar",                                       _px(9558738)),
+    (r"sports.*bra|high.*support.*bra",                                             _px(4498481)),
+    (r"blouse|embellish.*blouse|sleeveless.*top",                                   _px(3622574)),
+    (r"nightwear|satin.*night|night.*set",                                          _px(6311417)),
+    (r"women.*sweatshirt|trendy.*sweat|ladies.*sweat",                              _px(3622554)),
+    (r"sweatshirt|crewneck.*sweat",                                                 _px(3622554)),
+
+    # Fashion - Shirts
+    (r"linen.*shirt|formal.*shirt|oxford.*shirt|button.*down.*shirt",              _px(297933)),
+    (r"cotton.*shirt|casual.*shirt|regular.*fit.*shirt",                            _px(3622608)),
+    (r"shirt\b",                                                                    _px(297933)),
+
+    # Fashion - Jeans / Trousers
+    (r"ripped.*jean|skinny.*jean|distressed.*denim",                               _px(4210858)),
+    (r"denim.*jean|jeans\b|denim\b",                                               _px(1598507)),
+    (r"chino|flat.*front.*trouser|formal.*trouser",                                 _px(4210851)),
+    (r"jogger|trackpant|track.*pant|sweatpant",                                     _px(8386434)),
+    (r"compression.*tight|active.*tight|sports.*tight",                             _px(8386440)),
+
+    # Fashion - Women dresses
+    (r"midi.*dress|wrap.*dress|chiffon.*dress|floral.*dress",                       _px(1536619)),
+    (r"jegging|high.*rise.*slim.*fit",                                              _px(1598505)),
+
+    # Footwear
+    (r"running.*shoes|mesh.*running|lightweight.*running",                          _px(2529148)),
+    (r"canvas.*sneaker|low.*top.*canvas|classic.*sneaker",                          _px(1598508)),
+    (r"oxford.*shoe|derby.*shoe|formal.*oxford|leather.*formal.*shoe",             _px(336372)),
+    (r"trekking|hiking.*boot|waterproof.*boot",                                     _px(1456706)),
+    (r"flip.*flop|chappal|daily.*wear.*slipp",                                      _px(1598506)),
+    (r"block.*heel|party.*pump|embellish.*pump|heels\b",                            _px(3622555)),
+    (r"loafer|slip.*on.*women|women.*loafer",                                       _px(1598509)),
+    (r"sandal|strappy.*flat|flat.*sandal",                                          _px(1458492)),
+    (r"slide|eva.*slide|slip.*on.*slide",                                           _px(3622560)),
+    (r"sports.*shoes|velcro.*sport|men.*sport.*shoe",                               _px(2529148)),
+    (r"shoes\b|boots\b",                                                            _px(2529148)),
+
+    # Fashion Accessories
+    (r"bifold.*wallet|leather.*wallet|casual.*wallet|wallet\b",                     _px(1152077)),
+    (r"braided.*belt|leather.*belt|reversible.*belt|belt\b",                        _px(1152078)),
+    (r"aviator|polarized.*sunglass|uv400.*sunglass|sunglasses\b",                   _px(1572387)),
+    (r"canvas.*backpack|everyday.*backpack|casual.*backpack|backpack\b",            _px(1553793)),
+    (r"stainless.*watch|analog.*watch|classic.*watch|watch\b",                     _px(190819)),
+    (r"boxer.*short|men.*boxer|underwear",                                          _px(8386438)),
+
+    # Home Appliances
+    (r"microwave|grill.*oven",                                                      _px(5824569)),
+    (r"juicer|centrifugal.*juicer",                                                 _px(4397290)),
+    (r"mixer.*grinder|wet.*grinder",                                                _px(1640777)),
+    (r"air.*fryer|digital.*air.*fryer",                                             _px(5946476)),
+    (r"electric.*kettle|glass.*kettle|cordless.*kettle",                            _px(4397293)),
+    (r"air.*purifier|hepa.*purifier",                                               _px(4397297)),
+    (r"tower.*fan|ceiling.*fan|speed.*fan|fan\b",                                   _px(4397300)),
+    (r"steam.*iron|anti.*drip.*iron|iron\b",                                        _px(4397303)),
+    (r"water.*purifier|ro.*uv|reverse.*osmosis",                                    _px(4397306)),
+    (r"water.*dispenser|hot.*cold.*dispenser",                                      _px(4397309)),
+    (r"car.*washer|pressure.*washer|high.*pressure.*spray",                         _px(4397312)),
+    (r"mosquito.*trap|insect.*killer|trapper.*lamp",                                _px(4397315)),
+
+    # Kitchen
+    (r"cookware.*set|non.*stick.*set|tawa.*set|induction.*cookware|granito",       _px(4397320)),
+    (r"pressure.*cooker|induction.*cooker",                                         _px(4397323)),
+    (r"cast.*iron.*skillet|skillet|griller\b",                                      _px(4397326)),
+    (r"knife.*set|kitchen.*knife",                                                  _px(4397329)),
+    (r"spatula|silicone.*utensil|cooking.*utensil",                                 _px(4397332)),
+    (r"vegetable.*chopper|5-in-1.*chopper|dicer",                                   _px(4397335)),
+    (r"food.*storage|airtight.*container|bpa.*free",                               _px(4397338)),
+    (r"dish.*rack|drying.*rack",                                                    _px(4397341)),
+    (r"aroma.*diffuser|ultrasonic.*diffuser|essential.*oil.*diffus",               _px(4397344)),
+    (r"water.*bottle|insulated.*bottle|stainless.*bottle",                          _px(4397347)),
+
+    # Furniture
+    (r"mesh.*office.*chair|ergonomic.*chair|high.*back.*mesh|high.*back.*desk",    _px(1957478)),
+    (r"armchair|velvet.*arm|velvet.*chair",                                         _px(1866149)),
+    (r"recliner|sofa.*chair|foldable.*recliner",                                    _px(1866149)),
+    (r"writing.*desk|study.*desk|solid.*wood.*desk",                               _px(1957477)),
+    (r"dining.*table|glass.*top.*dining|extendable.*table",                        _px(1350789)),
+    (r"tv.*unit|entertainment.*unit|floating.*tv",                                  _px(1350790)),
+    (r"fabric.*sofa|3-seater.*sofa|sofa.*ottoman|sofa\b",                           _px(1350789)),
+    (r"bed.*frame|platform.*bed|upholster.*bed|queen.*bed",                         _px(1350788)),
+    (r"bedsheet|cotton.*bedsheet|reversible.*bedsheet",                             _px(1350787)),
+    (r"pillow|memory.*foam.*pillow",                                                _px(1350786)),
+    (r"wardrobe|sliding.*wardrobe|4-door.*wardrobe",                               _px(1350785)),
+    (r"shoe.*rack|3-tier.*rack|wooden.*shoe.*rack",                                 _px(1350784)),
+    (r"chair\b|desk.*chair|office.*chair",                                          _px(1957478)),
+    (r"table\b|dining\b|desk\b",                                                   _px(1350789)),
+    (r"bed\b",                                                                      _px(1350788)),
 
     # Beauty & Personal Care
-    "Hydrating Vitamin C + Hyaluronic Facial Serum": "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=600&auto=format&fit=crop&q=80",
-    "Organic Herbal Daily Moisturizing Cream": "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=600&auto=format&fit=crop&q=80",
-    "Exfoliating Mineral Himalayan Body Scrub": "https://images.unsplash.com/photo-1608248597359-2e06180630b9?w=600&auto=format&fit=crop&q=80",
-    "Nourishing Botanical Night Repair Elixir": "https://images.unsplash.com/photo-1601049541289-9b1b7bbbfe19?w=600&auto=format&fit=crop&q=80",
-}
+    (r"vitamin.*c.*serum|brightening.*serum|hyaluronic.*serum",                     _px(3685523)),
+    (r"niacinamide|pore.*minimiz|zinc.*serum",                                      _px(3685525)),
+    (r"face.*wash|foaming.*face|salicylic.*face",                                   _px(3685521)),
+    (r"moisturizing.*cream|ceramide|peptide.*cream|moisturizer",                    _px(3685519)),
+    (r"sunscreen|spf.*50|sun.*gel|sun.*protect",                                    _px(3685517)),
+    (r"body.*scrub|papaya.*scrub|brightening.*scrub",                               _px(3685515)),
+    (r"shampoo|keratin.*shampoo|anti.*frizz.*shampoo",                              _px(3735969)),
+    (r"hair.*oil|bhringraj|hair.*growth.*oil",                                      _px(3735965)),
+    (r"hair.*straightener|ceramic.*straightener|ionic.*straight",                   _px(3735961)),
+    (r"lipstick|bullet.*lip|matte.*lip",                                            _px(3735957)),
+    (r"beard.*oil|beard.*soften|jojoba.*beard",                                     _px(3735953)),
+    (r"serum\b",                                                                    _px(3685523)),
+    (r"lotion\b|cream\b|skin.*care",                                               _px(3685519)),
+
+    # Grocery
+    (r"basmati.*rice|royal.*basmati|aged.*rice|rice\b",                             _px(1537538)),
+    (r"toor.*dal|arhar.*dal|lentil|dal\b",                                          _px(1640776)),
+    (r"mustard.*oil|kachi.*ghani",                                                  _px(1640775)),
+    (r"desi.*ghee|a2.*ghee|cow.*ghee|ghee\b",                                      _px(1640774)),
+    (r"wild.*honey|forest.*honey|raw.*honey|honey\b",                              _px(1640773)),
+    (r"california.*almond|almond\b",                                                _px(1640772)),
+    (r"cashew.*nut|roasted.*cashew|kaju",                                           _px(1640771)),
+    (r"peanut.*butter|dark.*choc.*peanut",                                          _px(1640770)),
+    (r"black.*tea|ctc.*tea|assam.*tea|chai\b|tea\b",                               _px(1640769)),
+    (r"filter.*coffee|south.*indian.*coffee|ground.*coffee|coffee\b",              _px(1640768)),
+    (r"oil\b|cooking.*oil",                                                         _px(1640775)),
+    (r"ghee\b",                                                                     _px(1640774)),
+
+    # Sports & Fitness
+    (r"rubber.*dumbbell|dumbbell.*set|adjustable.*dumbbell|dumbbell\b",            _px(1552252)),
+    (r"yoga.*mat|eva.*yoga|non.*slip.*mat",                                         _px(4056535)),
+    (r"pull.*up.*bar|doorway.*bar|chin.*up.*bar",                                   _px(1552253)),
+    (r"resistance.*band|loop.*band|exercise.*band",                                 _px(4056538)),
+    (r"skipping.*rope|jump.*rope|speed.*rope",                                      _px(4056541)),
+    (r"gym.*gloves|weightlifting.*gloves|padded.*gloves",                           _px(4056544)),
+    (r"massage.*roller|foam.*roller|roller.*stick",                                 _px(4056547)),
+    (r"badminton.*racket|carbon.*fiber.*racket|racket\b",                           _px(4056550)),
+    (r"protein.*shaker|gym.*shaker|shaker.*bottle",                                 _px(4056553)),
+    (r"hydration.*pack|hydropack|running.*backpack",                                _px(4056556)),
+
+    # Books
+    (r"atomic.*habit|high.*performance.*habit",                                     _px(4170448)),
+    (r"psychology.*wealth|financial.*freedom",                                      _px(4170451)),
+    (r"data.*struct|algorithm.*easy|python.*algo",                                  _px(4170454)),
+    (r"machine.*learning|deep.*learning|ml.*guide",                                 _px(4170457)),
+    (r"fastapi|react.*microservice",                                                _px(4170460)),
+    (r"database.*internal|distributed.*system",                                     _px(4170463)),
+    (r"clean.*code|enterprise.*system",                                             _px(4170466)),
+    (r"cloud.*architect|docker.*microservice",                                      _px(4170469)),
+    (r"indian.*polity|governance.*exam|upsc",                                       _px(4170472)),
+    (r"ancient.*indian|heritage.*architect",                                        _px(4170475)),
+    (r"book\b|novel\b|handbook\b|blueprint\b|guide\b",                             _px(4170448)),
+]
+
+# Legacy dictionary retained for direct exact-name lookups
+PRODUCT_IMAGES = {}
 
 CATEGORY_FALLBACK_IMAGES = {
-    "Electronics": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&auto=format&fit=crop&q=80",
-    "Fashion": "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=600&auto=format&fit=crop&q=80",
-    "Books": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80",
-    "Home & Kitchen": "https://images.unsplash.com/photo-1584990347449-3995874c2bc0?w=600&auto=format&fit=crop&q=80",
-    "Beauty & Personal Care": "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=600&auto=format&fit=crop&q=80",
-    "Sports & Fitness": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600&auto=format&fit=crop&q=80",
-    "General": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format&fit=crop&q=80",
+    "Electronics":          _px(3394650),
+    "Mobiles":              _px(607812),
+    "Laptops":              _px(18105),
+    "Accessories":          _px(393047),
+    "Fashion":              _px(1043474),
+    "Men's Clothing":       _px(1043474),
+    "Women's Clothing":     _px(8285390),
+    "Footwear":             _px(2529148),
+    "Books":                _px(4170448),
+    "Home & Kitchen":       _px(5824569),
+    "Home Appliances":      _px(5824569),
+    "Furniture":            _px(1957478),
+    "Kitchen Products":     _px(4397320),
+    "Beauty & Personal Care": _px(3685523),
+    "Sports & Fitness":     _px(1552252),
+    "Grocery":              _px(1537538),
+    "General":              _px(1043474),
 }
 
 CATEGORY_ICONS = {
@@ -149,13 +334,42 @@ def get_theme_config(theme_name: str) -> Dict[str, Any]:
     resolved = legacy_map.get(theme_name, DEFAULT_THEME)
     return THEME_CONFIGS.get(resolved, THEME_CONFIGS[DEFAULT_THEME])
 
-def get_product_image(product_name: str, category: str = "General") -> str:
-    """Return high-resolution photo URL matching product or fallback category."""
+def get_product_image(product_name: str, category: str = "General", image_url: str = None) -> str:
+    """Return high-resolution photo URL specifically matched to the product title, image_url, or category."""
+    # 0. If direct image_url is provided and valid, use it first (DB values take priority)
+    if image_url and isinstance(image_url, str) and image_url.strip().startswith("http"):
+        return image_url.strip()
+
+    if not product_name:
+        return CATEGORY_FALLBACK_IMAGES.get(category, CATEGORY_FALLBACK_IMAGES.get("General", _px(1043474)))
+
+    # Strip vendor edition suffixes: (Apex Edition), (Aura Edition), (Heritage Edition), etc.
+    base_name = re.sub(r"\s*\([^)]*Edition\)", "", product_name).strip()
+    base_name = re.sub(r"\s*\([^)]*\)\s*$", "", base_name).strip()
+
+    # 1. Exact match in inventory map (old system - kept for compatibility)
+    if product_name in EXACT_PRODUCT_IMAGE_MAP:
+        return EXACT_PRODUCT_IMAGE_MAP[product_name]
+    if base_name in EXACT_PRODUCT_IMAGE_MAP:
+        return EXACT_PRODUCT_IMAGE_MAP[base_name]
+
+    # 2. Check legacy dictionary match if any
     if product_name in PRODUCT_IMAGES:
         return PRODUCT_IMAGES[product_name]
-    for key, url in PRODUCT_IMAGES.items():
-        if key.lower() in product_name.lower() or product_name.lower() in key.lower():
+
+    # 3. Check keyword regex patterns against base title (Pexels-based)
+    name_clean = base_name.lower()
+    for pattern, url in PRODUCT_KEYWORD_PATTERNS:
+        if re.search(pattern, name_clean):
             return url
+
+    # 4. Check keyword regex patterns against raw title
+    raw_clean = product_name.lower().strip()
+    for pattern, url in PRODUCT_KEYWORD_PATTERNS:
+        if re.search(pattern, raw_clean):
+            return url
+
+    # 5. Category Fallback
     return CATEGORY_FALLBACK_IMAGES.get(category, CATEGORY_FALLBACK_IMAGES["General"])
 
 def get_product_meta(product_id: int, price: float) -> Tuple[float, int, float, int]:
@@ -334,17 +548,19 @@ header[data-testid="stHeader"] {{
 .ss-product-img-wrap {{
     width: 100%;
     height: 190px;
-    background: #fafafa;
+    background: #ffffff;
     position: relative;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 8px;
+    box-sizing: border-box;
 }}
 .ss-product-img {{
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     transition: transform 0.35s ease;
 }}
 .ss-product-card:hover .ss-product-img {{
@@ -684,7 +900,8 @@ def render_top_navbar(user_name: str, role: str, theme_name: str) -> str:
     cfg = get_theme_config(theme_name)
     brand_badge = cfg["brand_badge"]
     
-    role_display = {"CUSTOMER": "Shopper", "VENDOR": "Seller Hub", "ADMIN": "Admin Portal"}.get(role, role)
+    role_map = {"CUSTOMER": "Customer", "VENDOR": "Vendor", "ADMIN": "Admin"}
+    role_display = role_map.get(role, str(role))
 
     return f"""
 <div class="ss-navbar">
@@ -739,8 +956,9 @@ def render_product_card_html(product: Dict[str, Any], theme_name: str) -> str:
     price = float(product.get("price", 0.0))
     stock = int(product.get("stock", 0))
     vendor_disp = product.get("vendor_name") or f"Vendor #{product.get('vendor_id', '')}"
+    p_image = product.get("image_url")
     
-    img_url = get_product_image(p_name, category)
+    img_url = get_product_image(p_name, category, image_url=p_image)
     rating, reviews, mrp, discount = get_product_meta(p_id, price)
     
     # Stock badge logic
@@ -796,7 +1014,7 @@ def render_order_card_html(order: Dict[str, Any], theme_name: str) -> str:
     qty = order.get("quantity", 1)
     amt = float(order.get("amount", 0.0))
     date_str = str(order.get("transaction_date", ""))
-    img_url = get_product_image(p_name)
+    img_url = get_product_image(p_name, image_url=order.get("image_url"))
 
     return f"""
 <div style="background:#ffffff; border-radius:10px; border:1px solid var(--ss-border); padding:16px; margin-bottom:14px; box-shadow:0 2px 6px rgba(0,0,0,0.04); display:flex; gap:16px; align-items:center; flex-wrap:wrap;">
@@ -816,10 +1034,11 @@ def render_order_card_html(order: Dict[str, Any], theme_name: str) -> str:
 </div>
 """
 
-def render_customer_profile_card(user_name: str, user_email: str, role: str, theme_name: str) -> str:
+def render_customer_profile_card(user_name: str, user_email: str, role: str, theme_name: str, phone: str = None) -> str:
     """Renders customer profile card."""
     cfg = get_theme_config(theme_name)
     initial = user_name[0].upper() if user_name else 'U'
+    phone_html = f"<div style='font-size:0.88rem; color:var(--ss-text-muted); margin-top:2px;'>📞 {phone}</div>" if phone else ""
     return f"""
 <div style="background:#ffffff; border-radius:12px; border:1px solid var(--ss-border); padding:24px; box-shadow:0 2px 10px rgba(0,0,0,0.05); margin-bottom:20px;">
     <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
@@ -829,6 +1048,7 @@ def render_customer_profile_card(user_name: str, user_email: str, role: str, the
         <div style="flex-grow:1; min-width:200px;">
             <div style="font-size:1.4rem; font-weight:800; color:var(--ss-text-main);">{user_name}</div>
             <div style="font-size:0.88rem; color:var(--ss-text-muted); margin-top:2px;">📧 {user_email}</div>
+            {phone_html}
             <div style="margin-top:8px; display:flex; gap:8px; align-items:center;">
                 <span style="background:var(--ss-brand-badge-bg); color:var(--ss-brand-badge-color); font-weight:800; font-size:0.75rem; padding:3px 10px; border-radius:12px;">{cfg["brand_badge"]}</span>
                 <span class="status-badge-active">Verified {role}</span>

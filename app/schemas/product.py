@@ -9,12 +9,14 @@ class ProductCreate(BaseModel):
     price: Decimal = Field(..., gt=0)
     stock: int = Field(default=0, ge=0)
     vendor_id: Optional[int] = None
+    image_url: Optional[str] = None
 
 class ProductUpdate(BaseModel):
     product_name: Optional[str] = Field(None, min_length=2, max_length=150)
     category: Optional[str] = Field(None, min_length=2, max_length=80)
     price: Optional[Decimal] = Field(None, gt=0)
     stock: Optional[int] = Field(None, ge=0)
+    image_url: Optional[str] = None
 
 class ProductResponse(BaseModel):
     product_id: int
@@ -23,6 +25,7 @@ class ProductResponse(BaseModel):
     price: Decimal
     stock: int
     vendor_id: int
+    image_url: Optional[str] = None
     created_at: datetime
     vendor_name: Optional[str] = None
 

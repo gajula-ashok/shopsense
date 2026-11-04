@@ -1,0 +1,51 @@
+vendor_id,business_name,owner_name,email,phone,category,commission_rate,status,created_at
+1,Apex Tech India,John Doe (Vendor),techworld@example.com,+91 91824 13278,Electronics,12.0,ACTIVE,2026-10-30 19:38:50.000857
+2,Aura Ethnic Trends,Pooja Verma,vendor2@auraethnictr.in,+91 94506 42098,Fashion,10.0,ACTIVE,2026-10-30 19:38:50.507706
+3,Heritage Book House,Manoj Kulkarni,vendor3@heritagebook.in,+91 93657 28289,Books,8.0,ACTIVE,2026-10-30 19:38:51.000807
+4,Urban Home Comforts,Deepika Iyer,vendor4@urbanhomecom.in,+91 91679 98696,Home & Kitchen,11.0,ACTIVE,2026-10-30 19:38:51.502751
+5,AyurGlow Herbal Care,Vikram Rathore,vendor5@ayurglowherb.in,+91 98935 21395,Beauty & Personal Care,14.0,ACTIVE,2026-10-30 19:38:51.987927
+6,Bharat Electronics Hub,Amitabh Sen,vendor6@bharatelectr.in,+91 99674 65302,Electronics,12.5,ACTIVE,2026-10-30 19:38:52.481403
+7,Vogue Weaves & Silks,Ananya Deshmukh,vendor7@vogueweavess.in,+91 90520 13905,Fashion,9.5,ACTIVE,2026-10-30 19:38:52.962977
+8,KitchenCraft Pro,Sanjay Aggarwal,vendor8@kitchencraft.in,+91 91535 38657,Home & Kitchen,10.5,ACTIVE,2026-10-30 19:38:53.486041
+9,FitNation Gear,Karan Malhotra,vendor9@fitnationgea.in,+91 93811 76237,Sports & Fitness,11.5,ACTIVE,2026-10-30 19:38:54.038906
+10,PureNature Organics,Sunita Nair,vendor10@purenatureor.in,+91 99863 13478,Grocery,8.5,ACTIVE,2026-10-30 19:38:54.531467
+11,NextGen Gizmos,Rohan Mehta,vendor11@nextgengizmo.in,+91 99195 36062,Electronics,12.0,ACTIVE,2026-10-30 19:38:55.056764
+12,Royal Stitch Menswear,Harish Patel,vendor12@royalstitchm.in,+91 98928 64987,Fashion,10.0,ACTIVE,2026-10-30 19:38:55.576144
+13,Pinnacle Gadgets,Arun Varma,vendor13@pinnaclegadg.in,+91 93611 68878,Electronics,12.5,ACTIVE,2026-10-30 19:38:56.065761
+14,Modern Living Furnishings,Meenakshi Sundaram,vendor14@modernliving.in,+91 99654 46463,Home & Kitchen,11.0,ACTIVE,2026-10-30 19:38:56.534284
+15,Glamour Touch Cosmetics,Sneha Roy,vendor15@glamourtouch.in,+91 90106 30926,Beauty & Personal Care,13.5,ACTIVE,2026-10-30 19:38:57.015907
+16,Elite Mobile Mart,Nikhil Chopra,vendor16@elitemobilem.in,+91 96924 54597,Mobiles,11.0,ACTIVE,2026-10-30 19:38:57.552698
+17,IndoFab Casuals,Divya Pillai,vendor17@indofabcasua.in,+91 94552 30379,Men's Clothing,9.0,ACTIVE,2026-10-30 19:38:58.045182
+18,Shree Krishna Traders,Gopal Das,vendor18@shreekrishna.in,+91 93527 54118,Grocery,7.5,ACTIVE,2026-10-30 19:38:58.512767
+19,ProActive Sports India,Manpreet Singh,vendor19@proactivespo.in,+91 91674 22156,Sports & Fitness,10.0,ACTIVE,2026-10-30 19:38:59.278027
+20,Scholars Gateway Books,Prof. R. C. Prasad,vendor20@scholarsgate.in,+91 96224 22676,Books,8.0,ACTIVE,2026-10-30 19:38:59.870347
+21,Quantum Computech,Siddharth Jain,vendor21@quantumcompu.in,+91 95881 55082,Laptops,12.5,ACTIVE,2026-10-30 19:39:00.463963
+22,Zaveri Style Boutique,Ritu Singhania,vendor22@zaveristyleb.in,+91 99891 44671,Women's Clothing,10.5,ACTIVE,2026-10-30 19:39:01.028104
+23,ComfortZone Mattresses,Naveen Reddy,vendor23@comfortzonem.in,+91 90711 70217,Furniture,11.0,ACTIVE,2026-10-30 19:39:01.553409
+24,EverFresh Pantry,Kavita Hegde,vendor24@everfreshpan.in,+91 98785 26361,Grocery,8.0,ACTIVE,2026-10-30 19:39:02.022864
+25,VelvetSkin Botanicals,Dr. Shalini Gupta,vendor25@velvetskinbo.in,+91 96201 20328,Beauty & Personal Care,14.0,ACTIVE,2026-10-30 19:39:02.493962
+26,AudioVibe Acoustics,Tarun Bhasin,vendor26@audiovibeaco.in,+91 99044 48427,Accessories,12.0,ACTIVE,2026-10-30 19:39:02.994557
+27,StepUp Footwear,Aditya Mittal,vendor27@stepupfootwe.in,+91 95925 85674,Footwear,10.0,ACTIVE,2026-10-30 19:39:03.472904
+28,ChefElite Appliances,Geeta Bhatt,vendor28@chefeliteapp.in,+91 93150 19116,Kitchen Products,10.5,ACTIVE,2026-10-30 19:39:03.973682
+29,ActiveLife Athleisure,Varun Dhawan,vendor29@activelifeat.in,+91 90750 96673,Sports & Fitness,10.0,ACTIVE,2026-10-30 19:39:04.437819
+30,PrimePage Publishers,Sudhir Bannerjee,vendor30@primepagepub.in,+91 93733 47930,Books,8.5,ACTIVE,2026-10-30 19:39:04.922985
+31,Titanium Techworks,Ashish Joshi,vendor31@titaniumtech.in,+91 91307 40512,Electronics,13.0,ACTIVE,2026-10-30 19:39:05.400221
+32,Kalamkari Handlooms,Padma Rao,vendor32@kalamkarihan.in,+91 91654 59823,Fashion,9.5,ACTIVE,2026-10-30 19:39:05.854067
+33,CleanNest Solutions,Kunal Kapoor,vendor33@cleannestsol.in,+91 94554 69429,Home Appliances,11.0,ACTIVE,2026-10-30 19:39:06.319534
+34,HerbalRoots Ayurveda,Vaidya Shrikant,vendor34@herbalrootsa.in,+91 95977 31319,Beauty & Personal Care,13.0,ACTIVE,2026-10-30 19:39:06.810492
+35,SpeedLink Peripherals,Praveen Saxena,vendor35@speedlinkper.in,+91 96065 56566,Accessories,11.5,ACTIVE,2026-10-30 19:39:07.279565
+36,UrbanDenim Co.,Mohit Rawat,vendor36@urbandenimco.in,+91 93432 97841,Men's Clothing,10.0,ACTIVE,2026-10-30 19:39:07.758603
+37,Gourmet Basket Foods,Farhan Qureshi,vendor37@gourmetbaske.in,+91 94374 99593,Grocery,8.0,ACTIVE,2026-10-30 19:39:08.218084
+38,IronCore Fitness,Gurpreet Singh,vendor38@ironcorefitn.in,+91 91169 89840,Sports & Fitness,11.0,ACTIVE,2026-10-30 19:39:08.718220
+39,Lumiere Decor & Lamps,Bhavna Parekh,vendor39@lumieredecor.in,+91 92803 80010,Home & Kitchen,10.5,ACTIVE,2026-10-30 19:39:09.183299
+40,Zenith Mobile Hub,Sachin Patil,vendor40@zenithmobile.in,+91 94010 31417,Mobiles,12.0,ACTIVE,2026-10-30 19:39:09.635106
+41,Elegance Sarees & Kurtis,Swati Chawla,vendor41@elegancesare.in,+91 97573 59735,Women's Clothing,9.5,ACTIVE,2026-10-30 19:39:10.083705
+42,Apex Furniture Studio,Dinesh Khatri,vendor42@apexfurnitur.in,+91 94422 93886,Furniture,11.5,ACTIVE,2026-10-30 19:39:10.541691
+43,GlowBio Skincare,Tanvi Sengupta,vendor43@glowbioskinc.in,+91 99125 38785,Beauty & Personal Care,13.5,ACTIVE,2026-10-30 19:39:10.993964
+44,PowerTech Batteries,Rameshwar Dayal,vendor44@powertechbat.in,+91 95313 17331,Accessories,11.0,ACTIVE,2026-10-30 19:39:11.448959
+45,TrendSetter Footwear,Alok Pandey,vendor45@trendsetterf.in,+91 93752 14207,Footwear,10.0,ACTIVE,2026-10-30 19:39:11.901498
+46,MasterChef Cookware,Leela Krishnan,vendor46@masterchefco.in,+91 95168 62581,Kitchen Products,10.5,PENDING,2026-10-30 19:39:12.354070
+47,KnowledgeTree Library,Devendra Shastri,vendor47@knowledgetre.in,+91 94386 18675,Books,8.0,PENDING,2026-10-30 19:39:12.813333
+48,PulseTrack Wearables,Gaurav Ahuja,vendor48@pulsetrackwe.in,+91 93456 84341,Electronics,12.0,PENDING,2026-10-30 19:39:13.267574
+49,CozyNest Furnishings,Bina Agarwal,vendor49@cozynestfurn.in,+91 95155 37869,Home & Kitchen,10.0,SUSPENDED,2026-10-30 19:39:13.714328
+50,Omkar Spices & Staples,Vallabhbhai Patel,vendor50@omkarspicess.in,+91 98179 61856,Grocery,7.5,SUSPENDED,2026-10-30 19:39:14.168463

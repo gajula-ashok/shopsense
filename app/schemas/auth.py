@@ -45,12 +45,14 @@ class TokenResponse(BaseModel):
     user_id: int
     email: str
     full_name: str
+    phone: Optional[str] = None
     vendor_id: Optional[int] = None
 
 class UserResponse(BaseModel):
     user_id: int
     full_name: str
     email: str
+    phone: Optional[str] = None
     role: UserRole
     is_active: bool
     created_at: datetime

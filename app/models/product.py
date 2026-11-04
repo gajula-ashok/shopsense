@@ -11,6 +11,7 @@ class Product(Base):
     price = Column(Numeric(10, 2), nullable=False)
     stock = Column(Integer, default=0, nullable=False)
     vendor_id = Column(Integer, ForeignKey("vendors.vendor_id", ondelete="CASCADE"), nullable=False, index=True)
+    image_url = Column(String(500), nullable=True)
     created_at = Column(DateTime, server_default=func.now(), nullable=False)
 
     vendor = relationship("Vendor", back_populates="products")

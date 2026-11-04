@@ -5,7 +5,7 @@ from fastapi import HTTPException, status
 from app.models.vendor import Vendor, VendorStatus
 from app.models.user import User, UserRole
 from app.models.transaction import Transaction
-from app.schemas.vendor import VendorCreate, VendorUpdate, VendorResponse
+from app.schemas.vendor import VendorCreate, VendorUpdate, VendorResponse, VendorApplicationReview
 from app.utils.validators import (
     validate_vendor_registration,
     validate_business_name,
@@ -39,20 +39,21 @@ def create_vendor(db: Session, data: VendorCreate, current_user: User) -> Vendor
         assigned_user_id = data.user_id
         commission = data.commission_rate if data.commission_rate is not None else Decimal("10.00")
         new_status = data.status or VendorStatus.ACTIVE
+        app_status = "APPROVED" if new_status == VendorStatus.ACTIVE else "PENDING"
     elif current_user.role == UserRole.VENDOR:
-        # Item 3: VENDOR callers cannot have more than one vendor profile
         if current_user.vendor:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
                 detail="Your account already has a vendor profile."
             )
         assigned_user_id = current_user.user_id
-        # Item 3: Force safe defaults — vendors cannot choose commission or status
         commission = Decimal("10.00")
         new_status = VendorStatus.PENDING
+        app_status = "PENDING"
     else:
         commission = Decimal("10.00")
         new_status = VendorStatus.PENDING
+        app_status = "PENDING"
 
     # 4. Create vendor
     vendor = Vendor(
@@ -63,7 +64,14 @@ def create_vendor(db: Session, data: VendorCreate, current_user: User) -> Vendor
         category=data.category.strip(),
         commission_rate=commission,
         status=new_status,
-        user_id=assigned_user_id
+        user_id=assigned_user_id,
+        business_address=data.business_address,
+        city=data.city,
+        state=data.state,
+        pincode=data.pincode,
+        tax_id=data.tax_id,
+        application_status=app_status,
+        review_notes="Application submitted by seller."
     )
     db.add(vendor)
     db.commit()
@@ -75,28 +83,42 @@ def get_vendors(
     current_user: User,
     search: Optional[str] = None,
     category: Optional[str] = None,
-    vendor_status: Optional[str] = None
+    status_filter: Optional[str] = None,
+    application_status: Optional[str] = None
 ) -> List[Vendor]:
     query = db.query(Vendor)
 
-    # Role-based restriction: Vendors can only view their own vendor record
+    # Item 1: VENDOR can ONLY view their own record; ADMIN views all
     if current_user.role == UserRole.VENDOR:
         if not current_user.vendor:
             return []
-        query = query.filter(Vendor.vendor_id == current_user.vendor.vendor_id)
-    else:
-        # Admin filters
-        if search:
-            s = f"%{search.strip()}%"
-            query = query.filter(
-                (Vendor.business_name.ilike(s)) |
-                (Vendor.owner_name.ilike(s)) |
-                (Vendor.email.ilike(s))
+        return [current_user.vendor]
+
+    # Admin filtering:
+    if search:
+        kw = f"%{search.strip().lower()}%"
+        from sqlalchemy import or_, cast, String
+        query = query.filter(
+            or_(
+                Vendor.business_name.ilike(kw),
+                Vendor.owner_name.ilike(kw),
+                Vendor.email.ilike(kw),
+                cast(Vendor.vendor_id, String).ilike(kw)
             )
-        if category and category != "All":
-            query = query.filter(Vendor.category == category)
-        if vendor_status and vendor_status != "All":
-            query = query.filter(Vendor.status == vendor_status)
+        )
+
+    if category and category != "All":
+        query = query.filter(Vendor.category == category)
+
+    if status_filter and status_filter != "All":
+        try:
+            enum_status = VendorStatus(status_filter)
+            query = query.filter(Vendor.status == enum_status)
+        except ValueError:
+            pass
+
+    if application_status and application_status != "All":
+        query = query.filter(Vendor.application_status == application_status)
 
     return query.order_by(Vendor.vendor_id.asc()).all()
 
@@ -108,34 +130,88 @@ def get_vendor_by_id(db: Session, vendor_id: int, current_user: User) -> Vendor:
             detail=f"Vendor with ID {vendor_id} not found."
         )
 
-    # Authorization check
+    # Item 1: VENDOR cannot view another vendor's profile
     if current_user.role == UserRole.VENDOR:
         if not current_user.vendor or current_user.vendor.vendor_id != vendor_id:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail="You are not authorized to view this vendor's details."
+                detail="Access forbidden: you may only view your own vendor profile."
             )
 
     return vendor
 
+def review_vendor_application(db: Session, vendor_id: int, review: VendorApplicationReview, current_user: User) -> Vendor:
+    """Administrator review action: APPROVE, REQUEST_INFO, or REJECT."""
+    if current_user.role != UserRole.ADMIN:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only administrators can review vendor applications."
+        )
+
+    vendor = db.query(Vendor).filter(Vendor.vendor_id == vendor_id).first()
+    if not vendor:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Vendor application with ID {vendor_id} not found."
+        )
+
+    act = review.action.upper()
+    notes = review.notes or ""
+
+    if act == "APPROVE":
+        vendor.application_status = "APPROVED"
+        vendor.status = VendorStatus.ACTIVE
+        vendor.review_notes = f"Approved by Admin: {notes}" if notes else "Application verified and approved. Active marketplace seller."
+        # If user account is linked, ensure user is active
+        if vendor.user:
+            vendor.user.is_active = True
+    elif act in ["REQUEST_INFO", "MORE_INFO_NEEDED"]:
+        vendor.application_status = "MORE_INFO_NEEDED"
+        vendor.status = VendorStatus.PENDING
+        vendor.review_notes = f"Information Requested: {notes}" if notes else "Administrator requested additional verification documents."
+    elif act == "REJECT":
+        vendor.application_status = "REJECTED"
+        vendor.status = VendorStatus.SUSPENDED
+        vendor.review_notes = f"Application Rejected: {notes}" if notes else "Application rejected by marketplace administration."
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Invalid action '{review.action}'. Must be APPROVE, REQUEST_INFO, or REJECT."
+        )
+
+    db.commit()
+    db.refresh(vendor)
+    return vendor
+
 def update_vendor(db: Session, vendor_id: int, data: VendorUpdate, current_user: User) -> Vendor:
-    vendor = get_vendor_by_id(db, vendor_id, current_user)
+    vendor = db.query(Vendor).filter(Vendor.vendor_id == vendor_id).first()
+    if not vendor:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Vendor with ID {vendor_id} not found."
+        )
 
-    # If vendor is updating, they cannot modify status or commission_rate
-    if current_user.role == UserRole.VENDOR:
-        if data.status is not None:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Vendors are not permitted to alter vendor status."
-            )
-        if data.commission_rate is not None:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Vendors cannot alter commission rates. Contact Admin."
-            )
-
-    # Item 6: Validate editable fields just like creation
     update_dict = data.model_dump(exclude_unset=True)
+
+    if current_user.role == UserRole.VENDOR:
+        if not current_user.vendor or current_user.vendor.vendor_id != vendor_id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Access forbidden: you may only modify your own vendor profile."
+            )
+        if "status" in update_dict and update_dict["status"] is not None:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Vendors are not permitted to alter their own operational status."
+            )
+        if "commission_rate" in update_dict and update_dict["commission_rate"] is not None:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Vendors cannot modify commission rates."
+            )
+        if "application_status" in update_dict:
+            del update_dict["application_status"]
+
     field_errors = []
 
     if "business_name" in update_dict and update_dict["business_name"] is not None:
@@ -164,7 +240,6 @@ def update_vendor(db: Session, vendor_id: int, data: VendorUpdate, current_user:
             detail={"errors": field_errors}
         )
 
-    # Email uniqueness check if changing email
     if "email" in update_dict and update_dict["email"]:
         new_email = update_dict["email"].strip().lower()
         if new_email != vendor.email:
@@ -198,7 +273,6 @@ def delete_vendor(db: Session, vendor_id: int, current_user: User) -> dict:
             detail=f"Vendor with ID {vendor_id} not found."
         )
 
-    # Item 2: Protect sales history — refuse delete if any transaction exists for this vendor
     if db.query(Transaction).filter(Transaction.vendor_id == vendor_id).first():
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
