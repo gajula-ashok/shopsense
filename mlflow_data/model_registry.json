@@ -1,0 +1,329 @@
+{
+  "Inventory Demand Forecasting (Random Forest)": {
+    "model_name": "Inventory Demand Forecasting (Random Forest)",
+    "versions": [
+      {
+        "version": 1,
+        "logged_at": "2026-11-15T11:54:50.317940",
+        "status": "PRODUCTION",
+        "parameters": {
+          "n_estimators": 100,
+          "max_depth": 10,
+          "criterion": "squared_error"
+        },
+        "metrics": {
+          "accuracy": 81.28,
+          "rmse": 2.62,
+          "mae": 1.94
+        },
+        "artifacts_path": null
+      },
+      {
+        "version": 2,
+        "logged_at": "2026-11-15T13:44:16.428150",
+        "status": "PRODUCTION",
+        "parameters": {
+          "n_estimators": 100,
+          "max_depth": 10,
+          "criterion": "squared_error"
+        },
+        "metrics": {
+          "accuracy": 81.28,
+          "rmse": 2.62,
+          "mae": 1.94
+        },
+        "artifacts_path": null
+      },
+      {
+        "version": 3,
+        "logged_at": "2026-11-15T13:45:46.014795",
+        "status": "PRODUCTION",
+        "parameters": {
+          "n_estimators": 100,
+          "max_depth": 10,
+          "criterion": "squared_error"
+        },
+        "metrics": {
+          "accuracy": 81.28,
+          "rmse": 2.62,
+          "mae": 1.94
+        },
+        "artifacts_path": null
+      },
+      {
+        "version": 4,
+        "logged_at": "2026-11-15T13:47:32.303734",
+        "status": "PRODUCTION",
+        "parameters": {
+          "n_estimators": 100,
+          "max_depth": 10,
+          "criterion": "squared_error"
+        },
+        "metrics": {
+          "accuracy": 81.28,
+          "rmse": 2.62,
+          "mae": 1.94
+        },
+        "artifacts_path": null
+      },
+      {
+        "version": 5,
+        "logged_at": "2026-11-17T18:47:43.149841",
+        "status": "PRODUCTION",
+        "parameters": {
+          "n_estimators": 100,
+          "max_depth": 10,
+          "criterion": "squared_error"
+        },
+        "metrics": {
+          "accuracy": 81.28,
+          "rmse": 2.62,
+          "mae": 1.94
+        },
+        "artifacts_path": null
+      },
+      {
+        "version": 6,
+        "logged_at": "2026-11-17T19:35:22.708892",
+        "status": "PRODUCTION",
+        "parameters": {
+          "n_estimators": 100,
+          "max_depth": 10,
+          "criterion": "squared_error"
+        },
+        "metrics": {
+          "accuracy": 81.28,
+          "rmse": 2.62,
+          "mae": 1.94
+        },
+        "artifacts_path": null
+      }
+    ],
+    "current_production_version": 6,
+    "latest_version": 6
+  },
+  "Customer Segmentation (K-Means)": {
+    "model_name": "Customer Segmentation (K-Means)",
+    "versions": [
+      {
+        "version": 1,
+        "logged_at": "2026-11-15T11:54:51.961373",
+        "status": "PRODUCTION",
+        "parameters": {
+          "n_clusters": 4,
+          "scaling": "StandardScaler",
+          "init": "k-means++"
+        },
+        "metrics": {
+          "silhouette_score": 0.4428,
+          "clusters": 4
+        },
+        "artifacts_path": null
+      },
+      {
+        "version": 2,
+        "logged_at": "2026-11-15T13:44:18.165116",
+        "status": "PRODUCTION",
+        "parameters": {
+          "n_clusters": 4,
+          "scaling": "StandardScaler",
+          "init": "k-means++"
+        },
+        "metrics": {
+          "silhouette_score": 0.4428,
+          "clusters": 4
+        },
+        "artifacts_path": null
+      },
+      {
+        "version": 3,
+        "logged_at": "2026-11-15T13:45:47.678745",
+        "status": "PRODUCTION",
+        "parameters": {
+          "n_clusters": 4,
+          "scaling": "StandardScaler",
+          "init": "k-means++"
+        },
+        "metrics": {
+          "silhouette_score": 0.4428,
+          "clusters": 4
+        },
+        "artifacts_path": null
+      },
+      {
+        "version": 4,
+        "logged_at": "2026-11-15T13:47:33.901522",
+        "status": "PRODUCTION",
+        "parameters": {
+          "n_clusters": 4,
+          "scaling": "StandardScaler",
+          "init": "k-means++"
+        },
+        "metrics": {
+          "silhouette_score": 0.4428,
+          "clusters": 4
+        },
+        "artifacts_path": null
+      },
+      {
+        "version": 5,
+        "logged_at": "2026-11-17T18:47:44.586090",
+        "status": "PRODUCTION",
+        "parameters": {
+          "n_clusters": 4,
+          "scaling": "StandardScaler",
+          "init": "k-means++"
+        },
+        "metrics": {
+          "silhouette_score": 0.4428,
+          "clusters": 4
+        },
+        "artifacts_path": null
+      },
+      {
+        "version": 6,
+        "logged_at": "2026-11-17T19:35:23.961615",
+        "status": "PRODUCTION",
+        "parameters": {
+          "n_clusters": 4,
+          "scaling": "StandardScaler",
+          "init": "k-means++"
+        },
+        "metrics": {
+          "silhouette_score": 0.4428,
+          "clusters": 4
+        },
+        "artifacts_path": null
+      }
+    ],
+    "current_production_version": 6,
+    "latest_version": 6
+  },
+  "Product Recommendation Engine (Collaborative Filtering)": {
+    "model_name": "Product Recommendation Engine (Collaborative Filtering)",
+    "versions": [
+      {
+        "version": 1,
+        "logged_at": "2026-11-15T11:54:58.038841",
+        "status": "PRODUCTION",
+        "parameters": {
+          "algorithm": "Cosine Similarity",
+          "k_neighbors": 15,
+          "top_n": 5
+        },
+        "metrics": {
+          "precision_at_5": 0.7467,
+          "customers_evaluated": 30
+        },
+        "artifacts_path": null
+      },
+      {
+        "version": 2,
+        "logged_at": "2026-11-15T13:44:24.114230",
+        "status": "PRODUCTION",
+        "parameters": {
+          "algorithm": "Cosine Similarity",
+          "k_neighbors": 15,
+          "top_n": 5
+        },
+        "metrics": {
+          "precision_at_5": 0.7467,
+          "customers_evaluated": 30
+        },
+        "artifacts_path": null
+      },
+      {
+        "version": 3,
+        "logged_at": "2026-11-15T13:45:54.529795",
+        "status": "PRODUCTION",
+        "parameters": {
+          "algorithm": "Cosine Similarity",
+          "k_neighbors": 15,
+          "top_n": 5
+        },
+        "metrics": {
+          "precision_at_5": 0.7467,
+          "customers_evaluated": 30
+        },
+        "artifacts_path": null
+      },
+      {
+        "version": 4,
+        "logged_at": "2026-11-15T13:47:40.199172",
+        "status": "PRODUCTION",
+        "parameters": {
+          "algorithm": "Cosine Similarity",
+          "k_neighbors": 15,
+          "top_n": 5
+        },
+        "metrics": {
+          "precision_at_5": 0.7467,
+          "customers_evaluated": 30
+        },
+        "artifacts_path": null
+      },
+      {
+        "version": 5,
+        "logged_at": "2026-11-15T14:42:58.719677",
+        "status": "PRODUCTION",
+        "parameters": {
+          "algorithm": "Cosine Similarity",
+          "k_neighbors": 15,
+          "top_n": 5
+        },
+        "metrics": {
+          "precision_at_5": 0.7733,
+          "customers_evaluated": 30
+        },
+        "artifacts_path": null
+      },
+      {
+        "version": 6,
+        "logged_at": "2026-11-15T14:43:56.860948",
+        "status": "PRODUCTION",
+        "parameters": {
+          "algorithm": "Cosine Similarity",
+          "k_neighbors": 25,
+          "top_n": 5
+        },
+        "metrics": {
+          "precision_at_5": 0.7733,
+          "customers_evaluated": 30
+        },
+        "artifacts_path": null
+      },
+      {
+        "version": 7,
+        "logged_at": "2026-11-17T18:47:56.946468",
+        "status": "PRODUCTION",
+        "parameters": {
+          "algorithm": "Cosine Similarity",
+          "k_neighbors": 25,
+          "top_n": 5
+        },
+        "metrics": {
+          "precision_at_5": 0.7733,
+          "customers_evaluated": 30
+        },
+        "artifacts_path": null
+      },
+      {
+        "version": 8,
+        "logged_at": "2026-11-17T19:35:32.946888",
+        "status": "PRODUCTION",
+        "parameters": {
+          "algorithm": "Cosine Similarity",
+          "k_neighbors": 25,
+          "top_n": 5
+        },
+        "metrics": {
+          "precision_at_5": 0.7733,
+          "customers_evaluated": 30
+        },
+        "artifacts_path": null
+      }
+    ],
+    "current_production_version": 8,
+    "latest_version": 8
+  }
+}

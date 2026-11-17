@@ -41,25 +41,21 @@ def _get_scoped_dataframes(
 
     t_rows = t_query.all()
     if t_rows:
-        df_trans = pd.DataFrame([{
-            "transaction_id": r.transaction_id,
-            "product_id": r.product_id,
-            "vendor_id": r.vendor_id,
-            "quantity": int(r.quantity),
-            "amount": float(r.amount),
-            "transaction_date": pd.to_datetime(r.transaction_date),
-            "product_name": r.product_name,
-            "category": r.category,
-            "price": float(r.price),
-            "vendor_name": r.vendor_name
-        } for r in t_rows])
+        df_trans = pd.DataFrame(t_rows, columns=[
+            "transaction_id", "product_id", "vendor_id", "quantity", "amount",
+            "transaction_date", "product_name", "category", "price", "vendor_name"
+        ])
+        df_trans["quantity"] = df_trans["quantity"].astype(int)
+        df_trans["amount"] = df_trans["amount"].astype(float)
+        df_trans["price"] = df_trans["price"].astype(float)
+        df_trans["transaction_date"] = pd.to_datetime(df_trans["transaction_date"])
     else:
         df_trans = pd.DataFrame(columns=[
             "transaction_id", "product_id", "vendor_id", "quantity",
             "amount", "transaction_date", "product_name", "category", "price", "vendor_name"
         ])
 
-    # 2. Fetch products (join Inventory for reorder_level — Item 5)
+    # 2. Fetch products
     p_query = db.query(
         Product.product_id,
         Product.product_name,

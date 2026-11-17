@@ -23,18 +23,13 @@ def _load_transactions_df(db: Session) -> pd.DataFrame:
     ).all()
 
     if len(db_txs) >= 40:
-        records = [
-            {
-                "transaction_id": t.transaction_id,
-                "customer_id": t.user_id or 1,
-                "product_id": t.product_id,
-                "quantity": t.quantity,
-                "amount": float(t.amount),
-                "transaction_date": t.transaction_date.strftime("%Y-%m-%d %H:%M:%S")
-            }
-            for t in db_txs
-        ]
-        df = pd.DataFrame(records)
+        df = pd.DataFrame(db_txs, columns=[
+            "transaction_id", "customer_id", "product_id", "quantity", "amount", "transaction_date"
+        ])
+        df["customer_id"] = df["customer_id"].fillna(1).astype(int)
+        df["quantity"] = df["quantity"].astype(int)
+        df["amount"] = df["amount"].astype(float)
+        df["transaction_date"] = pd.to_datetime(df["transaction_date"])
     elif os.path.exists(DATA_PATH):
         df = pd.read_csv(DATA_PATH)
     else:
@@ -55,16 +50,20 @@ def _load_transactions_df(db: Session) -> pd.DataFrame:
     df["transaction_date"] = pd.to_datetime(df["transaction_date"])
     return df
 
+import time as _t
+
+_CUST_CACHE = {}
+_CUST_CACHE_TIME = {}
+_CUST_TTL = 3.0
+
 def get_customer_behavior_metrics(db: Session, target_customer_id: Optional[int] = None) -> List[CustomerBehaviorSummary]:
     """
-    Customer Behavior Analysis:
-    1. Total orders per customer
-    2. Total amount spent
-    3. Average order value
-    4. Purchase frequency (days between purchases)
-    5. Most purchased products
-    6. Customer purchase history and activity status
+    Optimized Customer Behavior Analysis with lightweight short TTL cache.
     """
+    cache_key = target_customer_id or 0
+    if cache_key in _CUST_CACHE and (_t.time() - _CUST_CACHE_TIME.get(cache_key, 0) < _CUST_TTL):
+        return _CUST_CACHE[cache_key]
+
     df = _load_transactions_df(db)
 
     # Product names map
@@ -75,38 +74,44 @@ def get_customer_behavior_metrics(db: Session, target_customer_id: Optional[int]
     users = db.query(User.user_id, User.full_name, User.email).filter(User.role == UserRole.CUSTOMER).all()
     user_map = {u[0]: (u[1], u[2]) for u in users}
 
-    summaries = []
-    customer_ids = df["customer_id"].unique()
-
     if target_customer_id:
-        customer_ids = [target_customer_id]
+        df = df[df["customer_id"] == target_customer_id]
+        if df.empty:
+            return []
 
-    now = datetime.now()
+    # Single-pass grouped aggregations
+    grouped = df.groupby("customer_id")
+    agg_df = grouped.agg(
+        total_orders=("transaction_id", "count"),
+        total_spent=("amount", "sum"),
+        average_order_value=("amount", "mean"),
+        first_purchase_date=("transaction_date", "min"),
+        last_purchase_date=("transaction_date", "max")
+    ).reset_index()
 
-    for cid in customer_ids:
-        c_df = df[df["customer_id"] == cid]
-        if c_df.empty:
-            continue
-
-        total_orders = len(c_df)
-        total_spent = round(float(c_df["amount"].sum()), 2)
-        avg_order_val = round(float(c_df["amount"].mean()), 2)
-
-        # Date analysis
-        sorted_dates = c_df["transaction_date"].sort_values()
-        first_dt = sorted_dates.iloc[0]
-        last_dt = sorted_dates.iloc[-1]
-        date_span_days = max(1, (last_dt - first_dt).days)
-        freq_days = round(date_span_days / max(1, total_orders), 1)
-
-        # Most purchased products
-        top_prods_s = c_df.groupby("product_id")["quantity"].sum().sort_values(ascending=False).head(3)
-        top_prods = [
-            {"product_id": int(pid), "product_name": prod_name_map.get(pid, f"Product #{pid}"), "quantity_bought": int(qty)}
-            for pid, qty in top_prods_s.items()
+    # Precompute top products per customer
+    cust_prod_qty = df.groupby(["customer_id", "product_id"])["quantity"].sum().reset_index()
+    cust_top_prods = cust_prod_qty.sort_values(["customer_id", "quantity"], ascending=[True, False]).groupby("customer_id").head(3)
+    prod_dict_per_cust = {}
+    for cid, sub in cust_top_prods.groupby("customer_id"):
+        prod_dict_per_cust[cid] = [
+            {"product_id": int(r.product_id), "product_name": prod_name_map.get(r.product_id, f"Product #{r.product_id}"), "quantity_bought": int(r.quantity)}
+            for r in sub.itertuples()
         ]
 
-        # Activity status
+    now = datetime.now()
+    summaries = []
+
+    for row in agg_df.itertuples():
+        cid = row.customer_id
+        tot_orders = row.total_orders
+        tot_spent = round(float(row.total_spent), 2)
+        avg_ov = round(float(row.average_order_value), 2)
+        first_dt = row.first_purchase_date
+        last_dt = row.last_purchase_date
+        span_days = max(1, (last_dt - first_dt).days)
+        freq_days = round(span_days / max(1, tot_orders), 1)
+
         days_since_last = (now - last_dt).days
         if days_since_last <= 45:
             activity = "ACTIVE"
@@ -115,22 +120,23 @@ def get_customer_behavior_metrics(db: Session, target_customer_id: Optional[int]
         else:
             activity = "DORMANT"
 
-        # Customer name / email
         name, email = user_map.get(cid, (f"Customer #{cid}", f"customer{cid}@example.com"))
 
         summaries.append(CustomerBehaviorSummary(
             customer_id=int(cid),
             customer_name=name,
             email=email,
-            total_orders=total_orders,
-            total_spent=total_spent,
-            average_order_value=avg_order_val,
+            total_orders=tot_orders,
+            total_spent=tot_spent,
+            average_order_value=avg_ov,
             purchase_frequency_days=freq_days,
-            most_purchased_products=top_prods,
+            most_purchased_products=prod_dict_per_cust.get(cid, []),
             first_purchase_date=first_dt.strftime("%Y-%m-%d"),
             last_purchase_date=last_dt.strftime("%Y-%m-%d"),
             activity_status=activity
         ))
 
     summaries.sort(key=lambda x: x.total_spent, reverse=True)
+    _CUST_CACHE[cache_key] = summaries
+    _CUST_CACHE_TIME[cache_key] = _t.time()
     return summaries

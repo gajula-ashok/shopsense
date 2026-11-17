@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, Numeric, DateTime, ForeignKey, Enum as SQLEnum, func
+from sqlalchemy import Column, Integer, String, Text, Numeric, DateTime, ForeignKey, Enum as SQLEnum, JSON, func
 from sqlalchemy.orm import relationship
 import enum
 from app.database import Base
@@ -22,14 +22,17 @@ class Vendor(Base):
     created_at = Column(DateTime, server_default=func.now(), nullable=False)
     user_id = Column(Integer, ForeignKey("users.user_id", ondelete="SET NULL"), nullable=True, unique=True)
 
-    # Vendor Application Management fields
+    # Vendor Application Management & Details fields
     business_address = Column(String(255), nullable=True)
     city = Column(String(100), nullable=True)
     state = Column(String(100), nullable=True)
     pincode = Column(String(20), nullable=True)
     tax_id = Column(String(50), nullable=True)  # GSTIN / PAN
+    description = Column(Text, nullable=True)
+    avatar_url = Column(String(255), nullable=True)
+    preferences = Column(JSON, default=lambda: {"currency": "USD", "email_notifications": True, "sms_notifications": True}, nullable=True)
     review_notes = Column(Text, nullable=True)
-    application_status = Column(String(50), default="APPROVED", nullable=True)  # PENDING, APPROVED, MORE_INFO_NEEDED, REJECTED
+    application_status = Column(String(50), default="APPROVED", nullable=True)
 
     user = relationship("User", back_populates="vendor")
     products = relationship("Product", back_populates="vendor", cascade="all, delete-orphan")

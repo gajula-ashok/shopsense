@@ -5,6 +5,7 @@ from fastapi.exceptions import RequestValidationError
 from sqlalchemy.exc import IntegrityError
 import uvicorn
 from app.config import settings
+from app.routes.profile_routes import router as profile_router
 from app.routes import (
     auth_router,
     vendors_router,
@@ -15,6 +16,7 @@ from app.routes import (
     warehouses_router,
     categories_router,
     recommendations_router,
+    analytics_m3_router,
 )
 
 app = FastAPI(
@@ -74,6 +76,8 @@ app.include_router(analytics_router)
 app.include_router(warehouses_router)
 app.include_router(categories_router)
 app.include_router(recommendations_router)
+app.include_router(analytics_m3_router)
+app.include_router(profile_router)
 
 @app.get("/", tags=["System"])
 def root():

@@ -7,6 +7,7 @@ from app.routes.analytics import router as analytics_router
 from app.routes.warehouses import router as warehouses_router
 from app.routes.categories import router as categories_router
 from app.routes.recommendations import router as recommendations_router
+from app.routes.revenue_routes import router as analytics_m3_router
 
 __all__ = [
     "auth_router",
@@ -18,4 +19,5 @@ __all__ = [
     "warehouses_router",
     "categories_router",
     "recommendations_router",
+    "analytics_m3_router",
 ]

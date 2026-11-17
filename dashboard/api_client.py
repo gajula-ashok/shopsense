@@ -1,4 +1,4 @@
-﻿import requests
+import requests
 from typing import Optional, Dict, Any, List
 
 class ApiClient:
@@ -321,3 +321,103 @@ class ApiClient:
         resp = self.session.post(url, headers=self._headers(token), json=data)
         return self._handle_response(resp)
 
+    # 10. Milestone 3 Analytics & Reporting APIs
+    def get_advanced_revenue(self, token: str, vendor_id: Optional[int] = None) -> Dict[str, Any]:
+        url = f"{self.base_url}/analytics/revenue"
+        params = {"vendor_id": vendor_id} if vendor_id else {}
+        resp = self.session.get(url, headers=self._headers(token), params=params)
+        return self._handle_response(resp)
+
+    def get_registered_models(self, token: str) -> List[Dict[str, Any]]:
+        url = f"{self.base_url}/analytics/models"
+        resp = self.session.get(url, headers=self._headers(token))
+        return self._handle_response(resp)
+
+    def get_workflow_stats(self, token: str) -> Dict[str, Any]:
+        url = f"{self.base_url}/analytics/workflows/stats"
+        resp = self.session.get(url, headers=self._headers(token))
+        return self._handle_response(resp)
+
+    def get_workflow_history(self, token: str, limit: int = 25) -> List[Dict[str, Any]]:
+        url = f"{self.base_url}/analytics/workflows/history"
+        resp = self.session.get(url, headers=self._headers(token), params={"limit": limit})
+        return self._handle_response(resp)
+
+    def trigger_workflow_run(self, token: str) -> Dict[str, Any]:
+        url = f"{self.base_url}/analytics/workflows/run"
+        resp = self.session.post(url, headers=self._headers(token))
+        return self._handle_response(resp)
+
+    def run_consistency_validation(self, token: str) -> Dict[str, Any]:
+        url = f"{self.base_url}/analytics/validation/run"
+        resp = self.session.post(url, headers=self._headers(token))
+        return self._handle_response(resp)
+
+    def get_validation_history(self, token: str, limit: int = 10) -> List[Dict[str, Any]]:
+        url = f"{self.base_url}/analytics/validation/history"
+        resp = self.session.get(url, headers=self._headers(token), params={"limit": limit})
+        return self._handle_response(resp)
+
+    def run_performance_benchmarks(self, token: str, iterations: int = 5) -> List[Dict[str, Any]]:
+        url = f"{self.base_url}/analytics/performance/run"
+        resp = self.session.post(url, headers=self._headers(token), params={"iterations": iterations})
+        return self._handle_response(resp)
+
+    def get_performance_history(self, token: str, limit: int = 25) -> List[Dict[str, Any]]:
+        url = f"{self.base_url}/analytics/performance/history"
+        resp = self.session.get(url, headers=self._headers(token), params={"limit": limit})
+        return self._handle_response(resp)
+
+    def download_excel_report_bytes(self, token: str, vendor_id: Optional[int] = None) -> bytes:
+        url = f"{self.base_url}/analytics/reports/excel"
+        params = {"vendor_id": vendor_id} if vendor_id else {}
+        resp = self.session.get(url, headers=self._headers(token), params=params)
+        if resp.status_code == 200:
+            return resp.content
+        raise Exception(f"Failed to download Excel report: {resp.text}")
+
+    def download_pdf_report_bytes(self, token: str, vendor_id: Optional[int] = None) -> bytes:
+        url = f"{self.base_url}/analytics/reports/pdf"
+        params = {"vendor_id": vendor_id} if vendor_id else {}
+        resp = self.session.get(url, headers=self._headers(token), params=params)
+        if resp.status_code == 200:
+            return resp.content
+        raise Exception(f"Failed to download PDF report: {resp.text}")
+
+
+    # Profile & Address Management APIs
+    def get_vendor_profile(self, token: str) -> Dict[str, Any]:
+        res = requests.get(f"{self.base_url}/api/vendor/profile", headers=self._headers(token))
+        return self._handle_response(res)
+
+    def update_vendor_profile(self, token: str, data: Dict[str, Any]) -> Dict[str, Any]:
+        res = requests.put(f"{self.base_url}/api/vendor/profile", json=data, headers=self._headers(token))
+        return self._handle_response(res)
+
+    def get_customer_profile(self, token: str) -> Dict[str, Any]:
+        res = requests.get(f"{self.base_url}/api/customer/profile", headers=self._headers(token))
+        return self._handle_response(res)
+
+    def update_customer_profile(self, token: str, data: Dict[str, Any]) -> Dict[str, Any]:
+        res = requests.put(f"{self.base_url}/api/customer/profile", json=data, headers=self._headers(token))
+        return self._handle_response(res)
+
+    def get_addresses(self, token: str) -> List[Dict[str, Any]]:
+        res = requests.get(f"{self.base_url}/api/addresses", headers=self._headers(token))
+        return self._handle_response(res)
+
+    def create_address(self, token: str, data: Dict[str, Any]) -> Dict[str, Any]:
+        res = requests.post(f"{self.base_url}/api/addresses", json=data, headers=self._headers(token))
+        return self._handle_response(res)
+
+    def update_address(self, token: str, address_id: int, data: Dict[str, Any]) -> Dict[str, Any]:
+        res = requests.put(f"{self.base_url}/api/addresses/{address_id}", json=data, headers=self._headers(token))
+        return self._handle_response(res)
+
+    def set_default_address(self, token: str, address_id: int) -> Dict[str, Any]:
+        res = requests.put(f"{self.base_url}/api/addresses/{address_id}/default", headers=self._headers(token))
+        return self._handle_response(res)
+
+    def delete_address(self, token: str, address_id: int) -> Dict[str, Any]:
+        res = requests.delete(f"{self.base_url}/api/addresses/{address_id}", headers=self._headers(token))
+        return self._handle_response(res)

@@ -59,6 +59,27 @@ except Exception:
     import vendor_applications_ui as _vapp_ui
     importlib.reload(_vapp_ui)
 
+try:
+    import dashboard.bi_dashboard_ui as _bi_ui
+    importlib.reload(_bi_ui)
+except Exception:
+    import bi_dashboard_ui as _bi_ui
+    importlib.reload(_bi_ui)
+
+try:
+    import dashboard.reports_ui as _reports_ui
+    importlib.reload(_reports_ui)
+except Exception:
+    import reports_ui as _reports_ui
+    importlib.reload(_reports_ui)
+
+try:
+    import dashboard.validation_ui as _val_ui
+    importlib.reload(_val_ui)
+except Exception:
+    import validation_ui as _val_ui
+    importlib.reload(_val_ui)
+
 # Page configuration
 st.set_page_config(
     page_title="ShopSense – Multi-Vendor Analytics & Marketplace",
@@ -519,108 +540,122 @@ def render_vendors_page():
     current_theme = st.session_state.get("theme", _theme_module.DEFAULT_THEME)
 
     st.markdown(_theme_module.render_top_navbar(user_name, role, current_theme), unsafe_allow_html=True)
-    st.title("🏢 Vendor Management & Onboarding")
+    st.title("🏢 Vendors Management")
 
     if role != "ADMIN":
         st.warning("Only Marketplace Administrators can manage vendor accounts.")
         return
 
-    # Add Vendor Expandable Form
-    with st.expander("➕ Onboard New Vendor", expanded=False):
-        with st.form("add_vendor_form"):
-            c1, c2 = st.columns(2)
-            with c1:
-                b_name = st.text_input("Business Name *")
-                o_name = st.text_input("Owner Name *")
-                v_email = st.text_input("Vendor Email *")
-            with c2:
-                v_phone = st.text_input("Phone Number * (10-15 digits)")
-                v_cat = st.selectbox("Category *", [
-                    "Electronics", "Fashion", "Books", "Home & Kitchen",
-                    "Beauty & Personal Care", "Sports & Fitness", "Automotive", "Other"
-                ])
-                v_comm = st.number_input("Commission Rate (%)", min_value=0.0, max_value=100.0, value=10.0, step=0.5)
+    tab_overview, tab_apps = st.tabs([
+        "📋 All Vendors & Management",
+        "📝 Applications & Approvals"
+    ])
 
-            submitted = st.form_submit_button("Register & Activate Vendor", type="primary")
-            if submitted:
-                if not b_name or not o_name or not v_email or not v_phone:
-                    st.error("Please complete all required fields.")
-                else:
-                    try:
-                        api.create_vendor(token, {
-                            "business_name": b_name,
-                            "owner_name": o_name,
-                            "email": v_email,
-                            "phone": v_phone,
-                            "category": v_cat,
-                            "commission_rate": v_comm,
-                            "status": "ACTIVE"
-                        })
-                        st.success(f"Vendor '{b_name}' successfully onboarded!")
-                        st.rerun()
-                    except Exception as e:
-                        err_msg = str(e)
-                        if "409" in err_msg or "already registered" in err_msg:
-                            st.error(f"⚠️ A vendor with that email is already registered. If they self-registered, you can find them in the list below and change their status to ACTIVE.")
-                        else:
-                            st.error(f"Vendor onboarding error: {err_msg}")
+    with tab_apps:
+        _vapp_ui.render_vendor_applications_page(api, token, current_theme)
 
-    # Filter and Search
-    f1, f2, f3 = st.columns([2, 1, 1])
-    with f1:
-        search_kw = st.text_input("🔍 Search vendors...", "")
-    with f2:
-        cat_filter = st.selectbox("Category Filter", ["All", "Electronics", "Fashion", "Books", "Home & Kitchen", "Beauty & Personal Care"])
-    with f3:
-        status_filter = st.selectbox("Status Filter", ["All", "ACTIVE", "PENDING", "SUSPENDED"])
+    with tab_overview:
 
-    try:
-        vendors = api.get_vendors(token, search=search_kw, category=cat_filter, status=status_filter)
-        if vendors:
-            df_v = pd.DataFrame(vendors)
-            st.dataframe(
-                df_v[["vendor_id", "business_name", "owner_name", "email", "phone", "category", "commission_rate", "status", "created_at"]],
-                use_container_width=True,
-                hide_index=True
-            )
+        if role != "ADMIN":
+            st.warning("Only Marketplace Administrators can manage vendor accounts.")
+            return
 
-            # Quick Actions Section
-            st.subheader("⚙️ Vendor Actions")
-            sel_vendor_id = st.selectbox("Select Vendor to manage", [v["vendor_id"] for v in vendors], format_func=lambda x: f"Vendor #{x} - {[v['business_name'] for v in vendors if v['vendor_id']==x][0]}")
-            curr_vendor = next(v for v in vendors if v["vendor_id"] == sel_vendor_id)
+        # Add Vendor Expandable Form
+        with st.expander("➕ Onboard New Vendor", expanded=False):
+            with st.form("add_vendor_form"):
+                c1, c2 = st.columns(2)
+                with c1:
+                    b_name = st.text_input("Business Name *")
+                    o_name = st.text_input("Owner Name *")
+                    v_email = st.text_input("Vendor Email *")
+                with c2:
+                    v_phone = st.text_input("Phone Number * (10-15 digits)")
+                    v_cat = st.selectbox("Category *", [
+                        "Electronics", "Fashion", "Books", "Home & Kitchen",
+                        "Beauty & Personal Care", "Sports & Fitness", "Automotive", "Other"
+                    ])
+                    v_comm = st.number_input("Commission Rate (%)", min_value=0.0, max_value=100.0, value=10.0, step=0.5)
 
-            col_act1, col_act2, col_act3 = st.columns(3)
-            with col_act1:
-                new_status = st.selectbox("Change Status", ["ACTIVE", "PENDING", "SUSPENDED"], index=["ACTIVE", "PENDING", "SUSPENDED"].index(curr_vendor["status"]))
-                if st.button("Update Status"):
-                    try:
-                        api.update_vendor(token, sel_vendor_id, {"status": new_status})
-                        st.success(f"Status for Vendor #{sel_vendor_id} changed to {new_status}")
-                        st.rerun()
-                    except Exception as e:
-                        st.error(f"Update failed: {e}")
-            with col_act2:
-                new_rate = st.number_input("Update Commission (%)", value=float(curr_vendor["commission_rate"]), min_value=0.0, max_value=100.0)
-                if st.button("Save Commission"):
-                    try:
-                        api.update_vendor(token, sel_vendor_id, {"commission_rate": new_rate})
-                        st.success("Commission updated.")
-                        st.rerun()
-                    except Exception as e:
-                        st.error(f"Failed to update commission: {e}")
-            with col_act3:
-                st.write("Danger Zone:")
-                if st.button("🗑️ Delete Vendor", type="secondary"):
-                    try:
-                        api.delete_vendor(token, sel_vendor_id)
-                        st.success(f"Vendor #{sel_vendor_id} removed.")
-                        st.rerun()
-                    except Exception as e:
-                        st.error(f"Deletion failed: {e}")
-        else:
-            st.info("No vendors found matching criteria.")
-    except Exception as e:
-        st.error(f"Error loading vendors: {e}")
+                submitted = st.form_submit_button("Register & Activate Vendor", type="primary")
+                if submitted:
+                    if not b_name or not o_name or not v_email or not v_phone:
+                        st.error("Please complete all required fields.")
+                    else:
+                        try:
+                            api.create_vendor(token, {
+                                "business_name": b_name,
+                                "owner_name": o_name,
+                                "email": v_email,
+                                "phone": v_phone,
+                                "category": v_cat,
+                                "commission_rate": v_comm,
+                                "status": "ACTIVE"
+                            })
+                            st.success(f"Vendor '{b_name}' successfully onboarded!")
+                            st.rerun()
+                        except Exception as e:
+                            err_msg = str(e)
+                            if "409" in err_msg or "already registered" in err_msg:
+                                st.error(f"⚠️ A vendor with that email is already registered. If they self-registered, you can find them in the list below and change their status to ACTIVE.")
+                            else:
+                                st.error(f"Vendor onboarding error: {err_msg}")
+
+        # Filter and Search
+        f1, f2, f3 = st.columns([2, 1, 1])
+        with f1:
+            search_kw = st.text_input("🔍 Search vendors...", "")
+        with f2:
+            cat_filter = st.selectbox("Category Filter", ["All", "Electronics", "Fashion", "Books", "Home & Kitchen", "Beauty & Personal Care"])
+        with f3:
+            status_filter = st.selectbox("Status Filter", ["All", "ACTIVE", "PENDING", "SUSPENDED"])
+
+        try:
+            vendors = api.get_vendors(token, search=search_kw, category=cat_filter, status=status_filter)
+            if vendors:
+                df_v = pd.DataFrame(vendors)
+                st.dataframe(
+                    df_v[["vendor_id", "business_name", "owner_name", "email", "phone", "category", "commission_rate", "status", "created_at"]],
+                    use_container_width=True,
+                    hide_index=True
+                )
+
+                # Quick Actions Section
+                st.subheader("⚙️ Vendor Actions")
+                sel_vendor_id = st.selectbox("Select Vendor to manage", [v["vendor_id"] for v in vendors], format_func=lambda x: f"Vendor #{x} - {[v['business_name'] for v in vendors if v['vendor_id']==x][0]}")
+                curr_vendor = next(v for v in vendors if v["vendor_id"] == sel_vendor_id)
+
+                col_act1, col_act2, col_act3 = st.columns(3)
+                with col_act1:
+                    new_status = st.selectbox("Change Status", ["ACTIVE", "PENDING", "SUSPENDED"], index=["ACTIVE", "PENDING", "SUSPENDED"].index(curr_vendor["status"]))
+                    if st.button("Update Status"):
+                        try:
+                            api.update_vendor(token, sel_vendor_id, {"status": new_status})
+                            st.success(f"Status for Vendor #{sel_vendor_id} changed to {new_status}")
+                            st.rerun()
+                        except Exception as e:
+                            st.error(f"Update failed: {e}")
+                with col_act2:
+                    new_rate = st.number_input("Update Commission (%)", value=float(curr_vendor["commission_rate"]), min_value=0.0, max_value=100.0)
+                    if st.button("Save Commission"):
+                        try:
+                            api.update_vendor(token, sel_vendor_id, {"commission_rate": new_rate})
+                            st.success("Commission updated.")
+                            st.rerun()
+                        except Exception as e:
+                            st.error(f"Failed to update commission: {e}")
+                with col_act3:
+                    st.write("Danger Zone:")
+                    if st.button("🗑️ Delete Vendor", type="secondary"):
+                        try:
+                            api.delete_vendor(token, sel_vendor_id)
+                            st.success(f"Vendor #{sel_vendor_id} removed.")
+                            st.rerun()
+                        except Exception as e:
+                            st.error(f"Deletion failed: {e}")
+            else:
+                st.info("No vendors found matching criteria.")
+        except Exception as e:
+            st.error(f"Error loading vendors: {e}")
 
     st.markdown(_theme_module.render_trust_footer(), unsafe_allow_html=True)
 
@@ -1170,35 +1205,266 @@ def render_customer_orders():
 
 
 def render_customer_profile():
-    user_name = st.session_state.get("user_name", "Customer")
-    user_email = st.session_state.get("user", "")
-    user_phone = st.session_state.get("user_phone") or "+91 98765 43210"
+    token = st.session_state.get("token")
     role = st.session_state.get("role", "CUSTOMER")
     current_theme = st.session_state.get("theme", _theme_module.DEFAULT_THEME)
+
+    # Fetch live profile data from backend API
+    db_profile = None
+    if role == "VENDOR":
+        try:
+            db_profile = api.get_vendor_profile(token)
+            st.session_state["user_name"] = db_profile.get("full_name") or db_profile.get("owner_name")
+            st.session_state["user_phone"] = db_profile.get("phone")
+            st.session_state["vendor_name"] = db_profile.get("business_name")
+            st.session_state["avatar_url"] = db_profile.get("avatar_url")
+        except Exception:
+            pass
+    else:
+        try:
+            db_profile = api.get_customer_profile(token)
+            st.session_state["user_name"] = db_profile.get("full_name")
+            st.session_state["user_phone"] = db_profile.get("phone")
+            st.session_state["avatar_url"] = db_profile.get("avatar_url")
+        except Exception:
+            pass
+
+    user_name = st.session_state.get("user_name", "User")
+    user_email = st.session_state.get("user", "")
+    user_phone = st.session_state.get("user_phone") or "+91 98765 43210"
+    avatar_url = st.session_state.get("avatar_url")
 
     st.markdown(_theme_module.render_top_navbar(user_name, role, current_theme), unsafe_allow_html=True)
     st.title("👤 My Account & Membership")
 
-    # Member Profile Card
-    st.markdown(_theme_module.render_customer_profile_card(user_name, user_email, role, current_theme, phone=user_phone), unsafe_allow_html=True)
+    # Member Profile Card with Edit Profile toggle
+    st.markdown(_theme_module.render_customer_profile_card(user_name, user_email, role, current_theme, phone=user_phone, avatar_url=avatar_url), unsafe_allow_html=True)
 
-    # Address and Preferences Cards
+    # Edit Profile State Management
+    if "is_editing_profile" not in st.session_state:
+        st.session_state["is_editing_profile"] = False
+
+    col_btn, _ = st.columns([2, 5])
+    with col_btn:
+        if not st.session_state["is_editing_profile"]:
+            if st.button("✏️ Edit Profile", type="primary", use_container_width=True):
+                st.session_state["is_editing_profile"] = True
+                st.rerun()
+        else:
+            if st.button("❌ Cancel Editing", type="secondary", use_container_width=True):
+                st.session_state["is_editing_profile"] = False
+                st.rerun()
+
+    # ==========================================
+    # EDIT PROFILE FORM VIEW
+    # ==========================================
+    if st.session_state["is_editing_profile"]:
+        st.markdown("<hr style='margin: 14px 0;'/>", unsafe_allow_html=True)
+        st.subheader("✏️ Edit Account & Profile Information")
+
+        if role == "VENDOR":
+            v_prof = db_profile or {}
+            with st.form("edit_vendor_profile_form"):
+                st.markdown("#### 👤 1. Personal Details")
+                cp1, cp2 = st.columns(2)
+                with cp1:
+                    f_name = st.text_input("Full Name (Owner Name) *", value=v_prof.get("full_name") or user_name)
+                    f_phone = st.text_input("Mobile Contact Number *", value=v_prof.get("phone") or user_phone)
+                with cp2:
+                    st.text_input("Registered Email Address", value=user_email, disabled=True)
+                    f_avatar = st.text_input("Profile Avatar Image URL", value=v_prof.get("avatar_url") or "", placeholder="https://example.com/avatar.jpg")
+
+                st.markdown("#### 🏢 2. Business Details")
+                cb1, cb2 = st.columns(2)
+                with cb1:
+                    b_name = st.text_input("Business / Store Name *", value=v_prof.get("business_name") or "")
+                    b_desc = st.text_area("Business Description", value=v_prof.get("description") or "", height=85)
+                with cb2:
+                    b_addr = st.text_input("Business Street Address", value=v_prof.get("business_address") or "")
+                    c_city, c_state, c_pin = st.columns(3)
+                    with c_city:
+                        b_city = st.text_input("City", value=v_prof.get("city") or "")
+                    with c_state:
+                        b_state = st.text_input("State", value=v_prof.get("state") or "")
+                    with c_pin:
+                        b_pin = st.text_input("PIN Code", value=v_prof.get("pincode") or "")
+
+                st.markdown("#### ⚙️ 3. Preferences")
+                c_pref1, c_pref2 = st.columns(2)
+                v_prefs = v_prof.get("preferences") or {}
+                with c_pref1:
+                    pref_curr = st.selectbox("Preferred Currency", ["USD", "INR", "EUR", "GBP"], index=["USD", "INR", "EUR", "GBP"].index(v_prefs.get("currency", "USD")) if v_prefs.get("currency") in ["USD", "INR", "EUR", "GBP"] else 0)
+                with c_pref2:
+                    pref_email = st.checkbox("Email Notifications (Order & Account Alerts)", value=v_prefs.get("email_notifications", True))
+                    pref_sms = st.checkbox("SMS Notifications (Dispatch & Security)", value=v_prefs.get("sms_notifications", True))
+
+                btn_sub = st.form_submit_button("💾 Save Vendor Profile", type="primary", use_container_width=True)
+                if btn_sub:
+                    if not f_name or not b_name:
+                        st.error("Name and Business Name cannot be empty.")
+                    else:
+                        try:
+                            updated = api.update_vendor_profile(token, {
+                                "full_name": f_name,
+                                "phone": f_phone,
+                                "avatar_url": f_avatar,
+                                "business_name": b_name,
+                                "description": b_desc,
+                                "business_address": b_addr,
+                                "city": b_city,
+                                "state": b_state,
+                                "pincode": b_pin,
+                                "preferences": {
+                                    "currency": pref_curr,
+                                    "email_notifications": pref_email,
+                                    "sms_notifications": pref_sms
+                                }
+                            })
+                            st.session_state["user_name"] = updated.get("full_name") or f_name
+                            st.session_state["user_phone"] = updated.get("phone") or f_phone
+                            st.session_state["vendor_name"] = updated.get("business_name") or b_name
+                            st.session_state["avatar_url"] = updated.get("avatar_url") or f_avatar
+                            st.session_state["is_editing_profile"] = False
+                            st.success("✅ Vendor profile updated and synchronized successfully!")
+                            st.rerun()
+                        except Exception as e:
+                            st.error(f"Failed to update profile: {e}")
+        else:
+            # CUSTOMER EDIT FORM
+            c_prof = db_profile or {}
+            with st.form("edit_customer_profile_form"):
+                st.markdown("#### 👤 1. Personal Details")
+                cp1, cp2 = st.columns(2)
+                with cp1:
+                    cust_name = st.text_input("Full Name *", value=c_prof.get("full_name") or user_name)
+                    cust_phone = st.text_input("Mobile Contact Number *", value=c_prof.get("phone") or user_phone)
+                with cp2:
+                    st.text_input("Registered Email Address", value=user_email, disabled=True)
+                    cust_avatar = st.text_input("Profile Avatar Image URL", value=c_prof.get("avatar_url") or "", placeholder="https://example.com/avatar.jpg")
+
+                st.markdown("#### ⚙️ 2. Shopping & Notification Preferences")
+                c_pref1, c_pref2 = st.columns(2)
+                c_prefs = c_prof.get("preferences") or {}
+                with c_pref1:
+                    pref_curr = st.selectbox("Preferred Currency", ["USD", "INR", "EUR", "GBP"], index=["USD", "INR", "EUR", "GBP"].index(c_prefs.get("currency", "USD")) if c_prefs.get("currency") in ["USD", "INR", "EUR", "GBP"] else 0)
+                with c_pref2:
+                    pref_email = st.checkbox("Email Notifications (Order & Account Alerts)", value=c_prefs.get("email_notifications", True))
+                    pref_sms = st.checkbox("SMS Notifications (Dispatch & Security)", value=c_prefs.get("sms_notifications", True))
+                    pref_orders = st.checkbox("Real-Time Order Tracking Notifications", value=c_prefs.get("order_notifications", True))
+
+                btn_sub_c = st.form_submit_button("💾 Save Customer Details", type="primary", use_container_width=True)
+                if btn_sub_c:
+                    if not cust_name:
+                        st.error("Name cannot be empty.")
+                    else:
+                        try:
+                            updated = api.update_customer_profile(token, {
+                                "full_name": cust_name,
+                                "phone": cust_phone,
+                                "avatar_url": cust_avatar,
+                                "preferences": {
+                                    "currency": pref_curr,
+                                    "email_notifications": pref_email,
+                                    "sms_notifications": pref_sms,
+                                    "order_notifications": pref_orders
+                                }
+                            })
+                            st.session_state["user_name"] = updated.get("full_name") or cust_name
+                            st.session_state["user_phone"] = updated.get("phone") or cust_phone
+                            st.session_state["avatar_url"] = updated.get("avatar_url") or cust_avatar
+                            st.session_state["is_editing_profile"] = False
+                            st.success("✅ Profile details updated successfully!")
+                            st.rerun()
+                        except Exception as e:
+                            st.error(f"Failed to update profile: {e}")
+
+    # ==========================================
+    # DISPLAY VIEW (MATCHING REFERENCE UI)
+    # ==========================================
     col_addr, col_sec = st.columns(2)
+
     with col_addr:
         with st.container(border=True):
-            st.subheader("📍 Default Delivery Address")
-            st.write(f"**{user_name}**")
-            st.write("#42, Tech Boulevard, Koramangala 4th Block")
-            st.write("Bangalore, Karnataka – 560034")
-            st.write(f"📞 Contact: {user_phone}")
-            st.caption("⚡ Verified primary shipping address for 1-day delivery")
+            if role == "VENDOR":
+                st.subheader("🏢 Registered Business Address")
+                v_p = db_profile or {}
+                st.write(f"**{v_p.get('business_name') or user_name}**")
+                b_addr_str = v_p.get("business_address") or "#42, Commercial Avenue, Sector 5"
+                b_city_str = f"{v_p.get('city') or 'Bangalore'}, {v_p.get('state') or 'Karnataka'} – {v_p.get('pincode') or '560034'}"
+                st.write(b_addr_str)
+                st.write(b_city_str)
+                st.write(f"📞 Contact: {v_p.get('phone') or user_phone}")
+                st.caption("⚡ Registered vendor fulfillment hub & dispatch location")
+            else:
+                st.subheader("📍 Default Delivery Address")
+                c_p = db_profile or {}
+                def_addr = c_p.get("default_address")
+                if def_addr:
+                    st.write(f"**{def_addr.get('recipient_name') or user_name}**")
+                    bld = f"{def_addr.get('house_building')}, " if def_addr.get('house_building') else ""
+                    st.write(f"{bld}{def_addr.get('street_address')}")
+                    st.write(f"{def_addr.get('city')}, {def_addr.get('state')} – {def_addr.get('pincode')}")
+                    st.write(f"📞 Contact: {def_addr.get('phone') or user_phone}")
+                else:
+                    st.write(f"**{user_name}**")
+                    st.write("#42, Tech Boulevard, Koramangala 4th Block")
+                    st.write("Bangalore, Karnataka – 560034")
+                    st.write(f"📞 Contact: {user_phone}")
+                st.caption("⚡ Verified primary shipping address for 1-day delivery")
+
+                # Expandable multi-address management for Customer
+                with st.expander("📋 Manage Delivery Addresses"):
+                    addrs = c_p.get("addresses", [])
+                    if addrs:
+                        for a in addrs:
+                            c_a1, c_a2 = st.columns([3, 1])
+                            with c_a1:
+                                is_def_badge = " *(Default)*" if a.get("is_default") else ""
+                                st.markdown(f"**{a.get('recipient_name')}** ({a.get('address_type', 'HOME')}){is_def_badge}")
+                                st.caption(f"{a.get('street_address')}, {a.get('city')}, {a.get('state')} - {a.get('pincode')} | 📞 {a.get('phone')}")
+                            with c_a2:
+                                if not a.get("is_default"):
+                                    if st.button("Set Default", key=f"set_def_{a.get('address_id')}", use_container_width=True):
+                                        api.set_default_address(token, a.get("address_id"))
+                                        st.rerun()
+
+                    # Add new address form
+                    with st.form("add_new_address_form"):
+                        st.markdown("##### ➕ Add New Address")
+                        na1, na2 = st.columns(2)
+                        with na1:
+                            r_name = st.text_input("Recipient Name", value=user_name)
+                            r_phone = st.text_input("Contact Phone", value=user_phone)
+                            r_street = st.text_input("Street / Area Address")
+                        with na2:
+                            r_city = st.text_input("City")
+                            r_state = st.text_input("State")
+                            r_pin = st.text_input("PIN Code")
+                        r_def = st.checkbox("Set as default shipping address", value=True)
+                        if st.form_submit_button("Save New Address"):
+                            if not r_name or not r_street or not r_city or not r_pin:
+                                st.error("Please fill all required address fields.")
+                            else:
+                                api.create_address(token, {
+                                    "recipient_name": r_name,
+                                    "phone": r_phone,
+                                    "street_address": r_street,
+                                    "city": r_city,
+                                    "state": r_state,
+                                    "pincode": r_pin,
+                                    "is_default": r_def,
+                                    "address_type": "HOME"
+                                })
+                                st.success("Address added!")
+                                st.rerun()
 
     with col_sec:
         with st.container(border=True):
             st.subheader("🔒 Account Security & Preferences")
             st.write(f"Account Email: **{user_email}**")
-            st.write("Two-Factor Authentication: **Enabled (SMS)**")
-            st.write("Currency: **USD ($) / INR (₹)**")
+            st.write("Two-Factor Authentication: **Verified Password Authentication**")
+            curr_pref = (db_profile or {}).get("preferences", {}).get("currency", "USD ($) / INR (₹)")
+            st.write(f"Currency: **{curr_pref}**")
             st.write("Notification Preferences: **Email & SMS Orders**")
 
     st.markdown(_theme_module.render_trust_footer(), unsafe_allow_html=True)
@@ -1255,8 +1521,8 @@ def main():
         if role == "ADMIN":
             nav_options = [
                 "📊 Dashboard",
-                "🏢 Vendors",
-                "📋 Vendor Profiles",
+                "📊 Business Intelligence",
+                "🏢 Vendors Management",
                 "📦 Products",
                 "🏷️ Categories",
                 "📦 Orders",
@@ -1264,7 +1530,8 @@ def main():
                 "👥 Customer Analytics",
                 "💡 Recommendations",
                 "📈 Analytics",
-                "⚙️ Settings"
+                "📥 Reports",
+                "🛡️ Data Validation"
             ]
         elif role == "VENDOR":
             nav_options = [
@@ -1273,6 +1540,7 @@ def main():
                 "📋 Inventory",
                 "📦 Orders",
                 "📈 Sales Analytics",
+                "📥 Reports",
                 "👤 Profile"
             ]
         else:  # CUSTOMER
@@ -1318,17 +1586,13 @@ def main():
             # ADMIN & VENDOR Views
             if chosen_page == "📊 Dashboard":
                 render_dashboard_page()
-            elif chosen_page == "🏢 Vendors":
+            elif chosen_page in ("🏢 Vendors", "🏢 Vendors Management", "📋 Vendor Profiles"):
                 render_vendors_page()
-            elif chosen_page == "📋 Vendor Profiles":
-                _vapp_ui.render_vendor_applications_page(api, token, current_theme)
-                st.markdown(_theme_module.render_trust_footer(), unsafe_allow_html=True)
             elif chosen_page in ("📦 Products", "📦 My Products"):
                 render_products_page()
             elif chosen_page == "🏷️ Categories":
                 st.markdown(_theme_module.render_top_navbar(user_name, role, current_theme), unsafe_allow_html=True)
                 st.title("🏷️ Marketplace Category Hierarchy")
-                # Direct to the category tree view
                 _inv_ui.render_category_tree_view(api, token)
                 st.markdown(_theme_module.render_trust_footer(), unsafe_allow_html=True)
             elif chosen_page in ("📦 Orders", "💳 Transactions"):
@@ -1347,13 +1611,21 @@ def main():
                 st.title("💡 Recommendation Engine & Model Evaluation")
                 _rec_ui.render_recommendation_intelligence_section(api, token, role, user_id, _theme_module, current_theme)
                 st.markdown(_theme_module.render_trust_footer(), unsafe_allow_html=True)
+            elif chosen_page == "📊 Business Intelligence":
+                st.markdown(_theme_module.render_top_navbar(user_name, role, current_theme), unsafe_allow_html=True)
+                _bi_ui.render_bi_dashboard(api, token, role, _theme_module, current_theme)
+                st.markdown(_theme_module.render_trust_footer(), unsafe_allow_html=True)
+            elif chosen_page == "📥 Reports":
+                st.markdown(_theme_module.render_top_navbar(user_name, role, current_theme), unsafe_allow_html=True)
+                _v_id = st.session_state.get("vendor_id") if role == "VENDOR" else None
+                _reports_ui.render_reports_page(api, token, role, vendor_id=_v_id)
+                st.markdown(_theme_module.render_trust_footer(), unsafe_allow_html=True)
+            elif chosen_page == "🛡️ Data Validation":
+                st.markdown(_theme_module.render_top_navbar(user_name, role, current_theme), unsafe_allow_html=True)
+                _val_ui.render_validation_and_testing_page(api, token, _theme_module, current_theme)
+                st.markdown(_theme_module.render_trust_footer(), unsafe_allow_html=True)
             elif chosen_page == "👤 Profile":
                 render_customer_profile()
-            elif chosen_page == "⚙️ Settings":
-                st.markdown(_theme_module.render_top_navbar(user_name, role, current_theme), unsafe_allow_html=True)
-                st.title("⚙️ Marketplace Configuration & System Settings")
-                st.info("Marketplace settings, API integrations, and security controls are active and verified.")
-                st.markdown(_theme_module.render_trust_footer(), unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()

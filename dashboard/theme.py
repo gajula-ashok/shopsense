@@ -1034,17 +1034,20 @@ def render_order_card_html(order: Dict[str, Any], theme_name: str) -> str:
 </div>
 """
 
-def render_customer_profile_card(user_name: str, user_email: str, role: str, theme_name: str, phone: str = None) -> str:
-    """Renders customer profile card."""
+def render_customer_profile_card(user_name: str, user_email: str, role: str, theme_name: str, phone: str = None, avatar_url: str = None) -> str:
+    """Renders customer profile card with support for custom avatar."""
     cfg = get_theme_config(theme_name)
     initial = user_name[0].upper() if user_name else 'U'
     phone_html = f"<div style='font-size:0.88rem; color:var(--ss-text-muted); margin-top:2px;'>📞 {phone}</div>" if phone else ""
+    if avatar_url and avatar_url.strip():
+        avatar_html = f"<img src='{avatar_url}' style='width:68px; height:68px; border-radius:50%; object-fit:cover; border:2px solid #38bdf8; box-shadow:0 4px 12px rgba(0,0,0,0.15);'/>"
+    else:
+        avatar_html = f"<div style='width:68px; height:68px; border-radius:50%; background:var(--ss-header-grad); color:#ffffff; display:flex; align-items:center; justify-content:center; font-size:1.8rem; font-weight:800; box-shadow:0 4px 12px rgba(0,0,0,0.15);'>{initial}</div>"
+
     return f"""
 <div style="background:#ffffff; border-radius:12px; border:1px solid var(--ss-border); padding:24px; box-shadow:0 2px 10px rgba(0,0,0,0.05); margin-bottom:20px;">
     <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
-        <div style="width:68px; height:68px; border-radius:50%; background:var(--ss-header-grad); color:#ffffff; display:flex; align-items:center; justify-content:center; font-size:1.8rem; font-weight:800; box-shadow:0 4px 12px rgba(0,0,0,0.15);">
-            {initial}
-        </div>
+        {avatar_html}
         <div style="flex-grow:1; min-width:200px;">
             <div style="font-size:1.4rem; font-weight:800; color:var(--ss-text-main);">{user_name}</div>
             <div style="font-size:0.88rem; color:var(--ss-text-muted); margin-top:2px;">📧 {user_email}</div>

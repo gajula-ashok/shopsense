@@ -108,7 +108,7 @@ def recommend_products(db: Session, customer_id: int, top_n: int = 5) -> Custome
     already_interacted.update(bought_ids)
 
     # 4. Weighted score prediction for unrated products: sum(similarity * rating) / sum(similarity)
-    top_neighbors = similar_users.head(15)
+    top_neighbors = similar_users.head(25)
     neighbor_ratings = matrix.loc[top_neighbors.index]
 
     unrated_products = [pid for pid in matrix.columns if pid not in already_interacted]

@@ -8,6 +8,11 @@ from app.models.warehouse import Warehouse
 from app.models.category import Category
 from app.models.stock_movement import StockMovement, MovementType
 from app.models.interaction import ProductInteraction
+from app.models.analytics_metadata import (
+    WorkflowExecutionLog,
+    DashboardValidationLog,
+    PerformanceTestResult,
+)
 
 __all__ = [
     "Base",
@@ -23,4 +28,9 @@ __all__ = [
     "StockMovement",
     "MovementType",
     "ProductInteraction",
+    "WorkflowExecutionLog",
+    "DashboardValidationLog",
+    "PerformanceTestResult",
 ]
+
+from app.models.address import Address
